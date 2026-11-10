@@ -133,15 +133,6 @@ p {
   line-height: 1;
 }
 
-.nav-kicker {
-  margin: 0 12px 8px;
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
 .nav {
   display: flex;
   flex-direction: column;
@@ -1696,20 +1687,6 @@ p {
   }
 }
 
-.brand-lockup {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.brand-sub {
-  font-family: var(--font-display);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
 .products-workspace {
   --move: 0.25s cubic-bezier(0.22, 1, 0.36, 1);
   min-width: 0;
@@ -2144,8 +2121,8 @@ p {
 
 .toast {
   position: fixed;
+  top: 20px;
   right: 20px;
-  bottom: 20px;
   z-index: 80;
   max-width: min(320px, calc(100vw - 32px));
   padding: 12px 14px;
@@ -2155,8 +2132,8 @@ p {
   font-family: var(--font-body);
   font-size: 14px;
   opacity: 0;
-  transform: translateY(8px);
-  transition: opacity var(--move), transform var(--move);
+  transform: translateY(-8px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .toast.is-on {

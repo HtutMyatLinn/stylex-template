@@ -354,19 +354,6 @@
     announce("Internal note added.");
   }
 
-  function onRefund(orderId) {
-    const order = fetchOrderDetails(orderId);
-    if (!order || !order.returnRequest || !order.returnRequest.validated) return;
-    if (order.returnRequest.refundLocked || order.returnRequest.refunded) return;
-    initiateRefund(orderId);
-    render();
-    window.setTimeout(() => {
-      processRefundTransaction(orderId);
-      render();
-      announce("Refund processed.");
-    }, 600);
-  }
-
   function openCancelModal(orderId) {
     const order = fetchOrderDetails(orderId);
     if (!order || order.status === "Cancelled") return;
@@ -511,10 +498,13 @@
 
   function announce(message) {
     const node = document.getElementById("order-status-live");
-    node.textContent = "";
-    window.setTimeout(() => {
-      node.textContent = message;
-    }, 20);
+    if (node) {
+      node.textContent = "";
+      window.setTimeout(() => {
+        node.textContent = message;
+      }, 20);
+    }
+    window.showToast(message);
   }
 
   function money(value) {

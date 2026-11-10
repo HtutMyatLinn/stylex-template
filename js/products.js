@@ -16,7 +16,6 @@
   let variantPage = 1;
   let tab = "All";
   let query = "";
-  let toastTimer = 0;
 
   const listView = document.getElementById("inventory-view");
   const editView = document.getElementById("editor-view");
@@ -806,17 +805,7 @@
   }
 
   function toast(message) {
-    const node = document.getElementById("toast");
-    node.textContent = message;
-    node.hidden = false;
-    window.requestAnimationFrame(() => node.classList.add("is-on"));
-    window.clearTimeout(toastTimer);
-    toastTimer = window.setTimeout(() => {
-      node.classList.remove("is-on");
-      window.setTimeout(() => {
-        node.hidden = true;
-      }, 250);
-    }, 2800);
+    window.showToast(message);
   }
 
   function uid() {

@@ -67,6 +67,33 @@
     );
   };
 
+  let toastTimer = 0;
+  let toastHideTimer = 0;
+
+  window.showToast = function (message) {
+    let node = document.getElementById("toast");
+    if (!node) {
+      node = document.createElement("div");
+      node.id = "toast";
+      node.className = "toast";
+      node.setAttribute("role", "status");
+      node.setAttribute("aria-live", "polite");
+      node.hidden = true;
+      document.body.appendChild(node);
+    }
+    node.textContent = message;
+    node.hidden = false;
+    window.requestAnimationFrame(() => node.classList.add("is-on"));
+    window.clearTimeout(toastTimer);
+    window.clearTimeout(toastHideTimer);
+    toastTimer = window.setTimeout(() => {
+      node.classList.remove("is-on");
+      toastHideTimer = window.setTimeout(() => {
+        node.hidden = true;
+      }, 200);
+    }, 2000);
+  };
+
   window.runWithLoading = function (button, task) {
     if (!button || button.classList.contains("is-loading") || button.disabled) return;
     button.classList.add("is-loading");
@@ -837,11 +864,13 @@
 
   function announce(message) {
     const node = document.getElementById("status-live");
-    if (!node) return;
-    node.textContent = "";
-    window.setTimeout(() => {
-      node.textContent = message;
-    }, 20);
+    if (node) {
+      node.textContent = "";
+      window.setTimeout(() => {
+        node.textContent = message;
+      }, 20);
+    }
+    window.showToast(message);
   }
 
   function periodName(period) {
