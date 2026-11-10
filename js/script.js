@@ -1,0 +1,879 @@
+(function () {
+  const PAGE_SIZE = 10;
+
+  window.pageRows = function (items, page) {
+    const pages = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
+    const current = Math.min(Math.max(1, page || 1), pages);
+    const start = (current - 1) * PAGE_SIZE;
+    return { page: current, pages: pages, rows: items.slice(start, start + PAGE_SIZE) };
+  };
+
+  function pagerItems(page, pages) {
+    const list = [];
+    if (pages <= 6) {
+      for (let index = 1; index <= pages; index += 1) list.push(index);
+      return list;
+    }
+    if (page <= 4) {
+      for (let index = 1; index <= 4; index += 1) list.push(index);
+      list.push("gap", pages);
+      return list;
+    }
+    if (page >= pages - 3) {
+      list.push(1, "gap");
+      for (let index = pages - 3; index <= pages; index += 1) list.push(index);
+      return list;
+    }
+    list.push(1, "gap", page - 1, page, page + 1, "gap", pages);
+    return list;
+  }
+
+  window.renderPager = function (container, page, pages, label) {
+    if (!container) return;
+    const atStart = page <= 1;
+    const atEnd = page >= pages;
+    let markup = label ? '<span class="pager-count">' + label + "</span>" : "";
+    markup += '<button type="button" data-page="first"' + (atStart ? " disabled" : "") + ">« First</button>";
+    markup += '<button type="button" data-page="prev"' + (atStart ? " disabled" : "") + ">&lt; Back</button>";
+    pagerItems(page, pages).forEach((item) => {
+      if (item === "gap") {
+        markup += '<span class="pager-gap" aria-hidden="true">…</span>';
+        return;
+      }
+      markup += '<button type="button" data-page="' + item + '"' + (item === page ? ' aria-current="page"' : "") + ">" + item + "</button>";
+    });
+    markup += '<button type="button" data-page="next"' + (atEnd ? " disabled" : "") + ">Next &gt;</button>";
+    markup += '<button type="button" data-page="last"' + (atEnd ? " disabled" : "") + ">Last »</button>";
+    container.innerHTML = markup;
+  };
+
+  window.turnPage = function (page, pages, action) {
+    if (action === "first") return 1;
+    if (action === "prev") return Math.max(1, page - 1);
+    if (action === "next") return Math.min(pages, page + 1);
+    if (action === "last") return pages;
+    const next = Number(action);
+    if (!Number.isFinite(next)) return page;
+    return Math.min(Math.max(1, next), pages);
+  };
+
+  const COLORS = {
+    white: "#ffffff",
+    paper: "#f7f6f4",
+    line: "#e8e6e4",
+    ink: "#0d0d0d",
+    red: "#f40000",
+  };
+
+  const sidebar = document.getElementById("sidebar");
+  const menuToggle = document.getElementById("menu-toggle");
+  const scrim = document.getElementById("scrim");
+
+  function setSidebar(open) {
+    if (!sidebar || !menuToggle || !scrim) return;
+    sidebar.classList.toggle("is-open", open);
+    scrim.hidden = !open;
+    menuToggle.setAttribute("aria-expanded", String(open));
+  }
+
+  if (menuToggle && scrim && sidebar) {
+    menuToggle.addEventListener("click", () => {
+      setSidebar(!sidebar.classList.contains("is-open"));
+    });
+    scrim.addEventListener("click", () => setSidebar(false));
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 980) setSidebar(false);
+    });
+  }
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    setSidebar(false);
+    if (document.body.dataset.page === "dashboard") closeNotifications();
+  });
+
+  if (document.body.dataset.page !== "dashboard") return;
+
+  const STATUS_KEYS = ["pending", "processing", "shipped", "completed", "cancelled"];
+
+  const PERIODS = {
+    today: {
+      orders: 46,
+      items: 71,
+      aov: 214,
+      gross: 9844,
+      fees: 591,
+      refunds: 0,
+      net: 9253,
+      trends: { orders: 18.4, items: 9.2, aov: -3.1, gross: 14.6 },
+      statuses: { pending: 8, processing: 11, shipped: 9, completed: 16, cancelled: 2 },
+      shape: [0.08, 0.12, 0.18, 0.22, 0.24, 0.16],
+      span: 1,
+    },
+    week: {
+      orders: 312,
+      items: 804,
+      aov: 198,
+      gross: 61776,
+      fees: 3707,
+      refunds: 1280,
+      net: 56789,
+      trends: { orders: 6.4, items: 4.8, aov: 1.2, gross: 7.7 },
+      statuses: { pending: 24, processing: 48, shipped: 70, completed: 158, cancelled: 12 },
+      shape: [0.1, 0.12, 0.14, 0.16, 0.18, 0.17, 0.13],
+      span: 7,
+    },
+    month: {
+      orders: 1284,
+      items: 3460,
+      aov: 186,
+      gross: 238824,
+      fees: 14329,
+      refunds: 6420,
+      net: 218075,
+      trends: { orders: 12.4, items: 8.1, aov: -2.4, gross: 6.2 },
+      statuses: { pending: 64, processing: 140, shipped: 286, completed: 742, cancelled: 52 },
+      shape: [0.11, 0.13, 0.12, 0.15, 0.14, 0.2, 0.15],
+      span: 30,
+    },
+  };
+
+  const products = [
+    { productId: "STX-0984", name: "Cigarette Trouser, Black", stock: 0 },
+    { productId: "STX-1048", name: "Ivory Silk Column Dress", stock: 2 },
+    { productId: "STX-1102", name: "Noir Tailored Wool Blazer", stock: 3 },
+    { productId: "STX-1188", name: "Sculpt Leather Ankle Boot", stock: 4 },
+    { productId: "STX-1214", name: "Cashmere Funnel Coat", stock: 6 },
+    { productId: "STX-1306", name: "Pleated Satin Midi Skirt", stock: 8 },
+    { productId: "STX-1410", name: "Gold-Hardware Mini Bag", stock: 9 },
+    { productId: "STX-1522", name: "Merino Fine-Knit Polo", stock: 11 },
+    { productId: "STX-1601", name: "Organza Evening Shirt", stock: 14 },
+    { productId: "STX-1719", name: "Wide-Leg Trouser, Chalk", stock: 18 },
+    { productId: "STX-1804", name: "Suede Loafer, Espresso", stock: 24 },
+  ];
+
+  const reviews = [
+    { reviewerName: "Amelia Cho", rating: 5, productName: "Ivory Silk Column Dress", comment: "The drape is exacting. It arrived pressed and photographed exactly as it hangs.", date: daysAgo(1) },
+    { reviewerName: "Jonah Ellis", rating: 4, productName: "Noir Tailored Wool Blazer", comment: "Shoulder line is sharp. Sleeves ran a touch long for me.", date: daysAgo(2) },
+    { reviewerName: "Sofia Marchetti", rating: 5, productName: "Cashmere Funnel Coat", comment: "Weight is perfect for the city. The camel tone reads richer in person.", date: daysAgo(2) },
+    { reviewerName: "Leo Park", rating: 3, productName: "Sculpt Leather Ankle Boot", comment: "Beautiful last, but the leather needed a longer break-in than expected.", date: daysAgo(4) },
+    { reviewerName: "Priya Nair", rating: 5, productName: "Pleated Satin Midi Skirt", comment: "The pleats hold their shape. Easily the piece I reach for first.", date: daysAgo(5) },
+    { reviewerName: "Elena Voss", rating: 4, productName: "Gold-Hardware Mini Bag", comment: "Hardware is substantial and the strap sits cleanly on the shoulder.", date: daysAgo(6) },
+  ];
+
+  const followers = [
+    { avatar: "MC", userName: "Mina Chen", userId: "@mina.chen", followedDate: daysAgo(0) },
+    { avatar: "OR", userName: "Omar Rahman", userId: "@omar.rahman", followedDate: daysAgo(0) },
+    { avatar: "CL", userName: "Clara Lind", userId: "@clara.lind", followedDate: daysAgo(1) },
+    { avatar: "JM", userName: "Jules Moreau", userId: "@jules.moreau", followedDate: daysAgo(1) },
+    { avatar: "HK", userName: "Hana Kato", userId: "@hana.kato", followedDate: daysAgo(2) },
+    { avatar: "SB", userName: "Soren Blake", userId: "@soren.blake", followedDate: daysAgo(3) },
+    { avatar: "AN", userName: "Ayo Nwosu", userId: "@ayo.nwosu", followedDate: daysAgo(4) },
+    { avatar: "EP", userName: "Eva Petrov", userId: "@eva.petrov", followedDate: daysAgo(5) },
+  ];
+
+  const notifications = [
+    { id: "ntf-8942", type: "order", orderId: "STX-8942", message: "Order #STX-8942 was placed for the Ivory Silk Column Dress.", date: minutesAgo(2), isRead: false },
+    { id: "ntf-8940", type: "order", orderId: "STX-8940", message: "Order #STX-8940 moved to Processing.", date: minutesAgo(26), isRead: false },
+    { id: "ntf-stock", type: "system", message: "Cigarette Trouser, Black is now out of stock.", date: minutesAgo(48), isRead: false },
+    { id: "ntf-review", type: "system", message: "Amelia Cho left a 5-star review on Ivory Silk Column Dress.", date: minutesAgo(180), isRead: false },
+    { id: "ntf-8931", type: "order", orderId: "STX-8931", message: "Order #STX-8931 was shipped.", date: minutesAgo(300), isRead: true },
+    { id: "ntf-fee", type: "system", message: "November platform fee statement is ready to view.", date: minutesAgo(1200), isRead: true },
+    { id: "ntf-8922", type: "order", orderId: "STX-8922", message: "Order #STX-8922 was cancelled by the buyer.", date: minutesAgo(1560), isRead: true },
+    { id: "ntf-follow", type: "system", message: "4 new followers joined Atelier Noir today.", date: minutesAgo(1800), isRead: true },
+  ];
+
+  const state = {
+    period: "month",
+    threshold: 10,
+    fromDate: "",
+    toDate: "",
+    filter: "all",
+    stockPage: 1,
+    countdown: 60,
+    products,
+    notifications,
+  };
+
+  const fromInput = document.getElementById("fromDate");
+  const toInput = document.getElementById("toDate");
+  const thresholdInput = document.getElementById("stock-threshold");
+  const dropdown = document.getElementById("notification-dropdown");
+  const bellButton = document.getElementById("bell-button");
+  const bellWrap = document.querySelector(".bell-wrap");
+  let revenueChart = null;
+  let ordersChart = null;
+
+  document.querySelectorAll("[data-period]").forEach((button) => {
+    button.addEventListener("click", () => setPeriod(button.dataset.period));
+  });
+
+  document.getElementById("refresh-button").addEventListener("click", () => {
+    refreshDashboard();
+    announce("Dashboard refreshed.");
+  });
+
+  fromInput.addEventListener("change", onCustomDate);
+  toInput.addEventListener("change", onCustomDate);
+
+  thresholdInput.addEventListener("input", () => {
+    const value = Number(thresholdInput.value);
+    if (!Number.isFinite(value) || value < 0) return;
+    state.threshold = value;
+    state.stockPage = 1;
+    renderLowStock();
+    renderTicker();
+  });
+
+  document.getElementById("stock-pager").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-page]");
+    if (!button || button.disabled) return;
+    const paged = window.pageRows(lowStockItems(), state.stockPage);
+    state.stockPage = window.turnPage(paged.page, paged.pages, button.dataset.page);
+    renderLowStock();
+  });
+
+  document.getElementById("low-stock-list").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-product-id]");
+    if (!button) return;
+    restock(button.dataset.productId);
+  });
+
+  document.querySelectorAll("[data-filter]").forEach((button) => {
+    button.addEventListener("click", () => setFilter(button.dataset.filter));
+  });
+
+  document.getElementById("mark-all-read").addEventListener("click", markAllRead);
+  document.getElementById("dropdown-mark-read").addEventListener("click", markAllRead);
+
+  document.getElementById("recent-notifications-list").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-notification-id]");
+    if (!button) return;
+    markRead(button.dataset.notificationId);
+  });
+
+  document.getElementById("bell-list").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-notification-id]");
+    if (!button) return;
+    markRead(button.dataset.notificationId);
+  });
+
+  bellButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const willOpen = dropdown.hidden;
+    dropdown.hidden = !willOpen;
+    bellButton.setAttribute("aria-expanded", String(willOpen));
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!bellWrap.contains(event.target)) closeNotifications();
+  });
+
+  setPeriod("month", { silent: true });
+  renderLowStock();
+  renderReviews();
+  renderFollowers();
+  renderNotifications();
+  renderTicker();
+  renderCountdown();
+  window.setInterval(tick, 1000);
+
+  function setPeriod(period, options) {
+    state.period = period;
+    document.querySelectorAll("[data-period]").forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.period === period));
+    });
+    syncDateInputs();
+    renderPeriodData();
+    if (!options || !options.silent) announce("Showing " + periodName(period) + ".");
+  }
+
+  function setFilter(filter) {
+    state.filter = filter;
+    document.querySelectorAll("[data-filter]").forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.filter === filter));
+    });
+    renderNotifications();
+  }
+
+  function onCustomDate() {
+    state.fromDate = fromInput.value;
+    state.toDate = toInput.value;
+    if (state.period !== "custom") setPeriod("custom");
+    else renderPeriodData();
+  }
+
+  function syncDateInputs() {
+    if (state.period === "custom") {
+      if (!state.fromDate || !state.toDate) {
+        const to = new Date();
+        const from = new Date();
+        from.setDate(to.getDate() - 13);
+        state.fromDate = iso(from);
+        state.toDate = iso(to);
+      }
+      fromInput.value = state.fromDate;
+      toInput.value = state.toDate;
+      fromInput.disabled = false;
+      toInput.disabled = false;
+      return;
+    }
+
+    const span = PERIODS[state.period].span;
+    const to = new Date();
+    const from = new Date();
+    from.setDate(to.getDate() - (span - 1));
+    fromInput.value = iso(from);
+    toInput.value = iso(to);
+    fromInput.disabled = true;
+    toInput.disabled = true;
+  }
+
+  function renderPeriodData() {
+    const metrics = currentMetrics();
+    setText("metric-total-orders", formatNumber(metrics.orders));
+    setText("metric-total-items", formatNumber(metrics.items));
+    setText("metric-avg-order-value", formatMoney(metrics.aov));
+    setText("metric-gross-revenue", formatMoney(metrics.gross));
+    setTrend("metric-total-orders-trend", metrics.trends.orders);
+    setTrend("metric-total-items-trend", metrics.trends.items);
+    setTrend("metric-avg-order-value-trend", metrics.trends.aov);
+    setTrend("metric-gross-revenue-trend", metrics.trends.gross);
+
+    setText("rev-gross", formatMoney(metrics.gross));
+    setText("rev-fees", formatMoney(metrics.fees));
+    setText("rev-refunds", formatMoney(metrics.refunds));
+    setText("rev-net", formatMoney(metrics.net));
+    setText("revenue-range", periodName(state.period) + " · " + formatShort(fromInput.value) + " – " + formatShort(toInput.value));
+
+    STATUS_KEYS.forEach((key) => setText("orders-" + key, formatNumber(metrics.statuses[key])));
+    setText("orders-total", formatNumber(metrics.orders));
+    renderCharts(metrics);
+  }
+
+  function renderCharts(metrics) {
+    if (typeof Chart === "undefined") return;
+    const labels = chartLabels(metrics);
+    const gross = allocate(metrics.gross, metrics.shape);
+    const net = allocate(metrics.net, metrics.shape);
+    const line = document.getElementById("revenueLineChart");
+    const pie = document.getElementById("orderStatusPieChart");
+
+    if (revenueChart) {
+      revenueChart.data.labels = labels;
+      revenueChart.data.datasets[0].data = gross;
+      revenueChart.data.datasets[1].data = net;
+      revenueChart.update();
+    } else {
+      revenueChart = new Chart(line, {
+        type: "line",
+        data: {
+          labels,
+          datasets: [
+            lineDataset("Gross revenue", gross, COLORS.ink),
+            lineDataset("Net earnings", net, COLORS.red),
+          ],
+        },
+        options: {
+          animation: false,
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: "index", intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: COLORS.ink,
+              titleColor: COLORS.white,
+              bodyColor: COLORS.white,
+              borderColor: COLORS.line,
+              borderWidth: 1,
+              callbacks: {
+                label(context) {
+                  return context.dataset.label + ": " + formatMoney(context.parsed.y);
+                },
+              },
+            },
+          },
+          scales: {
+            x: axisOptions(),
+            y: Object.assign(axisOptions(), {
+              beginAtZero: true,
+              ticks: Object.assign(axisOptions().ticks, {
+                callback: (value) => axisMoney(value),
+              }),
+            }),
+          },
+        },
+      });
+    }
+
+    const statusData = STATUS_KEYS.map((key) => metrics.statuses[key]);
+    const statusColors = [
+      COLORS.red,
+      COLORS.ink,
+      COLORS.line,
+      stripePattern(COLORS.white, COLORS.ink),
+      stripePattern(COLORS.paper, COLORS.red),
+    ];
+
+    if (ordersChart) {
+      ordersChart.data.datasets[0].data = statusData;
+      ordersChart.update();
+    } else {
+      ordersChart = new Chart(pie, {
+        type: "doughnut",
+        data: {
+          labels: ["Pending", "Processing", "Shipped", "Completed", "Cancelled"],
+          datasets: [
+            {
+              data: statusData,
+              backgroundColor: statusColors,
+              borderColor: COLORS.white,
+              borderWidth: 2,
+              hoverOffset: 4,
+            },
+          ],
+        },
+        options: {
+          animation: false,
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: "68%",
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: COLORS.ink,
+              titleColor: COLORS.white,
+              bodyColor: COLORS.white,
+              callbacks: {
+                label(context) {
+                  return context.label + ": " + formatNumber(context.parsed);
+                },
+              },
+            },
+          },
+        },
+      });
+    }
+  }
+
+  function renderLowStock() {
+    const items = lowStockItems();
+    const paged = window.pageRows(items, state.stockPage);
+    state.stockPage = paged.page;
+    const list = document.getElementById("low-stock-list");
+    if (!items.length) {
+      list.innerHTML = '<tr><td colspan="5" class="empty-copy">No items at or below this threshold.</td></tr>';
+    } else {
+      list.innerHTML = paged.rows
+      .map((product) => {
+        return (
+          "<tr data-product-id=\"" + escapeHtml(product.productId) + "\" data-stock=\"" + product.stock + "\" data-threshold=\"" + state.threshold + "\">" +
+            "<td class=\"product-id\" data-field=\"productId\">" + escapeHtml(product.productId) + "</td>" +
+            "<td data-field=\"name\">" + escapeHtml(product.name) + "</td>" +
+            "<td class=\"stock-count\" data-field=\"stock\">" + formatNumber(product.stock) + "</td>" +
+            "<td data-field=\"threshold\">" + formatNumber(state.threshold) + "</td>" +
+            "<td><button type=\"button\" class=\"restock-btn\" data-product-id=\"" + escapeHtml(product.productId) + "\">Restock</button></td>" +
+          "</tr>"
+        );
+      })
+      .join("");
+    }
+    window.renderPager(document.getElementById("stock-pager"), state.stockPage, paged.pages);
+  }
+
+  function renderReviews() {
+    document.getElementById("recent-reviews-list").innerHTML = reviews
+      .map((review) => {
+        return (
+          "<article class=\"review\" data-reviewer-name=\"" + escapeHtml(review.reviewerName) + "\" data-rating=\"" + review.rating + "\" data-product-name=\"" + escapeHtml(review.productName) + "\" data-date=\"" + escapeHtml(review.date) + "\">" +
+            "<div class=\"review-top\">" +
+              "<h3 data-field=\"reviewerName\">" + escapeHtml(review.reviewerName) + "</h3>" +
+              "<time datetime=\"" + escapeHtml(review.date) + "\" data-field=\"date\">" + formatShort(review.date.slice(0, 10)) + "</time>" +
+            "</div>" +
+            "<div class=\"stars\" role=\"img\" aria-label=\"Rated " + review.rating + " out of 5\" data-field=\"rating\">" + stars(review.rating) + "</div>" +
+            "<span class=\"product-badge\" data-field=\"productName\">" + escapeHtml(review.productName) + "</span>" +
+            "<p class=\"comment\" data-field=\"comment\">" + escapeHtml(review.comment) + "</p>" +
+          "</article>"
+        );
+      })
+      .join("");
+  }
+
+  function renderFollowers() {
+    document.getElementById("recent-followers-list").innerHTML = followers
+      .map((follower) => {
+        return (
+          "<article class=\"follower\" data-user-id=\"" + escapeHtml(follower.userId) + "\" data-avatar=\"" + escapeHtml(follower.avatar) + "\" data-followed-date=\"" + escapeHtml(follower.followedDate) + "\">" +
+            "<span class=\"avatar\" aria-hidden=\"true\">" + escapeHtml(follower.avatar) + "</span>" +
+            "<div>" +
+              "<h3 data-field=\"userName\">" + escapeHtml(follower.userName) + "</h3>" +
+              "<p data-field=\"userId\">" + escapeHtml(follower.userId) + "</p>" +
+            "</div>" +
+            "<time datetime=\"" + escapeHtml(follower.followedDate) + "\" data-field=\"followedDate\">" + formatShort(follower.followedDate.slice(0, 10)) + "</time>" +
+          "</article>"
+        );
+      })
+      .join("");
+  }
+
+  function renderNotifications() {
+    const visible = filteredNotifications();
+    const list = document.getElementById("recent-notifications-list");
+    list.innerHTML = visible.length
+      ? visible.map(notificationMarkup).join("")
+      : '<p class="empty-copy">No notifications in this view.</p>';
+    renderBell();
+  }
+
+  function renderBell() {
+    const unread = state.notifications.filter((item) => !item.isRead);
+    const badge = document.getElementById("notification-count");
+    badge.textContent = String(unread.length);
+    badge.hidden = unread.length === 0;
+    bellButton.setAttribute("aria-label", "Notifications, " + unread.length + " unread");
+    const bellList = document.getElementById("bell-list");
+    bellList.innerHTML = unread.length
+      ? unread.map(notificationMarkup).join("")
+      : '<p class="empty-copy">You are caught up.</p>';
+  }
+
+  function renderTicker() {
+    const latest = state.notifications.find((item) => item.type === "order" && item.orderId);
+    const detail = latest
+      ? "Order #" + latest.orderId + " placed " + relativeTime(latest.date)
+      : "No new order alerts.";
+    setText("ticker-detail", detail);
+    const items = lowStockItems();
+    const noun = items.length === 1 ? "item" : "items";
+    setText("low-stock-banner-text", items.length + " " + noun + " at or below " + state.threshold + " units");
+  }
+
+  function renderCountdown() {
+    setText("refresh-countdown", String(state.countdown));
+  }
+
+  function refreshDashboard() {
+    state.countdown = 60;
+    renderCountdown();
+    renderPeriodData();
+    renderTicker();
+    const icon = document.querySelector("#refresh-button i");
+    if (icon) {
+      icon.classList.remove("is-spinning");
+      void icon.offsetWidth;
+      icon.classList.add("is-spinning");
+    }
+  }
+
+  function tick() {
+    state.countdown -= 1;
+    if (state.countdown <= 0) {
+      refreshDashboard();
+      return;
+    }
+    renderCountdown();
+    renderTicker();
+  }
+
+  function restock(productId) {
+    const product = state.products.find((item) => item.productId === productId);
+    if (!product) return;
+    product.stock += 10;
+    renderLowStock();
+    renderTicker();
+    announce("Restocked " + product.name + ". Stock is now " + product.stock + ".");
+  }
+
+  function markAllRead() {
+    state.notifications.forEach((item) => {
+      item.isRead = true;
+    });
+    renderNotifications();
+    renderTicker();
+    announce("All notifications marked as read.");
+  }
+
+  function markRead(id) {
+    const item = state.notifications.find((entry) => entry.id === id);
+    if (!item || item.isRead) return;
+    item.isRead = true;
+    renderNotifications();
+  }
+
+  function closeNotifications() {
+    if (!dropdown || !bellButton) return;
+    dropdown.hidden = true;
+    bellButton.setAttribute("aria-expanded", "false");
+  }
+
+  function currentMetrics() {
+    if (state.period !== "custom") return PERIODS[state.period];
+    return customMetrics();
+  }
+
+  function customMetrics() {
+    const from = parseDate(state.fromDate);
+    const to = parseDate(state.toDate);
+    let days = 14;
+    if (from !== null && to !== null) {
+      days = Math.round((Math.max(from, to) - Math.min(from, to)) / 86400000) + 1;
+    }
+    days = Math.max(1, Math.min(days, 90));
+    const gross = Math.round(9844 * days * 0.72);
+    const fees = Math.round(gross * 0.06);
+    const refunds = Math.round(gross * 0.025);
+    const net = gross - fees - refunds;
+    const orders = Math.max(1, Math.round(46 * days * 0.68));
+    const items = Math.round(orders * 2.4);
+    const buckets = Math.min(8, days);
+    return {
+      orders,
+      items,
+      aov: gross / orders,
+      gross,
+      fees,
+      refunds,
+      net,
+      trends: { orders: 3.2, items: 2.1, aov: -1.4, gross: 4.4 },
+      statuses: statusSplit(orders),
+      shape: Array.from({ length: buckets }, () => 1),
+      span: days,
+    };
+  }
+
+  function chartLabels(metrics) {
+    if (state.period === "today") return ["09:00", "11:00", "13:00", "15:00", "17:00", "19:00"];
+    if (state.period === "custom") {
+      const count = metrics.shape.length;
+      const end = parseDate(state.toDate) || Date.now();
+      const start = parseDate(state.fromDate) || end;
+      const from = Math.min(start, end);
+      const to = Math.max(start, end);
+      return Array.from({ length: count }, (_, index) => {
+        const time = count === 1 ? to : from + ((to - from) * index) / (count - 1);
+        return formatShort(iso(new Date(time)));
+      });
+    }
+
+    const dates = [];
+    for (let index = metrics.span - 1; index >= 0; index -= 1) {
+      const date = new Date();
+      date.setDate(date.getDate() - index);
+      dates.push(date);
+    }
+    if (state.period === "week") {
+      return dates.map((date) => date.toLocaleDateString("en-US", { weekday: "short" }));
+    }
+    const step = (dates.length - 1) / (metrics.shape.length - 1);
+    return metrics.shape.map((_, index) => formatShort(iso(dates[Math.round(index * step)])));
+  }
+
+  function lowStockItems() {
+    return state.products
+      .filter((product) => product.stock <= state.threshold)
+      .sort((a, b) => a.stock - b.stock || a.name.localeCompare(b.name));
+  }
+
+  function filteredNotifications() {
+    return state.notifications
+      .filter((item) => {
+        if (state.filter === "unread") return !item.isRead;
+        if (state.filter === "orders") return item.type === "order";
+        if (state.filter === "system") return item.type === "system";
+        return true;
+      })
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
+  }
+
+  function notificationMarkup(item) {
+    const icon = item.type === "order" ? "ri-shopping-bag-line" : "ri-error-warning-line";
+    const label = item.type === "order" ? "Order" : "System";
+    return (
+      "<button type=\"button\" class=\"note" + (item.isRead ? "" : " is-unread") + "\" data-notification-id=\"" + escapeHtml(item.id) + "\" data-type=\"" + item.type + "\" data-read=\"" + item.isRead + "\" data-date=\"" + escapeHtml(item.date) + "\">" +
+        "<span class=\"note-icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>" +
+        "<span class=\"note-copy\">" +
+          "<span class=\"note-type\" data-field=\"type\">" + label + "</span>" +
+          "<span class=\"note-message\" data-field=\"message\">" + escapeHtml(item.message) + "</span>" +
+          "<time class=\"note-time\" datetime=\"" + escapeHtml(item.date) + "\" data-field=\"date\">" + relativeTime(item.date) + "</time>" +
+        "</span>" +
+        "<span class=\"unread-dot\" data-read=\"" + item.isRead + "\" data-field=\"isRead\"></span>" +
+      "</button>"
+    );
+  }
+
+  function stars(rating) {
+    let markup = "";
+    for (let index = 1; index <= 5; index += 1) {
+      markup += "<i class=\"" + (index <= rating ? "ri-star-fill" : "ri-star-line is-empty") + "\" aria-hidden=\"true\"></i>";
+    }
+    return markup;
+  }
+
+  function lineDataset(label, data, color) {
+    return {
+      label,
+      data,
+      borderColor: color,
+      backgroundColor: color,
+      pointBackgroundColor: color,
+      pointBorderColor: COLORS.white,
+      pointBorderWidth: 2,
+      borderWidth: 2,
+      tension: 0.35,
+      pointRadius: 3,
+      pointHoverRadius: 5,
+    };
+  }
+
+  function axisOptions() {
+    return {
+      grid: { color: COLORS.line },
+      border: { color: COLORS.line },
+      ticks: {
+        color: COLORS.ink,
+        font: { family: "'Roboto Flex', sans-serif" },
+      },
+    };
+  }
+
+  function stripePattern(base, stripe) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 6;
+    canvas.height = 6;
+    const context = canvas.getContext("2d");
+    context.fillStyle = base;
+    context.fillRect(0, 0, 6, 6);
+    context.strokeStyle = stripe;
+    context.lineWidth = 2;
+    context.beginPath();
+    context.moveTo(0, 6);
+    context.lineTo(6, 0);
+    context.stroke();
+    return context.createPattern(canvas, "repeat");
+  }
+
+  function statusSplit(total) {
+    const counts = allocate(total, [64, 140, 286, 742, 52]);
+    return {
+      pending: counts[0],
+      processing: counts[1],
+      shipped: counts[2],
+      completed: counts[3],
+      cancelled: counts[4],
+    };
+  }
+
+  function allocate(total, weights) {
+    const sum = weights.reduce((totalWeight, weight) => totalWeight + weight, 0);
+    const values = weights.map((weight) => Math.floor((total * weight) / sum));
+    let leftover = Math.round(total) - values.reduce((totalValue, value) => totalValue + value, 0);
+    let index = 0;
+    while (leftover > 0) {
+      values[index % values.length] += 1;
+      leftover -= 1;
+      index += 1;
+    }
+    return values;
+  }
+
+  function setTrend(id, value) {
+    const node = document.getElementById(id);
+    if (!node) return;
+    const negative = value < 0;
+    node.className = "trend" + (negative ? " is-down" : "");
+    node.dataset.trend = String(value);
+    node.innerHTML = (negative ? "−" : "+") + Math.abs(value).toFixed(1) + "% <span>vs prior period</span>";
+  }
+
+  function setText(id, value) {
+    const node = document.getElementById(id);
+    if (node) node.textContent = value;
+  }
+
+  function announce(message) {
+    const node = document.getElementById("status-live");
+    if (!node) return;
+    node.textContent = "";
+    window.setTimeout(() => {
+      node.textContent = message;
+    }, 20);
+  }
+
+  function periodName(period) {
+    if (period === "today") return "Today";
+    if (period === "week") return "Week";
+    if (period === "month") return "Month";
+    return "Custom";
+  }
+
+  function formatMoney(value) {
+    const cents = Math.round(value * 100) % 100 !== 0;
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: cents ? 2 : 0,
+      maximumFractionDigits: cents ? 2 : 0,
+    }).format(value);
+  }
+
+  function formatNumber(value) {
+    return new Intl.NumberFormat("en-US").format(value);
+  }
+
+  function axisMoney(value) {
+    if (Math.abs(value) >= 1000) {
+      const compact = value / 1000;
+      return "$" + compact.toFixed(compact >= 10 ? 0 : 1) + "k";
+    }
+    return formatMoney(value);
+  }
+
+  function formatShort(isoDate) {
+    const time = parseDate(isoDate);
+    if (time === null) return "";
+    return new Date(time).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  }
+
+  function relativeTime(isoDate) {
+    const delta = Date.now() - new Date(isoDate).getTime();
+    const minutes = Math.max(0, Math.round(delta / 60000));
+    if (minutes < 1) return "just now";
+    if (minutes < 60) return minutes + (minutes === 1 ? " min ago" : " mins ago");
+    const hours = Math.round(minutes / 60);
+    if (hours < 24) return hours + (hours === 1 ? " hour ago" : " hours ago");
+    const days = Math.round(hours / 24);
+    return days + (days === 1 ? " day ago" : " days ago");
+  }
+
+  function parseDate(value) {
+    if (!value) return null;
+    const parts = value.split("-").map(Number);
+    if (parts.length < 3 || parts.some((part) => !part)) return null;
+    return new Date(parts[0], parts[1] - 1, parts[2]).getTime();
+  }
+
+  function iso(date) {
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return date.getFullYear() + "-" + month + "-" + day;
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll("\"", "&quot;");
+  }
+
+  function minutesAgo(minutes) {
+    return new Date(Date.now() - minutes * 60000).toISOString();
+  }
+
+  function daysAgo(days) {
+    const date = new Date();
+    date.setDate(date.getDate() - days);
+    return iso(date);
+  }
+})();

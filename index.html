@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f6f4" />
+    <title>Stylex</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body data-page="dashboard">
+    <a class="skip" href="#content">Skip to content</a>
+    <div class="layout">
+      <aside class="sidebar" id="sidebar">
+        <a class="brand" href="index.html">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">Stylex</span>
+        </a>
+        <p class="nav-kicker">Shop</p>
+        <nav class="nav" id="shop-nav" aria-label="Shop">
+          <a class="nav-link is-active" href="index.html" aria-current="page">
+            <i class="ri-dashboard-line" aria-hidden="true"></i>
+            <span>Dashboard</span>
+          </a>
+          <a class="nav-link" href="orders.html">
+            <i class="ri-shopping-bag-line" aria-hidden="true"></i>
+            <span>Orders</span>
+          </a>
+          <a class="nav-link" href="products.html">
+            <i class="ri-stack-line" aria-hidden="true"></i>
+            <span>Products</span>
+          </a>
+          <a class="nav-link" href="finance.html">
+            <i class="ri-wallet-line" aria-hidden="true"></i>
+            <span>Revenue & Finance</span>
+          </a>
+          <a class="nav-link" href="reviews.html">
+            <i class="ri-star-line" aria-hidden="true"></i>
+            <span>Reviews</span>
+          </a>
+          <a class="nav-link" href="followers.html">
+            <i class="ri-group-line" aria-hidden="true"></i>
+            <span>Followers</span>
+          </a>
+          <a class="nav-link" href="notifications.html">
+            <i class="ri-notification-3-line" aria-hidden="true"></i>
+            <span>Notifications</span>
+          </a>
+          <a class="nav-link" href="setting.html">
+            <i class="ri-settings-3-line" aria-hidden="true"></i>
+            <span>Settings</span>
+          </a>
+        </nav>
+        <div class="shop-profile">
+          <span class="avatar" aria-hidden="true">AN</span>
+          <div>
+            <p class="shop-name">Atelier Noir</p>
+            <p class="shop-meta">@atelier.noir</p>
+          </div>
+        </div>
+      </aside>
+
+      <div class="main">
+        <div class="masthead">
+          <header class="topbar">
+            <div class="topbar-row">
+              <div class="topbar-left">
+                <button
+                  class="icon-btn menu-btn"
+                  id="menu-toggle"
+                  type="button"
+                  aria-label="Open menu"
+                  aria-expanded="false"
+                  aria-controls="sidebar"
+                >
+                  <i class="ri-menu-line" aria-hidden="true"></i>
+                </button>
+                <h1 class="page-title">Shop Dashboard</h1>
+                <div class="refresh-badge">
+                  <span
+                    >Auto-refresh: <span id="refresh-countdown">60</span>s</span
+                  >
+                  <button
+                    type="button"
+                    id="refresh-button"
+                    aria-label="Refresh dashboard"
+                  >
+                    <i class="ri-refresh-line" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="bell-wrap">
+                <button
+                  class="icon-btn bell-btn"
+                  id="bell-button"
+                  type="button"
+                  aria-label="Notifications"
+                  aria-expanded="false"
+                  aria-controls="notification-dropdown"
+                >
+                  <i class="ri-notification-3-line" aria-hidden="true"></i>
+                  <span class="bell-badge" id="notification-count">4</span>
+                </button>
+                <div class="dropdown" id="notification-dropdown" hidden>
+                  <div class="dropdown-head">
+                    <p class="card-title">Notifications</p>
+                    <button
+                      type="button"
+                      class="text-btn"
+                      id="dropdown-mark-read"
+                    >
+                      Mark all as read
+                    </button>
+                  </div>
+                  <div class="dropdown-list" id="bell-list"></div>
+                </div>
+              </div>
+            </div>
+            <div class="topbar-row">
+              <div class="topbar-right">
+                <div class="segment" role="group" aria-label="Period">
+                  <button
+                    type="button"
+                    data-period="today"
+                    aria-pressed="false"
+                  >
+                    Today
+                  </button>
+                  <button type="button" data-period="week" aria-pressed="false">
+                    Week
+                  </button>
+                  <button type="button" data-period="month" aria-pressed="true">
+                    Month
+                  </button>
+                  <button
+                    type="button"
+                    data-period="custom"
+                    aria-pressed="false"
+                  >
+                    Custom
+                  </button>
+                </div>
+                <div class="date-range">
+                  <label class="date-field">
+                    From
+                    <input id="fromDate" name="fromDate" type="date" />
+                  </label>
+                  <label class="date-field">
+                    To
+                    <input id="toDate" name="toDate" type="date" />
+                  </label>
+                </div>
+              </div>
+            </div>
+          </header>
+          <div class="ticker">
+            <p class="ticker-alert" id="ticker-message">
+              <i class="ri-megaphone-line" aria-hidden="true"></i>
+              <strong>New order alert</strong>
+              <span id="ticker-detail">Order #STX-8942 placed 2 mins ago</span>
+            </p>
+            <p class="ticker-stock" id="low-stock-banner">
+              <i class="ri-alert-line" aria-hidden="true"></i>
+              <span id="low-stock-banner-text"
+                >7 items at or below 10 units</span
+              >
+            </p>
+          </div>
+        </div>
+
+        <main class="canvas" id="content">
+          <div class="board">
+            <article class="card kpi-card span-3">
+              <p class="kpi-label">Total Orders</p>
+              <p
+                class="kpi-value"
+                id="metric-total-orders"
+                data-metric="totalOrders"
+              >
+                1,284
+              </p>
+              <p class="trend" id="metric-total-orders-trend" data-trend="12.4">
+                +12.4% <span>vs prior period</span>
+              </p>
+            </article>
+            <article class="card kpi-card span-3">
+              <p class="kpi-label">Total Items Sold</p>
+              <p
+                class="kpi-value"
+                id="metric-total-items"
+                data-metric="totalItems"
+              >
+                3,460
+              </p>
+              <p class="trend" id="metric-total-items-trend" data-trend="8.1">
+                +8.1% <span>vs prior period</span>
+              </p>
+            </article>
+            <article class="card kpi-card span-3">
+              <p class="kpi-label">Average Order Value</p>
+              <p
+                class="kpi-value"
+                id="metric-avg-order-value"
+                data-metric="averageOrderValue"
+              >
+                $186
+              </p>
+              <p
+                class="trend is-down"
+                id="metric-avg-order-value-trend"
+                data-trend="-2.4"
+              >
+                −2.4% <span>vs prior period</span>
+              </p>
+            </article>
+            <article class="card kpi-card span-3">
+              <p class="kpi-label">Gross Revenue</p>
+              <p
+                class="kpi-value"
+                id="metric-gross-revenue"
+                data-metric="grossRevenue"
+              >
+                $238,824
+              </p>
+              <p class="trend" id="metric-gross-revenue-trend" data-trend="6.2">
+                +6.2% <span>vs prior period</span>
+              </p>
+            </article>
+
+            <article class="card span-8" id="revenue-panel">
+              <header class="card-head">
+                <h2 class="card-title">Revenue Summary</h2>
+                <div class="segment" role="group" aria-label="Revenue period">
+                  <button
+                    type="button"
+                    data-period="today"
+                    aria-pressed="false"
+                  >
+                    Today
+                  </button>
+                  <button type="button" data-period="week" aria-pressed="false">
+                    Week
+                  </button>
+                  <button type="button" data-period="month" aria-pressed="true">
+                    Month
+                  </button>
+                  <button
+                    type="button"
+                    data-period="custom"
+                    aria-pressed="false"
+                  >
+                    Custom
+                  </button>
+                </div>
+              </header>
+              <div class="card-body">
+                <div class="rev-grid">
+                  <div class="rev-stat">
+                    <p class="rev-label">Gross Revenue</p>
+                    <p class="rev-value" id="rev-gross" data-field="gross">
+                      $238,824
+                    </p>
+                  </div>
+                  <div class="rev-stat">
+                    <p class="rev-label">Platform Fees</p>
+                    <p class="rev-value" id="rev-fees" data-field="fees">
+                      $14,329
+                    </p>
+                  </div>
+                  <div class="rev-stat">
+                    <p class="rev-label">Refunds</p>
+                    <p
+                      class="rev-value is-negative"
+                      id="rev-refunds"
+                      data-field="refunds"
+                    >
+                      $6,420
+                    </p>
+                  </div>
+                  <div class="rev-stat is-net">
+                    <p class="rev-label">Net Earnings</p>
+                    <p class="rev-value" id="rev-net" data-field="net">
+                      $218,075
+                    </p>
+                  </div>
+                </div>
+                <p class="range-note" id="revenue-range"></p>
+                <div class="chart-legend">
+                  <span
+                    ><i class="legend-swatch is-gross"></i> Gross revenue</span
+                  >
+                  <span><i class="legend-swatch is-net"></i> Net earnings</span>
+                </div>
+                <div class="chart-box">
+                  <canvas
+                    id="revenueLineChart"
+                    role="img"
+                    aria-label="Gross revenue and net earnings over the selected period"
+                  ></canvas>
+                </div>
+              </div>
+            </article>
+
+            <article class="card span-4" id="orders-panel">
+              <header class="card-head">
+                <h2 class="card-title">Orders</h2>
+              </header>
+              <div class="card-body">
+                <div class="orders-layout">
+                  <div class="pie-box">
+                    <canvas
+                      id="orderStatusPieChart"
+                      role="img"
+                      aria-label="Orders by status"
+                    ></canvas>
+                    <div class="pie-center">
+                      <strong id="orders-total" data-field="ordersTotal"
+                        >1,284</strong
+                      >
+                      <span>Orders</span>
+                    </div>
+                  </div>
+                  <ul class="status-list">
+                    <li>
+                      <span class="swatch" data-status="pending"></span>
+                      <span>Pending</span>
+                      <span
+                        class="status-count"
+                        id="orders-pending"
+                        data-field="pending"
+                        >64</span
+                      >
+                    </li>
+                    <li>
+                      <span class="swatch" data-status="processing"></span>
+                      <span>Processing</span>
+                      <span
+                        class="status-count"
+                        id="orders-processing"
+                        data-field="processing"
+                        >140</span
+                      >
+                    </li>
+                    <li>
+                      <span class="swatch" data-status="shipped"></span>
+                      <span>Shipped</span>
+                      <span
+                        class="status-count"
+                        id="orders-shipped"
+                        data-field="shipped"
+                        >286</span
+                      >
+                    </li>
+                    <li>
+                      <span class="swatch" data-status="completed"></span>
+                      <span>Completed</span>
+                      <span
+                        class="status-count"
+                        id="orders-completed"
+                        data-field="completed"
+                        >742</span
+                      >
+                    </li>
+                    <li>
+                      <span class="swatch" data-status="cancelled"></span>
+                      <span>Cancelled</span>
+                      <span
+                        class="status-count"
+                        id="orders-cancelled"
+                        data-field="cancelled"
+                        >52</span
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+
+            <article class="card span-6 is-alert" id="low-stock-panel">
+              <header class="card-head">
+                <div class="card-head-title">
+                  <h2 class="card-title" id="low-stock-title">Low Stock</h2>
+                  <span class="warn-badge">Low stock</span>
+                </div>
+                <label class="threshold-field" for="stock-threshold">
+                  Threshold
+                  <input
+                    id="stock-threshold"
+                    data-field="threshold"
+                    type="number"
+                    min="0"
+                    max="999"
+                    step="1"
+                    value="10"
+                    inputmode="numeric"
+                  />
+                </label>
+              </header>
+              <div class="card-body">
+                <div class="table-wrap">
+                  <table class="data-table" aria-labelledby="low-stock-title">
+                    <thead>
+                      <tr>
+                        <th scope="col">Product ID</th>
+                        <th scope="col">Item</th>
+                        <th scope="col">Stock</th>
+                        <th scope="col">Threshold</th>
+                        <th scope="col"><span class="sr-only">Action</span></th>
+                      </tr>
+                    </thead>
+                    <tbody id="low-stock-list"></tbody>
+                  </table>
+                </div>
+                <nav
+                  class="pager"
+                  id="stock-pager"
+                  aria-label="Low stock pages"
+                ></nav>
+              </div>
+            </article>
+
+            <article class="card span-6">
+              <header class="card-head">
+                <h2 class="card-title">Recent Reviews</h2>
+              </header>
+              <div class="card-body">
+                <div class="feed" id="recent-reviews-list"></div>
+              </div>
+            </article>
+
+            <article class="card span-6">
+              <header class="card-head">
+                <h2 class="card-title">New Followers</h2>
+              </header>
+              <div class="card-body">
+                <div id="recent-followers-list"></div>
+              </div>
+            </article>
+
+            <article class="card span-6">
+              <header class="card-head">
+                <div class="card-head-title">
+                  <h2 class="card-title">Notifications</h2>
+                </div>
+                <div class="card-tools">
+                  <div
+                    class="segment"
+                    role="group"
+                    aria-label="Notification filter"
+                  >
+                    <button type="button" data-filter="all" aria-pressed="true">
+                      All
+                    </button>
+                    <button
+                      type="button"
+                      data-filter="unread"
+                      aria-pressed="false"
+                    >
+                      Unread
+                    </button>
+                    <button
+                      type="button"
+                      data-filter="orders"
+                      aria-pressed="false"
+                    >
+                      Orders
+                    </button>
+                    <button
+                      type="button"
+                      data-filter="system"
+                      aria-pressed="false"
+                    >
+                      System
+                    </button>
+                  </div>
+                  <button type="button" class="text-btn" id="mark-all-read">
+                    Mark all as read
+                  </button>
+                </div>
+              </header>
+              <div class="card-body">
+                <div class="feed" id="recent-notifications-list"></div>
+              </div>
+            </article>
+          </div>
+        </main>
+      </div>
+    </div>
+    <button
+      class="scrim"
+      id="scrim"
+      type="button"
+      hidden
+      aria-label="Close menu"
+    ></button>
+    <div id="status-live" class="sr-only" aria-live="polite"></div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>

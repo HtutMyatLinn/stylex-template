@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f6f4" />
+    <title>Products · Stylex</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body data-page="products">
+    <a class="skip" href="#content">Skip to content</a>
+    <div class="layout">
+      <aside class="sidebar" id="sidebar">
+        <a class="brand" href="index.html">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-lockup">
+            <span class="brand-name">Stylex</span>
+            <span class="brand-sub">Seller Center</span>
+          </span>
+        </a>
+        <p class="nav-kicker">Shop</p>
+        <nav class="nav" id="shop-nav" aria-label="Shop">
+          <a class="nav-link" href="index.html">
+            <i class="ri-dashboard-line" aria-hidden="true"></i>
+            <span>Dashboard</span>
+          </a>
+          <a class="nav-link" href="orders.html">
+            <i class="ri-shopping-bag-line" aria-hidden="true"></i>
+            <span>Orders</span>
+          </a>
+          <a class="nav-link is-active" href="products.html" aria-current="page">
+            <i class="ri-stack-line" aria-hidden="true"></i>
+            <span>Products</span>
+          </a>
+          <a class="nav-link" href="finance.html">
+            <i class="ri-wallet-line" aria-hidden="true"></i>
+            <span>Revenue & Finance</span>
+          </a>
+          <a class="nav-link" href="reviews.html">
+            <i class="ri-star-line" aria-hidden="true"></i>
+            <span>Reviews</span>
+          </a>
+          <a class="nav-link" href="followers.html">
+            <i class="ri-group-line" aria-hidden="true"></i>
+            <span>Followers</span>
+          </a>
+          <a class="nav-link" href="notifications.html">
+            <i class="ri-notification-3-line" aria-hidden="true"></i>
+            <span>Notifications</span>
+          </a>
+          <a class="nav-link" href="setting.html">
+            <i class="ri-settings-3-line" aria-hidden="true"></i>
+            <span>Settings</span>
+          </a>
+        </nav>
+        <div class="shop-profile">
+          <span class="avatar" aria-hidden="true">AN</span>
+          <div>
+            <p class="shop-name">Atelier Noir</p>
+            <p class="shop-meta">@atelier.noir</p>
+          </div>
+        </div>
+      </aside>
+      <div class="main">
+        <div class="masthead">
+          <header class="topbar">
+            <div class="topbar-left">
+              <button class="icon-btn menu-btn" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
+                <i class="ri-menu-line" aria-hidden="true"></i>
+              </button>
+              <h1 class="page-title">Products</h1>
+            </div>
+          </header>
+        </div>
+        <main class="canvas" id="content">
+          <div class="products-workspace" id="products-app">
+            <section class="product-view is-shown" id="inventory-view" data-view="list">
+              <div class="inventory-head">
+                <button class="btn" id="create-product" type="button">+ Create product</button>
+              </div>
+              <div class="toolbar">
+                <input class="search" id="product-search" type="search" placeholder="Search name or SKU" aria-label="Search by product name or SKU" />
+                <label class="threshold-field" for="low-stock-threshold">
+                  Low stock alert threshold
+                  <input id="low-stock-threshold" type="number" min="0" max="999" step="1" value="10" inputmode="numeric" />
+                </label>
+              </div>
+              <div class="status-tabs" id="status-tabs" role="tablist" aria-label="Product status"></div>
+              <div class="table-scroll">
+                <table class="product-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Product</th>
+                      <th scope="col">SKU & variants</th>
+                      <th scope="col">Selling type</th>
+                      <th scope="col">Price</th>
+                      <th scope="col">Stock</th>
+                      <th scope="col">Restock date</th>
+                      <th scope="col">Visibility</th>
+                      <th scope="col"><span class="sr-only">Actions</span></th>
+                    </tr>
+                  </thead>
+                  <tbody id="product-table"></tbody>
+                </table>
+              </div>
+              <nav class="pager" id="product-pager" aria-label="Product pages"></nav>
+            </section>
+
+            <section class="product-view" id="editor-view" data-view="edit" hidden>
+              <div class="editor-bar">
+                <button class="btn is-ghost" id="editor-back" type="button">Back</button>
+                <p class="editor-kicker" id="editor-kicker">New product</p>
+                <div class="editor-actions">
+                  <button class="btn" id="publish-product" type="button">Publish product</button>
+                </div>
+              </div>
+
+              <div class="editor-grid">
+                <div>
+                  <section class="panel">
+                    <h2>Basic information</h2>
+                    <label class="field">
+                      <span>Product name <i class="req">*</i></span>
+                      <input id="product-name" data-field="name" type="text" maxlength="120" />
+                    </label>
+                    <label class="field">
+                      <span>Category <i class="req">*</i></span>
+                      <select id="product-category" data-field="category">
+                        <option value="">Select a category</option>
+                        <option>Outerwear</option>
+                        <option>Dresses</option>
+                        <option>Footwear</option>
+                        <option>Accessories</option>
+                        <option>Knitwear</option>
+                      </select>
+                    </label>
+                    <label class="field">
+                      <span>Description</span>
+                      <textarea id="product-description" data-field="description" rows="5" maxlength="500"></textarea>
+                      <span class="hint" id="desc-count">0 / 500</span>
+                    </label>
+                    <div class="field">
+                      <span>Tags</span>
+                      <input id="tag-input" type="text" placeholder="Type a tag, then Enter" />
+                      <div class="chips" id="tag-chips"></div>
+                    </div>
+                    <label class="switch">
+                      <input id="size-toggle" type="checkbox" />
+                      <span>Attach size chart</span>
+                    </label>
+                    <div class="conditional" id="size-chart">
+                      <div class="conditional-inner">
+                        <table class="measure-table">
+                          <thead>
+                            <tr>
+                              <th scope="col">Size</th>
+                              <th scope="col">Chest</th>
+                              <th scope="col">Waist</th>
+                              <th scope="col">Length</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <th scope="row">S</th>
+                              <td><input id="m-S-chest" data-measure="S-chest" type="text" inputmode="decimal" /></td>
+                              <td><input id="m-S-waist" data-measure="S-waist" type="text" inputmode="decimal" /></td>
+                              <td><input id="m-S-length" data-measure="S-length" type="text" inputmode="decimal" /></td>
+                            </tr>
+                            <tr>
+                              <th scope="row">M</th>
+                              <td><input id="m-M-chest" data-measure="M-chest" type="text" /></td>
+                              <td><input id="m-M-waist" data-measure="M-waist" type="text" /></td>
+                              <td><input id="m-M-length" data-measure="M-length" type="text" /></td>
+                            </tr>
+                            <tr>
+                              <th scope="row">L</th>
+                              <td><input id="m-L-chest" data-measure="L-chest" type="text" /></td>
+                              <td><input id="m-L-waist" data-measure="L-waist" type="text" /></td>
+                              <td><input id="m-L-length" data-measure="L-length" type="text" /></td>
+                            </tr>
+                            <tr>
+                              <th scope="row">XL</th>
+                              <td><input id="m-XL-chest" data-measure="XL-chest" type="text" /></td>
+                              <td><input id="m-XL-waist" data-measure="XL-waist" type="text" /></td>
+                              <td><input id="m-XL-length" data-measure="XL-length" type="text" /></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section class="panel">
+                    <h2>Media</h2>
+                    <label class="dropzone" id="media-drop">
+                      Drop jpg, png, or mp4 files
+                      <input id="media-input" type="file" accept=".jpg,.jpeg,.png,.mp4,image/jpeg,image/png,video/mp4" multiple />
+                    </label>
+                    <div class="media-grid" id="media-grid"></div>
+                  </section>
+
+                  <section class="panel">
+                    <h2>Variants</h2>
+                    <div class="option-grid">
+                      <div class="field">
+                        <span>Color</span>
+                        <input id="opt-color" type="text" placeholder="Add a color, then Enter" />
+                        <div class="chips" id="chips-color"></div>
+                      </div>
+                      <div class="field">
+                        <span>Size</span>
+                        <input id="opt-size" type="text" placeholder="Add a size, then Enter" />
+                        <div class="chips" id="chips-size"></div>
+                      </div>
+                      <div class="field">
+                        <span>Material</span>
+                        <input id="opt-material" type="text" placeholder="Add a material, then Enter" />
+                        <div class="chips" id="chips-material"></div>
+                      </div>
+                    </div>
+                    <button class="btn is-ghost" id="generate-variants" type="button">Generate variant combinations</button>
+                    <div class="table-scroll" id="variant-wrap"></div>
+                    <nav class="pager" id="variant-pager" aria-label="Variant pages"></nav>
+                  </section>
+                </div>
+
+                <div>
+                  <section class="panel">
+                    <h2>Pricing</h2>
+                    <label class="field">
+                      <span>Original price</span>
+                      <input id="price-original" data-field="originalPrice" type="number" min="0" step="1" />
+                    </label>
+                    <div class="field">
+                      <span>Discount</span>
+                      <div class="screen-switch" id="discount-mode">
+                        <button type="button" data-discount="percent" aria-pressed="true">%</button>
+                        <button type="button" data-discount="fixed" aria-pressed="false">$</button>
+                      </div>
+                      <input id="discount-value" data-field="discount" type="number" min="0" step="1" value="0" />
+                    </div>
+                    <div class="price-box">
+                      <span>Selling price</span>
+                      <strong id="price-selling">$0</strong>
+                      <p class="hint" id="price-savings"></p>
+                    </div>
+                  </section>
+
+                  <section class="panel">
+                    <h2>Selling type</h2>
+                    <div class="sell-types" id="selling-types">
+                      <label class="sell-card">
+                        <input type="radio" name="selling-type" value="instock" />
+                        <span>In stock</span>
+                        <small>Standard inventory</small>
+                      </label>
+                      <label class="sell-card">
+                        <input type="radio" name="selling-type" value="preorder" />
+                        <span>Pre-order</span>
+                        <small>Take orders before shipping</small>
+                      </label>
+                      <label class="sell-card">
+                        <input type="radio" name="selling-type" value="coming" />
+                        <span>Coming soon</span>
+                        <small>Purchasing stays off</small>
+                      </label>
+                    </div>
+                    <div class="conditional" id="preorder-panel">
+                      <div class="conditional-inner">
+                        <label class="field"><span>Pre-order start</span><input id="preorder-start" type="datetime-local" /></label>
+                        <label class="field"><span>Pre-order end</span><input id="preorder-end" type="datetime-local" /></label>
+                        <label class="field"><span>Estimated shipping</span><input id="preorder-ship" type="datetime-local" /></label>
+                        <label class="field"><span>Max orders</span><input id="preorder-max" type="number" min="1" step="1" /></label>
+                        <label class="field"><span>Deposit %</span><input id="preorder-deposit" type="number" min="0" max="100" step="1" /></label>
+                        <p class="field-error" id="preorder-error" hidden></p>
+                      </div>
+                    </div>
+                    <div class="conditional" id="coming-panel">
+                      <div class="conditional-inner">
+                        <p class="hint">Purchasing is disabled on the storefront.</p>
+                        <label class="switch">
+                          <input id="notify-me" type="checkbox" />
+                          <span>Enable Notify Me subscriptions</span>
+                        </label>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section class="panel">
+                    <h2>Inventory</h2>
+                    <label class="field"><span>SKU</span><input id="master-sku" data-field="sku" type="text" /></label>
+                    <label class="field"><span>Barcode</span><input id="master-barcode" data-field="barcode" type="text" /></label>
+                    <label class="field"><span>Total stock</span><input id="stock-qty" data-field="stock" type="number" min="0" step="1" /></label>
+                    <label class="field"><span>Restock date</span><input id="restock-date" data-field="restockDate" type="date" /></label>
+                    <label class="field"><span>Low stock threshold</span><input id="product-threshold" data-field="threshold" type="number" min="0" step="1" /></label>
+                    <p class="hint">Stock is deducted only when an order is confirmed, or when a pre-order deposit is paid.</p>
+                  </section>
+
+                  <section class="panel">
+                    <h2>Visibility</h2>
+                    <div class="sell-types" id="visibility-types">
+                      <label class="sell-card"><input type="radio" name="visibility" value="published" /><span>Published</span></label>
+                      <label class="sell-card"><input type="radio" name="visibility" value="draft" /><span>Draft</span></label>
+                      <label class="sell-card"><input type="radio" name="visibility" value="scheduled" /><span>Scheduled</span></label>
+                      <label class="sell-card"><input type="radio" name="visibility" value="hidden" /><span>Hide</span></label>
+                    </div>
+                    <div class="conditional" id="schedule-panel">
+                      <div class="conditional-inner">
+                        <label class="field"><span>Publish date</span><input id="schedule-at" type="datetime-local" /></label>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section class="panel">
+                    <h2>Return policy</h2>
+                    <label class="field">
+                      <span>Policy</span>
+                      <select id="refund-policy" data-field="policy">
+                        <option value="standard">Standard 7-day return</option>
+                        <option value="exchange">Exchange only</option>
+                        <option value="final">Non-returnable / final sale</option>
+                      </select>
+                    </label>
+                    <p class="hint" id="policy-summary"></p>
+                  </section>
+                </div>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+    <button class="scrim" id="scrim" type="button" hidden aria-label="Close menu"></button>
+    <div id="toast" class="toast" role="status" hidden></div>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/products.js"></script>
+  </body>
+</html>

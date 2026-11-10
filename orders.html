@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f6f4" />
+    <title>Orders · Stylex</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body data-page="orders">
+    <a class="skip" href="#content">Skip to content</a>
+    <div class="layout">
+      <aside class="sidebar" id="sidebar">
+        <a class="brand" href="index.html">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">Stylex</span>
+        </a>
+        <p class="nav-kicker">Shop</p>
+        <nav class="nav" id="shop-nav" aria-label="Shop">
+          <a class="nav-link" href="index.html">
+            <i class="ri-dashboard-line" aria-hidden="true"></i>
+            <span>Dashboard</span>
+          </a>
+          <a class="nav-link is-active" href="orders.html" aria-current="page">
+            <i class="ri-shopping-bag-line" aria-hidden="true"></i>
+            <span>Orders</span>
+          </a>
+          <a class="nav-link" href="products.html">
+            <i class="ri-stack-line" aria-hidden="true"></i>
+            <span>Products</span>
+          </a>
+          <a class="nav-link" href="finance.html">
+            <i class="ri-wallet-line" aria-hidden="true"></i>
+            <span>Revenue & Finance</span>
+          </a>
+          <a class="nav-link" href="reviews.html">
+            <i class="ri-star-line" aria-hidden="true"></i>
+            <span>Reviews</span>
+          </a>
+          <a class="nav-link" href="followers.html">
+            <i class="ri-group-line" aria-hidden="true"></i>
+            <span>Followers</span>
+          </a>
+          <a class="nav-link" href="notifications.html">
+            <i class="ri-notification-3-line" aria-hidden="true"></i>
+            <span>Notifications</span>
+          </a>
+          <a class="nav-link" href="setting.html">
+            <i class="ri-settings-3-line" aria-hidden="true"></i>
+            <span>Settings</span>
+          </a>
+        </nav>
+        <div class="shop-profile">
+          <span class="avatar" aria-hidden="true">AN</span>
+          <div>
+            <p class="shop-name">Atelier Noir</p>
+            <p class="shop-meta">@atelier.noir</p>
+          </div>
+        </div>
+      </aside>
+      <div class="main">
+        <div class="masthead">
+          <header class="topbar">
+            <div class="topbar-left">
+              <button class="icon-btn menu-btn" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
+                <i class="ri-menu-line" aria-hidden="true"></i>
+              </button>
+              <h1 class="page-title">Orders</h1>
+            </div>
+          </header>
+        </div>
+        <main class="canvas" id="content">
+          <div class="orders-workspace" id="orders-app">
+            <section id="screen-admin-table" data-screen-panel="table">
+              <div class="toolbar">
+                <input class="search" id="order-search" type="search" placeholder="Search order ID or customer" aria-label="Search by order ID or customer name" data-field="query" />
+                <div class="screen-switch" id="order-status-filters" role="group" aria-label="Filter by status"></div>
+              </div>
+              <p class="hint" id="order-count"></p>
+              <div class="table-scroll">
+                <table class="order-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Order ID</th>
+                      <th scope="col">Customer</th>
+                      <th scope="col">Order date</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Total</th>
+                      <th scope="col"><span class="sr-only">Action</span></th>
+                    </tr>
+                  </thead>
+                  <tbody id="order-table"></tbody>
+                </table>
+              </div>
+              <nav class="pager" id="order-pager" aria-label="Order pages"></nav>
+            </section>
+
+            <section id="screen-admin-detail" data-screen-panel="admin-detail" hidden></section>
+          </div>
+        </main>
+      </div>
+    </div>
+    <button class="scrim" id="scrim" type="button" hidden aria-label="Close menu"></button>
+
+    <div class="order-modal" id="cancel-modal" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="cancel-title">
+        <h2 id="cancel-title">Cancel order</h2>
+        <p class="hint" id="cancel-order-label"></p>
+        <form id="cancel-form">
+          <label class="field">
+            <span>Reason</span>
+            <select id="cancel-reason">
+              <option value="">Select a reason</option>
+              <option value="Changed mind">Changed mind</option>
+              <option value="Out of stock">Out of stock</option>
+              <option value="Wrong shipping address">Wrong shipping address</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Details</span>
+            <textarea id="cancel-detail" rows="4" placeholder="Tell us why this order should be cancelled"></textarea>
+          </label>
+          <p class="field-error" id="cancel-error" hidden>A reason is required.</p>
+          <div class="modal-actions">
+            <button type="button" class="btn is-ghost" data-close-modal>Keep order</button>
+            <button type="submit" class="btn is-danger">Cancel order</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="order-status-live" class="sr-only" aria-live="polite"></div>
+    <script src="js/script.js"></script>
+    <script src="js/orders.js"></script>
+  </body>
+</html>
