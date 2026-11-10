@@ -57,6 +57,34 @@
     return Math.min(Math.max(1, next), pages);
   };
 
+  window.emptyState = function (icon, title, text, compact) {
+    return (
+      '<div class="empty-state' + (compact ? " is-compact" : "") + '">' +
+        '<span class="empty-orb" aria-hidden="true"><i class="' + escapeHtml(icon) + '"></i></span>' +
+        "<h2>" + escapeHtml(title) + "</h2>" +
+        "<p>" + escapeHtml(text) + "</p>" +
+      "</div>"
+    );
+  };
+
+  window.runWithLoading = function (button, task) {
+    if (!button || button.classList.contains("is-loading") || button.disabled) return;
+    button.classList.add("is-loading");
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
+    window.setTimeout(() => {
+      try {
+        task();
+      } finally {
+        if (button.isConnected) {
+          button.classList.remove("is-loading");
+          button.disabled = false;
+          button.removeAttribute("aria-busy");
+        }
+      }
+    }, 700);
+  };
+
   const COLORS = {
     white: "#ffffff",
     paper: "#f7f6f4",
@@ -208,9 +236,11 @@
     button.addEventListener("click", () => setPeriod(button.dataset.period));
   });
 
-  document.getElementById("refresh-button").addEventListener("click", () => {
-    refreshDashboard();
-    announce("Dashboard refreshed.");
+  document.getElementById("refresh-button").addEventListener("click", (event) => {
+    window.runWithLoading(event.currentTarget, () => {
+      refreshDashboard();
+      announce("Dashboard refreshed.");
+    });
   });
 
   fromInput.addEventListener("change", onCustomDate);
@@ -234,17 +264,21 @@
   });
 
   document.getElementById("low-stock-list").addEventListener("click", (event) => {
-    const button = event.target.closest("[data-product-id]");
+    const button = event.target.closest(".restock-btn");
     if (!button) return;
-    restock(button.dataset.productId);
+    window.runWithLoading(button, () => restock(button.dataset.productId));
   });
 
   document.querySelectorAll("[data-filter]").forEach((button) => {
     button.addEventListener("click", () => setFilter(button.dataset.filter));
   });
 
-  document.getElementById("mark-all-read").addEventListener("click", markAllRead);
-  document.getElementById("dropdown-mark-read").addEventListener("click", markAllRead);
+  document.getElementById("mark-all-read").addEventListener("click", (event) => {
+    window.runWithLoading(event.currentTarget, markAllRead);
+  });
+  document.getElementById("dropdown-mark-read").addEventListener("click", (event) => {
+    window.runWithLoading(event.currentTarget, markAllRead);
+  });
 
   document.getElementById("recent-notifications-list").addEventListener("click", (event) => {
     const button = event.target.closest("[data-notification-id]");
@@ -463,7 +497,7 @@
     state.stockPage = paged.page;
     const list = document.getElementById("low-stock-list");
     if (!items.length) {
-      list.innerHTML = '<tr><td colspan="5" class="empty-copy">No items at or below this threshold.</td></tr>';
+      list.innerHTML = '<tr class="empty-row"><td colspan="5">' + window.emptyState("ri-archive-line", "Stock looks healthy", "Nothing is at or below this threshold.") + "</td></tr>";
     } else {
       list.innerHTML = paged.rows
       .map((product) => {
@@ -483,7 +517,12 @@
   }
 
   function renderReviews() {
-    document.getElementById("recent-reviews-list").innerHTML = reviews
+    const list = document.getElementById("recent-reviews-list");
+    if (!reviews.length) {
+      list.innerHTML = window.emptyState("ri-star-line", "No reviews yet", "Buyer notes about your pieces will gather here.");
+      return;
+    }
+    list.innerHTML = reviews
       .map((review) => {
         return (
           "<article class=\"review\" data-reviewer-name=\"" + escapeHtml(review.reviewerName) + "\" data-rating=\"" + review.rating + "\" data-product-name=\"" + escapeHtml(review.productName) + "\" data-date=\"" + escapeHtml(review.date) + "\">" +
@@ -501,7 +540,12 @@
   }
 
   function renderFollowers() {
-    document.getElementById("recent-followers-list").innerHTML = followers
+    const list = document.getElementById("recent-followers-list");
+    if (!followers.length) {
+      list.innerHTML = window.emptyState("ri-group-line", "No followers yet", "People who follow Atelier Noir will show up here.");
+      return;
+    }
+    list.innerHTML = followers
       .map((follower) => {
         return (
           "<article class=\"follower\" data-user-id=\"" + escapeHtml(follower.userId) + "\" data-avatar=\"" + escapeHtml(follower.avatar) + "\" data-followed-date=\"" + escapeHtml(follower.followedDate) + "\">" +
@@ -522,7 +566,7 @@
     const list = document.getElementById("recent-notifications-list");
     list.innerHTML = visible.length
       ? visible.map(notificationMarkup).join("")
-      : '<p class="empty-copy">No notifications in this view.</p>';
+      : window.emptyState("ri-notification-3-line", "No notifications", "Nothing in this view right now.", true);
     renderBell();
   }
 
@@ -535,7 +579,7 @@
     const bellList = document.getElementById("bell-list");
     bellList.innerHTML = unread.length
       ? unread.map(notificationMarkup).join("")
-      : '<p class="empty-copy">You are caught up.</p>';
+      : window.emptyState("ri-check-line", "You are caught up", "Unread alerts will show up here.", true);
   }
 
   function renderTicker() {

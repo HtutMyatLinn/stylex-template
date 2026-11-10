@@ -992,6 +992,119 @@ p {
   padding: 12px 0;
 }
 
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 48px 20px;
+  text-align: center;
+}
+
+.empty-state.is-compact {
+  padding: 24px 12px;
+}
+
+.empty-orb {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 6px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-bg-light);
+  font-size: 26px;
+}
+
+.empty-state.is-compact .empty-orb {
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
+}
+
+.empty-state h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.empty-state p {
+  max-width: 36ch;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.empty-code {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.empty-state .btn {
+  margin-top: 10px;
+  text-decoration: none;
+}
+
+.empty-row td {
+  padding: 0;
+  border-bottom: 0;
+}
+
+.empty-stage {
+  display: grid;
+  place-items: center;
+  min-height: calc(100vh - 88px);
+  padding: 32px 28px;
+}
+
+.empty-stage .empty-state {
+  width: min(440px, 100%);
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.btn.is-loading,
+.restock-btn.is-loading,
+.text-btn.is-loading,
+.icon-btn.is-loading {
+  cursor: progress;
+}
+
+.btn.is-loading:disabled,
+.restock-btn.is-loading:disabled,
+.text-btn.is-loading:disabled,
+.icon-btn.is-loading:disabled {
+  opacity: 1;
+}
+
+.btn.is-loading::before,
+.restock-btn.is-loading::before,
+.text-btn.is-loading::before {
+  content: "";
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 8px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  vertical-align: -1px;
+  animation: spin 0.7s linear infinite;
+}
+
+.icon-btn.is-loading i {
+  display: inline-block;
+  animation: spin 0.7s linear infinite;
+}
+
 .card-tools {
   display: flex;
   flex-wrap: wrap;

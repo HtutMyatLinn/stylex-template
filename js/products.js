@@ -116,16 +116,21 @@
       productPage = 1;
       renderTable();
     }
-    if (event.target.closest("#create-product")) openEditor(blankProduct());
-    if (edit) openEditor(products.find((item) => item.id === edit.dataset.edit));
+    const create = event.target.closest("#create-product");
+    if (create) window.runWithLoading(create, () => openEditor(blankProduct()));
+    if (edit) window.runWithLoading(edit, () => openEditor(products.find((item) => item.id === edit.dataset.edit)));
     if (event.target.closest("#editor-back")) showView("list");
-    if (event.target.closest("#publish-product")) saveProduct();
-    if (event.target.closest("#generate-variants")) {
-      readOptionsFromChips();
-      editor.variants = generateVariantCombinations();
-      variantPage = 1;
-      renderVariants();
-      if (!editor.variants.length) toast("Add at least one color, size, or material.");
+    const publish = event.target.closest("#publish-product");
+    if (publish) window.runWithLoading(publish, () => saveProduct());
+    const generate = event.target.closest("#generate-variants");
+    if (generate) {
+      window.runWithLoading(generate, () => {
+        readOptionsFromChips();
+        editor.variants = generateVariantCombinations();
+        variantPage = 1;
+        renderVariants();
+        if (!editor.variants.length) toast("Add at least one color, size, or material.");
+      });
     }
     if (discount) {
       editor.discountType = discount.dataset.discount;
@@ -143,9 +148,11 @@
       renderOptionChips();
     }
     if (removeMedia && editor) {
-      editor.media.splice(Number(removeMedia.dataset.removeMedia), 1);
-      if (editor.media[0]) editor.media[0].cover = true;
-      renderMedia();
+      window.runWithLoading(removeMedia, () => {
+        editor.media.splice(Number(removeMedia.dataset.removeMedia), 1);
+        if (editor.media[0]) editor.media[0].cover = true;
+        renderMedia();
+      });
     }
     if (cover && editor) {
       editor.media.forEach((file, index) => {
@@ -308,7 +315,7 @@
       schedulePublishDate(editor.scheduleAt);
       if (!editor.scheduleAt) {
         toast("Choose a publish date.");
-        return;
+        return false;
       }
     } else if (editor.visibility !== "hidden") {
       editor.visibility = "published";
@@ -316,7 +323,7 @@
     const errors = collectErrors();
     if (errors.length) {
       toast(errors[0]);
-      return;
+      return false;
     }
     editor.isNew = false;
     const index = products.findIndex((item) => item.id === editor.id);
@@ -327,6 +334,7 @@
     toast(editor.visibility === "hidden" ? "Product hidden" : editor.visibility === "scheduled" ? "Product scheduled" : "Product published");
     showView("list");
     renderTable();
+    return true;
   }
 
   function collectErrors() {
@@ -357,8 +365,16 @@
     const visible = products.filter(matches).sort((a, b) => a.name.localeCompare(b.name));
     const paged = window.pageRows(visible, productPage);
     productPage = paged.page;
+    const filtered = Boolean(query.trim()) || tab !== "All";
     if (!visible.length) {
-      table.innerHTML = '<tr><td colspan="8">No products match this view.</td></tr>';
+      table.innerHTML =
+        '<tr class="empty-row"><td colspan="8">' +
+        window.emptyState(
+          filtered ? "ri-search-line" : "ri-shirt-line",
+          filtered ? "No matching products" : "No products yet",
+          filtered ? "Try another name, SKU, or status." : "Create a product to start the catalog."
+        ) +
+        "</td></tr>";
     } else {
     table.innerHTML = paged.rows.map((product) => {
       const low = product.stock <= threshold;
@@ -491,7 +507,7 @@
     const wrap = document.getElementById("variant-wrap");
     const pager = document.getElementById("variant-pager");
     if (!editor.variants.length) {
-      wrap.innerHTML = '<p class="hint">Add options, then generate combinations.</p>';
+      wrap.innerHTML = window.emptyState("ri-layout-grid-line", "No variants yet", "Add a color, size, or material, then generate combinations.", true);
       pager.hidden = true;
       pager.innerHTML = "";
       return;

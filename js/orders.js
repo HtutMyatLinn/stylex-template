@@ -66,16 +66,32 @@
     }
     if (adminView) openAdminDetail(adminView.dataset.viewAdmin);
     if (back) openScreen("table");
-    if (update) onUpdateStatus(update.dataset.updateStatus);
-    if (tracking) onAssignTracking(tracking.dataset.assignTracking);
-    if (note) onAddNote(note.dataset.addNote);
+    if (update) window.runWithLoading(update, () => onUpdateStatus(update.dataset.updateStatus));
+    if (tracking) window.runWithLoading(tracking, () => onAssignTracking(tracking.dataset.assignTracking));
+    if (note) {
+      const input = document.getElementById("note-input");
+      if (sanitize(input ? input.value : "")) window.runWithLoading(note, () => onAddNote(note.dataset.addNote));
+    }
     if (cancel) openCancelModal(cancel.dataset.openCancel);
     if (approve) {
-      updateReturnStatus(approve.dataset.approveReturn);
-      render();
-      announce("Return confirmed.");
+      window.runWithLoading(approve, () => {
+        updateReturnStatus(approve.dataset.approveReturn);
+        render();
+        announce("Return confirmed.");
+      });
     }
-    if (refund) onRefund(refund.dataset.refund);
+    if (refund) {
+      const order = fetchOrderDetails(refund.dataset.refund);
+      const request = order && order.returnRequest;
+      if (request && request.validated && !request.refundLocked && !request.refunded) {
+        window.runWithLoading(refund, () => {
+          initiateRefund(refund.dataset.refund);
+          processRefundTransaction(refund.dataset.refund);
+          render();
+          announce("Refund processed.");
+        });
+      }
+    }
   }
 
   function openScreen(screen) {
@@ -107,10 +123,17 @@
     const visible = orders.filter(matchesQuery).sort((a, b) => new Date(b.date) - new Date(a.date));
     const paged = window.pageRows(visible, state.page);
     state.page = paged.page;
-    document.getElementById("order-count").textContent = visible.length + (visible.length === 1 ? " order" : " orders");
     const body = document.getElementById("order-table");
+    const filtered = Boolean(state.query.trim()) || state.filter !== "All";
     if (!visible.length) {
-      body.innerHTML = '<tr><td colspan="6">No orders match this search.</td></tr>';
+      body.innerHTML =
+        '<tr class="empty-row"><td colspan="6">' +
+        window.emptyState(
+          filtered ? "ri-search-line" : "ri-shopping-bag-line",
+          filtered ? "No matching orders" : "No orders yet",
+          filtered ? "Try another name, order ID, or status." : "Orders from your storefront will collect here."
+        ) +
+        "</td></tr>";
     } else {
     body.innerHTML = paged.rows.map((order) => {
       const total = calculateOrderTotal(order).total;
@@ -126,14 +149,15 @@
       );
     }).join("");
     }
-    window.renderPager(document.getElementById("order-pager"), state.page, paged.pages);
+    const countLabel = visible.length + (visible.length === 1 ? " order" : " orders");
+    window.renderPager(document.getElementById("order-pager"), state.page, paged.pages, countLabel);
   }
 
   function renderAdminDetail() {
     const order = fetchOrderDetails(state.selectedId);
     const root = document.getElementById("screen-admin-detail");
     if (!order) {
-      root.innerHTML = "<p>Select an order from the list.</p>";
+      root.innerHTML = window.emptyState("ri-shopping-bag-line", "Order not found", "Choose an order from the list.");
       return;
     }
     const totals = calculateOrderTotal(order);
@@ -222,7 +246,7 @@
   function returnCard(order) {
     const request = order.returnRequest;
     if (!request) {
-      return "<section class=\"panel\"><h2>Return and refund</h2><p class=\"hint\">No return request yet.</p></section>";
+      return "<section class=\"panel\"><h2>Return and refund</h2>" + window.emptyState("ri-arrow-go-back-line", "No return request", "A buyer return will show up here.", true) + "</section>";
     }
     const refundLabel = request.refunded ? "Refund processed" : request.refundLocked ? "Processing refund…" : "Process refund";
     return (
@@ -266,10 +290,7 @@
   function fillNotes(container, notes) {
     container.replaceChildren();
     if (!notes.length) {
-      const empty = document.createElement("p");
-      empty.className = "hint";
-      empty.textContent = "No internal notes yet.";
-      container.appendChild(empty);
+      container.innerHTML = window.emptyState("ri-sticky-note-line", "No notes yet", "Notes stay hidden from the buyer.", true);
       return;
     }
     notes.forEach((note) => {
@@ -374,11 +395,14 @@
       document.getElementById("cancel-detail").setAttribute("aria-invalid", "true");
       return;
     }
-    logCancellationReason(state.selectedId, reason, detail);
-    cancelOrder(state.selectedId);
-    closeModals();
-    render();
-    announce("Order cancelled.");
+    const button = event.submitter;
+    window.runWithLoading(button, () => {
+      logCancellationReason(state.selectedId, reason, detail);
+      cancelOrder(state.selectedId);
+      closeModals();
+      render();
+      announce("Order cancelled.");
+    });
   }
 
   function clearCancelError() {
@@ -641,6 +665,56 @@
         cancellation: null,
         deliveredAt: daysAgo(2),
       },
+    ].concat(extraOrders());
+  }
+
+  function extraOrders() {
+    const people = ["Mina Chen", "Omar Rahman", "Clara Lind", "Jules Moreau", "Hana Kato", "Soren Blake", "Ayo Nwosu", "Eva Petrov", "Noah Adler", "Isla Moretti", "Kenji Sato", "Freya Holm", "Mateo Ruiz", "Noor El-Sayed", "Camille Berger", "Hugo Stein", "Yara Costa", "Felix Nguyen", "Anika Bose", "Leila Haddad", "Owen Clarke", "Sable Okonkwo", "Theo Marin", "Ines Duarte"];
+    const cities = ["New York, NY 10013", "75004 Paris", "20121 Milan", "Seoul 06010", "London WC2E 9DP", "Los Angeles, CA 90012", "Tokyo 150-0001", "Berlin 10115", "Singapore 238801", "Sydney NSW 2000"];
+    const pieces = [
+      ["Ivory Silk Column Dress", "Ivory", 420, ["2", "4", "6"]],
+      ["Noir Tailored Wool Blazer", "Black", 580, ["38", "40", "42"]],
+      ["Cashmere Funnel Coat", "Camel", 890, ["XS", "S", "M"]],
+      ["Sculpt Leather Ankle Boot", "Black", 640, ["40", "41", "42"]],
+      ["Pleated Satin Midi Skirt", "Champagne", 310, ["4", "6", "8"]],
+      ["Organza Evening Shirt", "Ivory", 240, ["2", "4", "6"]],
+      ["Gold-Hardware Mini Bag", "Gold", 260, ["One"]],
+      ["Merino Fine-Knit Polo", "Chalk", 140, ["S", "M", "L"]],
     ];
+    const payments = ["Visa ···· 4242", "Mastercard ···· 5512", "Amex ···· 1008", "Visa ···· 1881", "Visa ···· 9090"];
+    const statuses = ["New", "Confirmed", "Processing", "Shipped", "Delivered", "Cancelled", "Return Requested"];
+    const rows = [];
+    for (let index = 0; index < 115; index += 1) {
+      const person = people[index % people.length];
+      const piece = pieces[index % pieces.length];
+      const extraPiece = pieces[(index + 3) % pieces.length];
+      const status = statuses[index % statuses.length];
+      const when = new Date();
+      when.setDate(when.getDate() - 9);
+      when.setHours(when.getHours() - index * 7);
+      const slug = person.toLowerCase().replace(/[^a-z]+/g, ".").replace(/^\.|\.$/g, "");
+      const trackingNumber = "STX-TRK-" + (51000 + index);
+      const needsTracking = status === "Shipped" || status === "Delivered" || status === "Return Requested";
+      const items = [{ name: piece[0], color: piece[1], size: piece[3][index % piece[3].length], qty: 1, price: piece[2] }];
+      if (index % 4 === 0) items.push({ name: extraPiece[0], color: extraPiece[1], size: extraPiece[3][0], qty: 1, price: extraPiece[2] });
+      rows.push({
+        id: "STX-" + (8300 - index),
+        customerName: person,
+        email: slug + index + "@email.com",
+        phone: "+1 415 555 " + String(1000 + index),
+        date: when.toISOString(),
+        status: status,
+        paymentMethod: payments[index % payments.length],
+        shippingFee: [0, 12, 16, 18, 24][index % 5],
+        address: { name: person, line1: (12 + (index % 80)) + " Atelier Street", city: cities[index % cities.length] },
+        items: items,
+        tracking: needsTracking ? { number: trackingNumber, carrier: "Stylex Courier", url: "https://example.com/track/" + trackingNumber } : null,
+        notes: index % 11 === 0 ? [{ text: "Gift wrap requested.", at: when.toISOString() }] : [],
+        returnRequest: status === "Return Requested" ? { reason: "The fit was not as expected.", photos: [], validated: index % 2 === 0, refunded: false, refundLocked: false, at: when.toISOString() } : null,
+        cancellation: status === "Cancelled" ? { reason: "Changed mind", detail: "The buyer asked to stop this order.", at: when.toISOString() } : null,
+        deliveredAt: status === "Delivered" || status === "Return Requested" ? when.toISOString() : null,
+      });
+    }
+    return rows;
   }
 })();
