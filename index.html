@@ -4,11 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f7f6f4" />
+    <script>
+      try {
+        if (localStorage.getItem("stylex-theme") === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
+        if (localStorage.getItem("stylex-sidebar") === "collapsed") {
+          document.documentElement.setAttribute("data-sidebar", "collapsed");
+        }
+      } catch (error) {}
+    </script>
+
     <title>Stylex</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,600&display=swap"
       rel="stylesheet"
     />
     <link
@@ -21,170 +32,366 @@
     <a class="skip" href="#content">Skip to content</a>
     <div class="layout">
       <aside class="sidebar" id="sidebar">
-        <a class="brand" href="index.html">
-          <span class="brand-mark" aria-hidden="true"></span>
-          <span class="brand-name">Stylex</span>
-        </a>
-        <nav class="nav" id="shop-nav" aria-label="Shop">
-          <a class="nav-link is-active" href="index.html" aria-current="page">
-            <i class="ri-dashboard-line" aria-hidden="true"></i>
-            <span>Dashboard</span>
+        <div class="brand-row">
+          <a class="brand" href="index.html">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <span class="brand-name">Stylex</span>
           </a>
-          <a class="nav-link" href="orders.html">
-            <i class="ri-shopping-bag-line" aria-hidden="true"></i>
-            <span>Orders</span>
-          </a>
-          <a class="nav-link" href="products.html">
-            <i class="ri-stack-line" aria-hidden="true"></i>
-            <span>Products</span>
-          </a>
-          <a class="nav-link" href="promotions.html">
-            <i class="ri-price-tag-3-line" aria-hidden="true"></i>
-            <span>Promotions</span>
-          </a>
-          <a class="nav-link" href="finance.html">
-            <i class="ri-wallet-line" aria-hidden="true"></i>
-            <span>Finance</span>
-          </a>
-          <a class="nav-link" href="message.html">
-            <i class="ri-chat-3-line" aria-hidden="true"></i>
-            <span>Message</span>
-          </a>
-          <a class="nav-link" href="studio.html">
-            <i class="ri-palette-line" aria-hidden="true"></i>
-            <span>Studio</span>
-          </a>
-          <a class="nav-link" href="team.html">
-            <i class="ri-team-line" aria-hidden="true"></i>
-            <span>Team</span>
-          </a>
-          <a class="nav-link" href="shop-profile.html">
-            <i class="ri-store-2-line" aria-hidden="true"></i>
-            <span>Shop Profile</span>
-          </a>
-          <a class="nav-link" href="setting.html">
-            <i class="ri-settings-3-line" aria-hidden="true"></i>
-            <span>Settings</span>
-          </a>
-        </nav>
-        <div class="shop-profile">
-          <span class="avatar" aria-hidden="true">AN</span>
-          <div>
-            <p class="shop-name">Atelier Noir</p>
-            <p class="shop-meta">@atelier.noir</p>
-          </div>
+          <button
+            class="sidebar-toggle"
+            id="sidebar-collapse"
+            type="button"
+            aria-expanded="true"
+            aria-controls="shop-nav"
+            aria-label="Close sidebar"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="3.5" y="4.5" width="17" height="15" rx="2" />
+              <path d="M9 4.5v15" />
+              <path d="m14 9 3 3-3 3" /></svg
+            ><span class="sidebar-tip"></span>
+          </button>
         </div>
+        <nav class="nav" id="shop-nav" aria-label="Shop">
+          <a class="nav-link is-active" href="index.html" aria-current="page"
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="3.5" y="3.5" width="7" height="7" rx="1.5" />
+              <rect x="13.5" y="3.5" width="7" height="7" rx="1.5" />
+              <rect x="3.5" y="13.5" width="7" height="7" rx="1.5" />
+              <rect x="13.5" y="13.5" width="7" height="7" rx="1.5" /></svg
+            ><span>Dashboard</span></a
+          >
+          <a class="nav-link" href="orders.html"
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M6.5 8h11l-1 12h-9l-1-12z" />
+              <path d="M9 8V7a3 3 0 0 1 6 0v1" /></svg
+            ><span>Orders</span></a
+          >
+          <a class="nav-link" href="products.html"
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="m12 3 8 4-8 4-8-4 8-4z" />
+              <path d="m4 12 8 4 8-4" />
+              <path d="m4 17 8 4 8-4" /></svg
+            ><span>Products</span></a
+          >
+          <a class="nav-link" href="promotions.html"
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="m20 13-9-9H5v6l9 9 6-6z" />
+              <circle
+                cx="8.5"
+                cy="8.5"
+                r="1"
+                fill="currentColor"
+                stroke="none"
+              /></svg
+            ><span>Promotions</span></a
+          >
+          <a class="nav-link" href="finance.html"
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="3" y="6" width="18" height="13" rx="2" />
+              <path d="M3 10h18" />
+              <path d="M7 15h4" /></svg
+            ><span>Finance</span></a
+          >
+          <a class="nav-link" href="message.html"
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path
+                d="M5 6h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H9l-4 3v-3H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"
+              /></svg
+            ><span>Message</span></a
+          >
+          <a class="nav-link" href="studio.html"
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="3" />
+              <path
+                d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"
+              /></svg
+            ><span>Studio</span></a
+          >
+          <a class="nav-link" href="team.html"
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="9" cy="8" r="3" />
+              <circle cx="17" cy="9.5" r="2" />
+              <path d="M3.5 19c.6-3 2.8-4.5 5.5-4.5s4.9 1.5 5.5 4.5" />
+              <path d="M16 14.6c1.7.2 3 1.2 3.6 3.4" /></svg
+            ><span>Team</span></a
+          >
+          <a class="nav-link" href="shop-profile.html"
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M4 10 6 4h12l2 6" />
+              <path d="M4 10h16v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z" />
+              <path d="M10 20v-5h4v5" /></svg
+            ><span>Shop Profile</span></a
+          >
+          <a class="nav-link" href="setting.html"
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="3" />
+              <path
+                d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"
+              /></svg
+            ><span>Settings</span></a
+          >
+        </nav>
       </aside>
 
-      <div class="main">
-        <div class="masthead">
-          <header class="topbar">
-            <div class="topbar-row">
-              <div class="topbar-left">
-                <button
-                  class="icon-btn menu-btn"
-                  id="menu-toggle"
-                  type="button"
-                  aria-label="Open menu"
-                  aria-expanded="false"
-                  aria-controls="sidebar"
+      <div class="main outlet">
+        <div class="outlet-head">
+          <div class="outlet-title-wrap">
+            <h1 class="page-title" data-bind="page-title">Shop Dashboard</h1>
+          </div>
+          <div class="utility-cluster">
+            <p class="status-pill">
+              <span class="live-dot" aria-hidden="true"></span
+              ><span id="status-date" data-bind="shop-date">Today</span>
+            </p>
+            <div class="bell-wrap">
+              <button
+                class="notify-btn"
+                id="bell-button"
+                type="button"
+                aria-label="Notifications"
+                aria-expanded="false"
+                aria-controls="notification-dropdown"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
                 >
-                  <i class="ri-menu-line" aria-hidden="true"></i>
-                </button>
-                <h1 class="page-title">Shop Dashboard</h1>
-                <div class="refresh-badge">
-                  <span
-                    >Auto-refresh: <span id="refresh-countdown">60</span>s</span
-                  >
+                  <path d="M6 16V10a6 6 0 1 1 12 0v6" />
+                  <path d="M4.5 16h15" />
+                  <path d="M10 19a2 2 0 0 0 4 0" />
+                </svg>
+                <span class="bell-badge" id="notification-count">4</span>
+              </button>
+              <div class="dropdown" id="notification-dropdown" hidden>
+                <div class="dropdown-head">
+                  <p class="card-title">Notifications</p>
                   <button
                     type="button"
-                    id="refresh-button"
-                    aria-label="Refresh dashboard"
+                    class="text-btn"
+                    id="dropdown-mark-read"
                   >
-                    <i class="ri-refresh-line" aria-hidden="true"></i>
+                    Mark all as read
                   </button>
                 </div>
+                <div
+                  class="dropdown-list"
+                  id="bell-list"
+                  data-bind="notifications-list"
+                ></div>
               </div>
-              <div class="bell-wrap">
-                <button
-                  class="icon-btn bell-btn"
-                  id="bell-button"
-                  type="button"
-                  aria-label="Notifications"
-                  aria-expanded="false"
-                  aria-controls="notification-dropdown"
+            </div>
+            <div class="account-menu">
+              <button
+                class="account-card"
+                id="account-toggle"
+                type="button"
+                aria-expanded="false"
+                aria-controls="account-dropdown"
+                data-bind="shop-owner"
+              >
+                <span
+                  class="avatar"
+                  data-bind="shop-owner-initials"
+                  aria-hidden="true"
+                  >AN</span
                 >
-                  <i class="ri-notification-3-line" aria-hidden="true"></i>
-                  <span class="bell-badge" id="notification-count">4</span>
-                </button>
-                <div class="dropdown" id="notification-dropdown" hidden>
-                  <div class="dropdown-head">
-                    <p class="card-title">Notifications</p>
-                    <button
-                      type="button"
-                      class="text-btn"
-                      id="dropdown-mark-read"
-                    >
-                      Mark all as read
+                <span class="account-copy">
+                  <span class="shop-name" data-bind="shop-owner-name"
+                    >Atelier Noir</span
+                  >
+                  <span class="shop-meta" data-bind="shop-owner-role"
+                    >Shop owner</span
+                  >
+                </span>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m7 10 5 5 5-5" />
+                </svg>
+              </button>
+              <div class="account-dropdown" id="account-dropdown" hidden>
+                <div class="theme-switch-row">
+                  <span id="theme-switch-label">Light theme</span>
+                  <button
+                    class="theme-switch"
+                    id="theme-switch"
+                    type="button"
+                    role="switch"
+                    aria-checked="false"
+                    aria-label="Switch to dark theme"
+                  >
+                    <span class="theme-switch-knob"></span>
+                  </button>
+                </div>
+                <div class="lang-row">
+                  <span>Language</span>
+                  <div
+                    class="lang-pills"
+                    role="group"
+                    aria-label="Language"
+                    data-bind="language"
+                  >
+                    <button type="button" data-lang="en" aria-pressed="true">
+                      EN
+                    </button>
+                    <button type="button" data-lang="my" aria-pressed="false">
+                      MY
                     </button>
                   </div>
-                  <div class="dropdown-list" id="bell-list"></div>
                 </div>
+                <button class="account-logout" id="logout-button" type="button">
+                  Log out
+                </button>
               </div>
             </div>
-            <div class="topbar-row">
-              <div class="topbar-right">
-                <div class="segment" role="group" aria-label="Period">
-                  <button
-                    type="button"
-                    data-period="today"
-                    aria-pressed="false"
-                  >
-                    Today
-                  </button>
-                  <button type="button" data-period="week" aria-pressed="false">
-                    Week
-                  </button>
-                  <button type="button" data-period="month" aria-pressed="true">
-                    Month
-                  </button>
-                  <button
-                    type="button"
-                    data-period="custom"
-                    aria-pressed="false"
-                  >
-                    Custom
-                  </button>
-                </div>
-                <div class="date-range">
-                  <label class="date-field">
-                    From
-                    <input id="fromDate" name="fromDate" type="date" />
-                  </label>
-                  <label class="date-field">
-                    To
-                    <input id="toDate" name="toDate" type="date" />
-                  </label>
-                </div>
-              </div>
-            </div>
-          </header>
-          <div class="ticker">
-            <p class="ticker-alert" id="ticker-message">
-              <i class="ri-megaphone-line" aria-hidden="true"></i>
-              <strong>New order alert</strong>
-              <span id="ticker-detail">Order #STX-8942 placed 2 mins ago</span>
-            </p>
-            <p class="ticker-stock" id="low-stock-banner">
-              <i class="ri-alert-line" aria-hidden="true"></i>
-              <span id="low-stock-banner-text"
-                >7 items at or below 10 units</span
-              >
-            </p>
           </div>
         </div>
-
-        <main class="canvas" id="content">
+        <div class="float-tools">
+          <div class="refresh-badge">
+            <span>Auto-refresh: <span id="refresh-countdown">60</span>s</span>
+            <button
+              type="button"
+              id="refresh-button"
+              aria-label="Refresh dashboard"
+            >
+              <i class="ri-refresh-line" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="segment" role="group" aria-label="Period">
+            <button type="button" data-period="today" aria-pressed="false">
+              Today
+            </button>
+            <button type="button" data-period="week" aria-pressed="false">
+              Week
+            </button>
+            <button type="button" data-period="month" aria-pressed="true">
+              Month
+            </button>
+            <button type="button" data-period="custom" aria-pressed="false">
+              Custom
+            </button>
+          </div>
+          <div class="date-range">
+            <label class="date-field"
+              >From <input id="fromDate" name="fromDate" type="date"
+            /></label>
+            <label class="date-field"
+              >To <input id="toDate" name="toDate" type="date"
+            /></label>
+          </div>
+        </div>
+        <div class="ticker">
+          <p class="ticker-alert" id="ticker-message">
+            <i class="ri-megaphone-line" aria-hidden="true"></i>
+            <strong>New order alert</strong>
+            <span id="ticker-detail">Order #STX-8942 placed 2 mins ago</span>
+          </p>
+          <p class="ticker-stock" id="low-stock-banner">
+            <i class="ri-alert-line" aria-hidden="true"></i>
+            <span id="low-stock-banner-text">7 items at or below 10 units</span>
+          </p>
+        </div>
+        <main class="canvas outlet-canvas" id="content">
           <div class="board">
             <article class="card kpi-card span-3">
               <p class="kpi-label">Total Orders</p>
@@ -510,6 +717,198 @@
       aria-label="Close menu"
     ></button>
     <div id="status-live" class="sr-only" aria-live="polite"></div>
+    <nav
+      class="mobile-floating-nav"
+      id="mobile-floating-nav"
+      aria-label="Primary"
+    >
+      <a class="is-active" href="index.html" aria-current="page"
+        ><svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect x="3.5" y="3.5" width="7" height="7" rx="1.5" />
+          <rect x="13.5" y="3.5" width="7" height="7" rx="1.5" />
+          <rect x="3.5" y="13.5" width="7" height="7" rx="1.5" />
+          <rect x="13.5" y="13.5" width="7" height="7" rx="1.5" /></svg
+        ><span>Dashboard</span></a
+      >
+      <a href="orders.html"
+        ><svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M6.5 8h11l-1 12h-9l-1-12z" />
+          <path d="M9 8V7a3 3 0 0 1 6 0v1" /></svg
+        ><span>Orders</span></a
+      >
+      <a href="products.html"
+        ><svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="m12 3 8 4-8 4-8-4 8-4z" />
+          <path d="m4 12 8 4 8-4" />
+          <path d="m4 17 8 4 8-4" /></svg
+        ><span>Products</span></a
+      >
+      <a href="promotions.html"
+        ><svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="m20 13-9-9H5v6l9 9 6-6z" />
+          <circle
+            cx="8.5"
+            cy="8.5"
+            r="1"
+            fill="currentColor"
+            stroke="none"
+          /></svg
+        ><span>Promotions</span></a
+      >
+      <button
+        type="button"
+        id="mobile-more-toggle"
+        aria-expanded="false"
+        aria-controls="mobile-more"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="6" cy="12" r="1.2" fill="currentColor" stroke="none" />
+          <circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none" />
+          <circle
+            cx="18"
+            cy="12"
+            r="1.2"
+            fill="currentColor"
+            stroke="none"
+          /></svg
+        ><span>More</span>
+      </button>
+    </nav>
+    <div class="mobile-more" id="mobile-more" hidden>
+      <a class="nav-link" href="finance.html"
+        ><svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect x="3" y="6" width="18" height="13" rx="2" />
+          <path d="M3 10h18" />
+          <path d="M7 15h4" /></svg
+        ><span>Finance</span></a
+      >
+      <a class="nav-link" href="message.html"
+        ><svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path
+            d="M5 6h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H9l-4 3v-3H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"
+          /></svg
+        ><span>Message</span></a
+      >
+      <a class="nav-link" href="studio.html"
+        ><svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"
+          /></svg
+        ><span>Studio</span></a
+      >
+      <a class="nav-link" href="team.html"
+        ><svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="9" cy="8" r="3" />
+          <circle cx="17" cy="9.5" r="2" />
+          <path d="M3.5 19c.6-3 2.8-4.5 5.5-4.5s4.9 1.5 5.5 4.5" />
+          <path d="M16 14.6c1.7.2 3 1.2 3.6 3.4" /></svg
+        ><span>Team</span></a
+      >
+      <a class="nav-link" href="shop-profile.html"
+        ><svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M4 10 6 4h12l2 6" />
+          <path d="M4 10h16v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z" />
+          <path d="M10 20v-5h4v5" /></svg
+        ><span>Shop Profile</span></a
+      >
+      <a class="nav-link" href="setting.html"
+        ><svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"
+          /></svg
+        ><span>Settings</span></a
+      >
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
     <script src="js/script.js"></script>
   </body>

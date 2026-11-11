@@ -112,17 +112,129 @@
     }, 700);
   };
 
+  function cssVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
   const COLORS = {
-    white: "#ffffff",
-    paper: "#f7f6f4",
-    line: "#e8e6e4",
-    ink: "#0d0d0d",
-    red: "#f40000",
+    get white() { return cssVar("--color-white"); },
+    get paper() { return cssVar("--color-bg-light"); },
+    get line() { return cssVar("--color-border"); },
+    get ink() { return cssVar("--color-black"); },
+    get red() { return cssVar("--color-red"); },
   };
+
+  const THEME_KEY = "stylex-theme";
+
+  function applyTheme(theme) {
+    const dark = theme === "dark";
+    if (dark) document.documentElement.setAttribute("data-theme", "dark");
+    else document.documentElement.removeAttribute("data-theme");
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", dark ? "#0d0d0d" : "#f7f6f4");
+    const themeSwitch = document.getElementById("theme-switch");
+    const themeLabel = document.getElementById("theme-switch-label");
+    if (themeSwitch) {
+      themeSwitch.setAttribute("aria-checked", String(dark));
+      themeSwitch.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+    }
+    if (themeLabel) themeLabel.textContent = dark ? "Dark theme" : "Light theme";
+    document.dispatchEvent(new CustomEvent("stylex-theme"));
+  }
+
+  function closeAccountMenu() {
+    const toggle = document.getElementById("account-toggle");
+    const menu = document.getElementById("account-dropdown");
+    if (!toggle || !menu) return;
+    menu.hidden = true;
+    toggle.setAttribute("aria-expanded", "false");
+  }
+
+  const accountToggle = document.getElementById("account-toggle");
+  const accountMenu = document.getElementById("account-dropdown");
+  const themeSwitch = document.getElementById("theme-switch");
+  const logoutButton = document.getElementById("logout-button");
+  const languageGroup = document.querySelector(".lang-pills");
+  applyTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light");
+  if (accountToggle && accountMenu) {
+    accountToggle.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const open = accountMenu.hidden;
+      accountMenu.hidden = !open;
+      accountToggle.setAttribute("aria-expanded", String(open));
+    });
+    document.addEventListener("click", (event) => {
+      if (accountToggle.contains(event.target) || accountMenu.contains(event.target)) return;
+      closeAccountMenu();
+    });
+  }
+  if (themeSwitch) {
+    themeSwitch.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      try {
+        localStorage.setItem(THEME_KEY, next);
+      } catch (error) {}
+      applyTheme(next);
+    });
+  }
+  if (languageGroup) {
+    const LANG_KEY = "stylex-lang";
+    let storedLang = "en";
+    try {
+      storedLang = localStorage.getItem(LANG_KEY) || "en";
+    } catch (error) {}
+    languageGroup.querySelectorAll("[data-lang]").forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.lang === storedLang));
+    });
+    languageGroup.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-lang]");
+      if (!button) return;
+      event.stopPropagation();
+      languageGroup.querySelectorAll("[data-lang]").forEach((item) => {
+        item.setAttribute("aria-pressed", String(item === button));
+      });
+      try {
+        localStorage.setItem(LANG_KEY, button.dataset.lang);
+      } catch (error) {}
+    });
+  }
+  if (logoutButton) {
+    logoutButton.addEventListener("click", () => {
+      closeAccountMenu();
+      window.showToast("Signed out.");
+    });
+  }
 
   const sidebar = document.getElementById("sidebar");
   const menuToggle = document.getElementById("menu-toggle");
   const scrim = document.getElementById("scrim");
+  const SIDEBAR_KEY = "stylex-sidebar";
+  const sidebarCollapse = document.getElementById("sidebar-collapse");
+
+  function setSidebarCollapsed(collapsed) {
+    if (!sidebar) return;
+    sidebar.classList.toggle("is-collapsed", collapsed);
+    if (collapsed) document.documentElement.setAttribute("data-sidebar", "collapsed");
+    else document.documentElement.removeAttribute("data-sidebar");
+    if (sidebarCollapse) {
+      sidebarCollapse.setAttribute("aria-expanded", String(!collapsed));
+      sidebarCollapse.setAttribute("aria-label", collapsed ? "Open sidebar" : "Close sidebar");
+    }
+    try {
+      localStorage.setItem(SIDEBAR_KEY, collapsed ? "collapsed" : "open");
+    } catch (error) {}
+  }
+
+  if (sidebarCollapse) {
+    sidebarCollapse.addEventListener("click", () => {
+      const collapsed = sidebar.classList.contains("is-collapsed") || document.documentElement.getAttribute("data-sidebar") === "collapsed";
+      setSidebarCollapsed(!collapsed);
+    });
+  }
+  if (document.documentElement.getAttribute("data-sidebar") === "collapsed") {
+    setSidebarCollapsed(true);
+  }
 
   function setSidebar(open) {
     if (!sidebar || !menuToggle || !scrim) return;
@@ -131,7 +243,45 @@
     menuToggle.setAttribute("aria-expanded", String(open));
   }
 
-  if (menuToggle && scrim && sidebar) {
+  (function initMobileNavScroll() {
+  const mobileNav = document.getElementById("mobile-floating-nav");
+  if (!mobileNav) return;
+  let lastScrollY = window.scrollY;
+  const scrollThreshold = 8;
+  window.addEventListener("scroll", () => {
+    const currentScrollY = window.scrollY;
+    if (currentScrollY <= 20) {
+      mobileNav.classList.remove("nav-hidden");
+      lastScrollY = currentScrollY;
+      return;
+    }
+    if (Math.abs(currentScrollY - lastScrollY) < scrollThreshold) return;
+    if (currentScrollY > lastScrollY) mobileNav.classList.add("nav-hidden");
+    else mobileNav.classList.remove("nav-hidden");
+    lastScrollY = currentScrollY;
+  }, { passive: true });
+})();
+
+const moreToggle = document.getElementById("mobile-more-toggle");
+const moreSheet = document.getElementById("mobile-more");
+if (moreToggle && moreSheet) {
+  moreToggle.addEventListener("click", () => {
+    const open = moreSheet.hidden;
+    moreSheet.hidden = !open;
+    moreToggle.setAttribute("aria-expanded", String(open));
+  });
+}
+
+const statusDate = document.getElementById("status-date");
+if (statusDate) {
+  statusDate.textContent = new Date().toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+if (menuToggle && scrim && sidebar) {
     menuToggle.addEventListener("click", () => {
       setSidebar(!sidebar.classList.contains("is-open"));
     });
@@ -144,6 +294,7 @@
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;
     setSidebar(false);
+    closeAccountMenu();
     if (document.body.dataset.page === "dashboard") closeNotifications();
   });
 
@@ -328,6 +479,18 @@
 
   document.addEventListener("click", (event) => {
     if (!bellWrap.contains(event.target)) closeNotifications();
+  });
+
+  document.addEventListener("stylex-theme", () => {
+    if (revenueChart) {
+      revenueChart.destroy();
+      revenueChart = null;
+    }
+    if (ordersChart) {
+      ordersChart.destroy();
+      ordersChart = null;
+    }
+    renderPeriodData();
   });
 
   setPeriod("month", { silent: true });

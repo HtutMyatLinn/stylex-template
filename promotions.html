@@ -4,11 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f7f6f4" />
+    <script>
+      try {
+        if (localStorage.getItem("stylex-theme") === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
+        if (localStorage.getItem("stylex-sidebar") === "collapsed") {
+          document.documentElement.setAttribute("data-sidebar", "collapsed");
+        }
+      } catch (error) {}
+    </script>
+
     <title>Promotions · Stylex</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,600&display=swap"
       rel="stylesheet"
     />
     <link
@@ -21,83 +32,446 @@
     <a class="skip" href="#content">Skip to content</a>
     <div class="layout">
       <aside class="sidebar" id="sidebar">
+        <div class="brand-row">
         <a class="brand" href="index.html">
           <span class="brand-mark" aria-hidden="true"></span>
           <span class="brand-name">Stylex</span>
         </a>
+        <button class="sidebar-toggle" id="sidebar-collapse" type="button" aria-expanded="true" aria-controls="shop-nav" aria-label="Close sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M9 4.5v15"/><path d="m14 9 3 3-3 3"/></svg><span class="sidebar-tip"></span></button>
+      </div>
         <nav class="nav" id="shop-nav" aria-label="Shop">
-          <a class="nav-link" href="index.html">
-            <i class="ri-dashboard-line" aria-hidden="true"></i>
-            <span>Dashboard</span>
-          </a>
-          <a class="nav-link" href="orders.html">
-            <i class="ri-shopping-bag-line" aria-hidden="true"></i>
-            <span>Orders</span>
-          </a>
-          <a class="nav-link" href="products.html">
-            <i class="ri-stack-line" aria-hidden="true"></i>
-            <span>Products</span>
-          </a>
-          <a class="nav-link is-active" href="promotions.html" aria-current="page">
-            <i class="ri-price-tag-3-line" aria-hidden="true"></i>
-            <span>Promotions</span>
-          </a>
-          <a class="nav-link" href="finance.html">
-            <i class="ri-wallet-line" aria-hidden="true"></i>
-            <span>Finance</span>
-          </a>
-          <a class="nav-link" href="message.html">
-            <i class="ri-chat-3-line" aria-hidden="true"></i>
-            <span>Message</span>
-          </a>
-          <a class="nav-link" href="studio.html">
-            <i class="ri-palette-line" aria-hidden="true"></i>
-            <span>Studio</span>
-          </a>
-          <a class="nav-link" href="team.html">
-            <i class="ri-team-line" aria-hidden="true"></i>
-            <span>Team</span>
-          </a>
-          <a class="nav-link" href="shop-profile.html">
-            <i class="ri-store-2-line" aria-hidden="true"></i>
-            <span>Shop Profile</span>
-          </a>
-          <a class="nav-link" href="setting.html">
-            <i class="ri-settings-3-line" aria-hidden="true"></i>
-            <span>Settings</span>
-          </a>
+          <a class="nav-link" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg><span>Dashboard</span></a>
+<a class="nav-link" href="orders.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 8h11l-1 12h-9l-1-12z"/><path d="M9 8V7a3 3 0 0 1 6 0v1"/></svg><span>Orders</span></a>
+<a class="nav-link" href="products.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 4-8 4-8-4 8-4z"/><path d="m4 12 8 4 8-4"/><path d="m4 17 8 4 8-4"/></svg><span>Products</span></a>
+<a class="nav-link is-active" href="promotions.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m20 13-9-9H5v6l9 9 6-6z"/><circle cx="8.5" cy="8.5" r="1" fill="currentColor" stroke="none"/></svg><span>Promotions</span></a>
+<a class="nav-link" href="finance.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/></svg><span>Finance</span></a>
+<a class="nav-link" href="message.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H9l-4 3v-3H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></svg><span>Message</span></a>
+<a class="nav-link" href="studio.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Studio</span></a>
+<a class="nav-link" href="team.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9.5" r="2"/><path d="M3.5 19c.6-3 2.8-4.5 5.5-4.5s4.9 1.5 5.5 4.5"/><path d="M16 14.6c1.7.2 3 1.2 3.6 3.4"/></svg><span>Team</span></a>
+<a class="nav-link" href="shop-profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10 6 4h12l2 6"/><path d="M4 10h16v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M10 20v-5h4v5"/></svg><span>Shop Profile</span></a>
+<a class="nav-link" href="setting.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Settings</span></a>
         </nav>
-        <div class="shop-profile">
-          <span class="avatar" aria-hidden="true">AN</span>
-          <div>
-            <p class="shop-name">Atelier Noir</p>
-            <p class="shop-meta">@atelier.noir</p>
+      </aside>
+      <div class="main outlet">
+        <div class="outlet-head">
+          <div class="outlet-title-wrap">
+            <h1 class="page-title" data-bind="page-title">Promotions</h1>
+          </div>
+          <div class="utility-cluster">
+            <p class="status-pill"><span class="live-dot" aria-hidden="true"></span><span id="status-date" data-bind="shop-date">Today</span></p>
+            <a class="notify-btn" href="notifications.html" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V10a6 6 0 1 1 12 0v6"/><path d="M4.5 16h15"/><path d="M10 19a2 2 0 0 0 4 0"/></svg><span class="bell-dot" aria-hidden="true"></span></a>
+            <div class="account-menu">
+              <button class="account-card" id="account-toggle" type="button" aria-expanded="false" aria-controls="account-dropdown" data-bind="shop-owner">
+              <span class="avatar" data-bind="shop-owner-initials" aria-hidden="true">AN</span>
+              <span class="account-copy">
+                <span class="shop-name" data-bind="shop-owner-name">Atelier Noir</span>
+                <span class="shop-meta" data-bind="shop-owner-role">Shop owner</span>
+              </span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
+            </button>
+              <div class="account-dropdown" id="account-dropdown" hidden>
+                <div class="theme-switch-row">
+                  <span id="theme-switch-label">Light theme</span>
+                  <button class="theme-switch" id="theme-switch" type="button" role="switch" aria-checked="false" aria-label="Switch to dark theme"><span class="theme-switch-knob"></span></button>
+                </div>
+                <div class="lang-row">
+                  <span>Language</span>
+                  <div class="lang-pills" role="group" aria-label="Language" data-bind="language">
+                    <button type="button" data-lang="en" aria-pressed="true">EN</button>
+                    <button type="button" data-lang="my" aria-pressed="false">MY</button>
+                  </div>
+                </div>
+                <button class="account-logout" id="logout-button" type="button">Log out</button>
+              </div>
+            </div>
           </div>
         </div>
-      </aside>
-      <div class="main">
-        <div class="masthead">
-          <header class="topbar">
-            <div class="topbar-left">
-              <button class="icon-btn menu-btn" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
-                <i class="ri-menu-line" aria-hidden="true"></i>
-              </button>
-              <h1 class="page-title">Promotions</h1>
-            </div>
-          </header>
-        </div>
-        <main class="canvas" id="content">
-          <section class="empty-stage">
-            <div class="empty-state">
-              <span class="empty-orb" aria-hidden="true"><i class="ri-price-tag-3-line"></i></span>
-              <h2>No promotions yet</h2>
-              <p>Campaigns and offers will be built here.</p>
-            </div>
-          </section>
+        <main class="canvas outlet-canvas" id="content">
+          <div class="promo">
+            <section class="promo-view is-shown" id="view-promo-dashboard" data-view="dashboard">
+              <div class="promo-head">
+                <div>
+                  <h2>Promotions &amp; Campaigns</h2>
+                  <p>Discounts, coupons, bundles, and live flash sales for Atelier Noir.</p>
+                </div>
+                <div class="promo-actions">
+                  <button class="btn is-ghost" id="export-promo" type="button">Export Promo Report</button>
+                  <button class="btn" id="create-promo" type="button">+ Create Promotion</button>
+                </div>
+              </div>
+
+              <section class="flash-banner" id="flash-banner" hidden>
+                <div>
+                  <span class="flash-live">Live</span>
+                  <p id="flash-banner-title">Flash sale</p>
+                </div>
+                <p class="flash-clock" id="flash-banner-clock">00:00:00</p>
+                <div class="promo-actions">
+                  <button class="btn is-ghost flash-manage" id="manage-flash" type="button">Manage Flash Sale</button>
+                  <button class="btn is-danger" id="end-flash" type="button">End Flash Sale</button>
+                </div>
+              </section>
+
+              <div class="promo-kpis">
+                <article class="promo-kpi">
+                  <p class="promo-kicker">Active Promotions</p>
+                  <p class="promo-kpi-value" id="kpi-active-promos">0</p>
+                  <p class="promo-note" id="kpi-scheduled">0 scheduled</p>
+                </article>
+                <article class="promo-kpi">
+                  <p class="promo-kicker">Total Discount Given</p>
+                  <p class="promo-kpi-value" id="kpi-total-discount">—</p>
+                  <p class="promo-note" id="kpi-total-discount-usd"></p>
+                </article>
+                <article class="promo-kpi">
+                  <p class="promo-kicker">Promo-Driven Revenue</p>
+                  <p class="promo-kpi-value" id="kpi-promo-revenue">—</p>
+                  <p class="promo-note" id="kpi-promo-revenue-usd"></p>
+                </article>
+                <article class="promo-kpi">
+                  <p class="promo-kicker">Total Coupon Redemptions</p>
+                  <p class="promo-kpi-value" id="kpi-coupon-uses">0</p>
+                  <p class="promo-note">Uses across coupon codes</p>
+                </article>
+              </div>
+
+              <section class="promo-card">
+                <div class="promo-head">
+                  <div>
+                    <h2>Promotion Analytics</h2>
+                    <p>Revenue generated against discount given.</p>
+                  </div>
+                </div>
+                <div class="promo-analytics">
+                  <div class="promo-chart"><canvas id="promoAnalyticsChart" role="img" aria-label="Promotion revenue and discount"></canvas></div>
+                  <div>
+                    <p class="promo-kicker">Top coupon codes</p>
+                    <ul class="coupon-bars" id="coupon-bars"></ul>
+                  </div>
+                </div>
+              </section>
+
+              <section class="promo-card">
+                <div class="promo-filters">
+                  <input class="search" id="promo-search" type="search" placeholder="Campaign name or coupon code" aria-label="Search campaigns" />
+                  <label class="promo-field">
+                    <span>Type</span>
+                    <select id="promo-type-filter">
+                      <option value="all">All Types</option>
+                      <option value="discount">Direct Discount</option>
+                      <option value="coupon">Coupon Code</option>
+                      <option value="bundle">Bundle Deal</option>
+                      <option value="bogo">Buy X Get Y</option>
+                      <option value="shipping">Free Shipping</option>
+                      <option value="flash">Flash Sale</option>
+                    </select>
+                  </label>
+                  <button class="btn is-ghost" id="reset-filters" type="button">Reset Filters</button>
+                </div>
+                <div class="promo-tabs" id="promo-status-tabs" role="tablist" aria-label="Campaign status">
+                  <button type="button" data-status="all" aria-pressed="true">All</button>
+                  <button type="button" data-status="Active" aria-pressed="false">Active</button>
+                  <button type="button" data-status="Scheduled" aria-pressed="false">Scheduled</button>
+                  <button type="button" data-status="Expired" aria-pressed="false">Expired</button>
+                </div>
+                <div class="table-scroll">
+                  <table class="promo-table">
+                    <caption class="sr-only">Campaigns and coupons</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Campaign</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Value</th>
+                        <th scope="col">Validity</th>
+                        <th scope="col">Usage</th>
+                        <th scope="col">Revenue</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="promo-table"></tbody>
+                  </table>
+                </div>
+                <div class="promo-pager" id="promo-pager"></div>
+              </section>
+            </section>
+
+            <section class="promo-view" id="view-promo-form" data-view="form" hidden>
+              <div class="promo-bar">
+                <button class="btn is-ghost" id="back-promos" type="button">Back to Promotions</button>
+                <p class="promo-kicker" id="form-kicker">New campaign</p>
+                <div class="promo-actions">
+                  <button class="btn is-ghost" id="save-draft" type="button">Save Draft</button>
+                  <button class="btn" id="publish-campaign" type="button">Publish Campaign</button>
+                </div>
+              </div>
+              <div class="promo-grid">
+                <div>
+                  <section class="promo-card">
+                    <h2>Promotion type</h2>
+                    <div class="type-grid" id="type-grid" role="radiogroup" aria-label="Promotion type"></div>
+                  </section>
+                  <section class="promo-card">
+                    <h2>Configuration</h2>
+                    <label class="promo-field">
+                      <span>Campaign title</span>
+                      <input id="promo-name" type="text" maxlength="80" />
+                    </label>
+                    <div data-config="discount">
+                      <div class="promo-split">
+                        <label class="promo-field">
+                          <span>Discount type</span>
+                          <select id="discount-mode">
+                            <option value="percent">Percentage %</option>
+                            <option value="fixed">Fixed amount MMK</option>
+                          </select>
+                        </label>
+                        <label class="promo-field">
+                          <span>Discount value</span>
+                          <input id="discount-value" type="number" min="0" step="1" value="20" />
+                        </label>
+                      </div>
+                      <label class="promo-field">
+                        <span>Target scope</span>
+                        <select id="discount-scope">
+                          <option value="products">Specific products</option>
+                          <option value="category">Entire category</option>
+                        </select>
+                      </label>
+                      <label class="promo-field" id="discount-category-field" hidden>
+                        <span>Category</span>
+                        <select id="discount-category">
+                          <option>Outerwear</option>
+                          <option>Dresses</option>
+                          <option>Footwear</option>
+                          <option>Accessories</option>
+                          <option>Knitwear</option>
+                        </select>
+                      </label>
+                      <button class="btn is-ghost" id="pick-discount" type="button" data-pick="products">Select Products</button>
+                      <p class="promo-note" id="discount-picked">0 products selected</p>
+                    </div>
+                    <div data-config="coupon" hidden>
+                      <label class="promo-field">
+                        <span>Promo code</span>
+                        <input id="coupon-code" type="text" maxlength="24" spellcheck="false" />
+                      </label>
+                      <button class="btn is-ghost" id="generate-code" type="button">Auto-Generate Secure Code</button>
+                      <div class="promo-split">
+                        <label class="promo-field">
+                          <span>Discount type</span>
+                          <select id="coupon-mode">
+                            <option value="percent">Percentage %</option>
+                            <option value="fixed">Fixed amount MMK</option>
+                          </select>
+                        </label>
+                        <label class="promo-field">
+                          <span>Discount value</span>
+                          <input id="coupon-value" type="number" min="0" step="1" value="15000" />
+                        </label>
+                      </div>
+                      <label class="promo-field">
+                        <span>Minimum spend (MMK)</span>
+                        <input id="coupon-min" type="number" min="0" step="1" value="80000" />
+                      </label>
+                      <p class="field-error" id="coupon-error" hidden></p>
+                    </div>
+                    <div data-config="bundle" hidden>
+                      <button class="btn is-ghost" id="pick-bundle" type="button" data-pick="bundle">Select Bundle Products</button>
+                      <ul class="picked-list" id="bundle-list"></ul>
+                      <p class="promo-note">Original combined price <strong id="bundle-original">0 MMK</strong></p>
+                      <label class="promo-field">
+                        <span>Special bundle price (MMK)</span>
+                        <input id="bundle-price" type="number" min="0" step="1" />
+                      </label>
+                      <p class="promo-note">Customer savings <strong id="bundle-savings">0 MMK</strong></p>
+                    </div>
+                    <div data-config="bogo" hidden>
+                      <div class="promo-split">
+                        <label class="promo-field">
+                          <span>Customer buys (X)</span>
+                          <input id="buy-qty" type="number" min="1" step="1" value="2" />
+                        </label>
+                        <label class="promo-field">
+                          <span>Customer gets (Y)</span>
+                          <input id="get-qty" type="number" min="1" step="1" value="1" />
+                        </label>
+                      </div>
+                      <div class="promo-actions">
+                        <button class="btn is-ghost" type="button" data-pick="trigger">Select Trigger Item(s) X</button>
+                        <button class="btn is-ghost" type="button" data-pick="reward">Select Reward Item Y</button>
+                      </div>
+                      <p class="promo-note" id="bogo-picked">Buy items 0 · Reward items 0</p>
+                      <label class="promo-field">
+                        <span>Reward benefit</span>
+                        <select id="reward-benefit">
+                          <option value="free">100% Free</option>
+                          <option value="percent">Percentage % off</option>
+                        </select>
+                      </label>
+                      <label class="promo-field" id="reward-percent-field" hidden>
+                        <span>Percent off the reward item</span>
+                        <input id="reward-percent" type="number" min="1" max="100" step="1" value="50" />
+                      </label>
+                      <p class="promo-note">The reward applies only when the cart contains the full buy quantity. One reward grant per qualifying set.</p>
+                      <p class="field-error" id="bogo-error" hidden></p>
+                    </div>
+                    <div data-config="shipping" hidden>
+                      <label class="promo-field">
+                        <span>Minimum cart spend (MMK)</span>
+                        <input id="ship-min" type="number" min="0" step="1000" value="50000" />
+                      </label>
+                      <label class="promo-field">
+                        <span>Applicable zone</span>
+                        <select id="ship-zone">
+                          <option>Yangon</option>
+                          <option>Mandalay</option>
+                          <option>Nationwide</option>
+                        </select>
+                      </label>
+                      <p class="ship-preview" id="ship-preview"></p>
+                    </div>
+                    <div data-config="flash" hidden>
+                      <label class="promo-field">
+                        <span>Flash sale banner title</span>
+                        <input id="flash-title" type="text" maxlength="60" />
+                      </label>
+                      <div class="promo-split">
+                        <label class="promo-field">
+                          <span>Flash discount %</span>
+                          <input id="flash-percent" type="number" min="1" max="90" step="1" value="30" />
+                        </label>
+                        <label class="promo-field">
+                          <span>Stock cap per item</span>
+                          <input id="flash-cap" type="number" min="1" step="1" value="20" />
+                        </label>
+                      </div>
+                      <button class="btn is-ghost" type="button" data-pick="flash">Select Flash Sale Products</button>
+                      <p class="promo-note" id="flash-picked">0 products selected</p>
+                      <p class="flash-clock is-preview" id="flash-preview-clock">00:00:00</p>
+                    </div>
+                  </section>
+                  <section class="promo-card">
+                    <h2>Validity period</h2>
+                    <p class="promo-note">Both dates are required, and the end must be after the start.</p>
+                    <div class="promo-split">
+                      <label class="promo-field" id="start-field">
+                        <span>Start</span>
+                        <input id="promo-start-date" type="datetime-local" />
+                      </label>
+                      <label class="promo-field" id="end-field">
+                        <span>End</span>
+                        <input id="promo-end-date" type="datetime-local" />
+                      </label>
+                    </div>
+                    <p class="field-error" id="date-error" hidden>End date must be later than the start date.</p>
+                  </section>
+                </div>
+                <aside class="promo-side">
+                  <section class="promo-card">
+                    <h2>Usage limits</h2>
+                    <label class="promo-check">
+                      <input id="usage-unlimited" type="checkbox" />
+                      <span>Unlimited redemptions</span>
+                    </label>
+                    <label class="promo-field">
+                      <span>Total usage limit</span>
+                      <input id="usage-limit" type="number" min="1" step="1" value="100" />
+                    </label>
+                    <label class="promo-field">
+                      <span>Uses per customer</span>
+                      <input id="usage-customer" type="number" min="1" step="1" value="1" />
+                    </label>
+                    <label class="promo-field">
+                      <span>Minimum spend (MMK)</span>
+                      <input id="usage-min" type="number" min="0" step="1" value="0" />
+                    </label>
+                  </section>
+                  <section class="promo-card">
+                    <h2>Stacking &amp; security</h2>
+                    <label class="promo-check">
+                      <input id="stacking" type="checkbox" />
+                      <span>Allow promotion stacking</span>
+                    </label>
+                    <p class="promo-note">Default: only 1 coupon permitted per cart.</p>
+                    <ul class="guard-list">
+                      <li>Brute-force rate limit active. Locks after 5 invalid coupon attempts.</li>
+                      <li>Server-side price validation and atomic row-locking enabled.</li>
+                    </ul>
+                  </section>
+                  <section class="promo-card" id="promo-summary" aria-live="polite"></section>
+                </aside>
+              </div>
+            </section>
+          </div>
         </main>
       </div>
     </div>
+
+    <div class="order-modal promo-modal" id="product-modal" hidden>
+      <div class="modal-card promo-picker" role="dialog" aria-modal="true" aria-labelledby="picker-title">
+        <div class="promo-head">
+          <h2 id="picker-title">Select products</h2>
+          <button class="icon-btn" type="button" data-close-picker aria-label="Close"><i data-lucide="x"></i></button>
+        </div>
+        <div class="promo-filters">
+          <input class="search" id="picker-search" type="search" placeholder="Product name or SKU" aria-label="Search products" />
+          <label class="promo-field">
+            <span>Category</span>
+            <select id="picker-category">
+              <option value="all">All</option>
+              <option>Outerwear</option>
+              <option>Dresses</option>
+              <option>Footwear</option>
+              <option>Accessories</option>
+              <option>Knitwear</option>
+            </select>
+          </label>
+        </div>
+        <div class="table-scroll">
+          <table class="promo-table">
+            <thead>
+              <tr>
+                <th scope="col"><span class="sr-only">Select</span></th>
+                <th scope="col">Product</th>
+                <th scope="col">SKU</th>
+                <th scope="col">Stock</th>
+                <th scope="col">Price</th>
+              </tr>
+            </thead>
+            <tbody id="picker-table"></tbody>
+          </table>
+        </div>
+        <div class="promo-pager" id="picker-pager"></div>
+        <div class="promo-bar">
+          <p id="picker-count">0 products selected</p>
+          <div class="promo-actions">
+            <button class="btn is-ghost" type="button" data-close-picker>Cancel</button>
+            <button class="btn" id="confirm-products" type="button">Confirm Selection</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="mobile-floating-nav" id="mobile-floating-nav" aria-label="Primary">
+      <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg><span>Dashboard</span></a>
+<a href="orders.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 8h11l-1 12h-9l-1-12z"/><path d="M9 8V7a3 3 0 0 1 6 0v1"/></svg><span>Orders</span></a>
+<a href="products.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 4-8 4-8-4 8-4z"/><path d="m4 12 8 4 8-4"/><path d="m4 17 8 4 8-4"/></svg><span>Products</span></a>
+<a class="is-active" href="promotions.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m20 13-9-9H5v6l9 9 6-6z"/><circle cx="8.5" cy="8.5" r="1" fill="currentColor" stroke="none"/></svg><span>Promotions</span></a>
+      <button type="button" id="mobile-more-toggle" aria-expanded="false" aria-controls="mobile-more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="18" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg><span>More</span></button>
+    </nav>
+    <div class="mobile-more" id="mobile-more" hidden>
+      <a class="nav-link" href="finance.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/></svg><span>Finance</span></a>
+<a class="nav-link" href="message.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H9l-4 3v-3H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></svg><span>Message</span></a>
+<a class="nav-link" href="studio.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Studio</span></a>
+<a class="nav-link" href="team.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9.5" r="2"/><path d="M3.5 19c.6-3 2.8-4.5 5.5-4.5s4.9 1.5 5.5 4.5"/><path d="M16 14.6c1.7.2 3 1.2 3.6 3.4"/></svg><span>Team</span></a>
+<a class="nav-link" href="shop-profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10 6 4h12l2 6"/><path d="M4 10h16v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M10 20v-5h4v5"/></svg><span>Shop Profile</span></a>
+<a class="nav-link" href="setting.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Settings</span></a>
+    </div>
     <button class="scrim" id="scrim" type="button" hidden aria-label="Close menu"></button>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <script src="js/script.js"></script>
+    <script src="js/promotions.js"></script>
   </body>
 </html>

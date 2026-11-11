@@ -4,11 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f7f6f4" />
+    <script>
+      try {
+        if (localStorage.getItem("stylex-theme") === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
+        if (localStorage.getItem("stylex-sidebar") === "collapsed") {
+          document.documentElement.setAttribute("data-sidebar", "collapsed");
+        }
+      } catch (error) {}
+    </script>
+
     <title>Finance · Stylex</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,600&display=swap"
       rel="stylesheet"
     />
     <link
@@ -21,83 +32,419 @@
     <a class="skip" href="#content">Skip to content</a>
     <div class="layout">
       <aside class="sidebar" id="sidebar">
+        <div class="brand-row">
         <a class="brand" href="index.html">
           <span class="brand-mark" aria-hidden="true"></span>
           <span class="brand-name">Stylex</span>
         </a>
+        <button class="sidebar-toggle" id="sidebar-collapse" type="button" aria-expanded="true" aria-controls="shop-nav" aria-label="Close sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M9 4.5v15"/><path d="m14 9 3 3-3 3"/></svg><span class="sidebar-tip"></span></button>
+      </div>
         <nav class="nav" id="shop-nav" aria-label="Shop">
-          <a class="nav-link" href="index.html">
-            <i class="ri-dashboard-line" aria-hidden="true"></i>
-            <span>Dashboard</span>
-          </a>
-          <a class="nav-link" href="orders.html">
-            <i class="ri-shopping-bag-line" aria-hidden="true"></i>
-            <span>Orders</span>
-          </a>
-          <a class="nav-link" href="products.html">
-            <i class="ri-stack-line" aria-hidden="true"></i>
-            <span>Products</span>
-          </a>
-          <a class="nav-link" href="promotions.html">
-            <i class="ri-price-tag-3-line" aria-hidden="true"></i>
-            <span>Promotions</span>
-          </a>
-          <a class="nav-link is-active" href="finance.html" aria-current="page">
-            <i class="ri-wallet-line" aria-hidden="true"></i>
-            <span>Finance</span>
-          </a>
-          <a class="nav-link" href="message.html">
-            <i class="ri-chat-3-line" aria-hidden="true"></i>
-            <span>Message</span>
-          </a>
-          <a class="nav-link" href="studio.html">
-            <i class="ri-palette-line" aria-hidden="true"></i>
-            <span>Studio</span>
-          </a>
-          <a class="nav-link" href="team.html">
-            <i class="ri-team-line" aria-hidden="true"></i>
-            <span>Team</span>
-          </a>
-          <a class="nav-link" href="shop-profile.html">
-            <i class="ri-store-2-line" aria-hidden="true"></i>
-            <span>Shop Profile</span>
-          </a>
-          <a class="nav-link" href="setting.html">
-            <i class="ri-settings-3-line" aria-hidden="true"></i>
-            <span>Settings</span>
-          </a>
+          <a class="nav-link" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg><span>Dashboard</span></a>
+<a class="nav-link" href="orders.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 8h11l-1 12h-9l-1-12z"/><path d="M9 8V7a3 3 0 0 1 6 0v1"/></svg><span>Orders</span></a>
+<a class="nav-link" href="products.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 4-8 4-8-4 8-4z"/><path d="m4 12 8 4 8-4"/><path d="m4 17 8 4 8-4"/></svg><span>Products</span></a>
+<a class="nav-link" href="promotions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m20 13-9-9H5v6l9 9 6-6z"/><circle cx="8.5" cy="8.5" r="1" fill="currentColor" stroke="none"/></svg><span>Promotions</span></a>
+<a class="nav-link is-active" href="finance.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/></svg><span>Finance</span></a>
+<a class="nav-link" href="message.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H9l-4 3v-3H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></svg><span>Message</span></a>
+<a class="nav-link" href="studio.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Studio</span></a>
+<a class="nav-link" href="team.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9.5" r="2"/><path d="M3.5 19c.6-3 2.8-4.5 5.5-4.5s4.9 1.5 5.5 4.5"/><path d="M16 14.6c1.7.2 3 1.2 3.6 3.4"/></svg><span>Team</span></a>
+<a class="nav-link" href="shop-profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10 6 4h12l2 6"/><path d="M4 10h16v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M10 20v-5h4v5"/></svg><span>Shop Profile</span></a>
+<a class="nav-link" href="setting.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Settings</span></a>
         </nav>
-        <div class="shop-profile">
-          <span class="avatar" aria-hidden="true">AN</span>
-          <div>
-            <p class="shop-name">Atelier Noir</p>
-            <p class="shop-meta">@atelier.noir</p>
+      </aside>
+      <div class="main outlet">
+        <div class="outlet-head">
+          <div class="outlet-title-wrap">
+            <h1 class="page-title" data-bind="page-title">Finance</h1>
+          </div>
+          <div class="utility-cluster">
+            <p class="status-pill"><span class="live-dot" aria-hidden="true"></span><span id="status-date" data-bind="shop-date">Today</span></p>
+            <a class="notify-btn" href="notifications.html" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V10a6 6 0 1 1 12 0v6"/><path d="M4.5 16h15"/><path d="M10 19a2 2 0 0 0 4 0"/></svg><span class="bell-dot" aria-hidden="true"></span></a>
+            <div class="account-menu">
+              <button class="account-card" id="account-toggle" type="button" aria-expanded="false" aria-controls="account-dropdown" data-bind="shop-owner">
+              <span class="avatar" data-bind="shop-owner-initials" aria-hidden="true">AN</span>
+              <span class="account-copy">
+                <span class="shop-name" data-bind="shop-owner-name">Atelier Noir</span>
+                <span class="shop-meta" data-bind="shop-owner-role">Shop owner</span>
+              </span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
+            </button>
+              <div class="account-dropdown" id="account-dropdown" hidden>
+                <div class="theme-switch-row">
+                  <span id="theme-switch-label">Light theme</span>
+                  <button class="theme-switch" id="theme-switch" type="button" role="switch" aria-checked="false" aria-label="Switch to dark theme"><span class="theme-switch-knob"></span></button>
+                </div>
+                <div class="lang-row">
+                  <span>Language</span>
+                  <div class="lang-pills" role="group" aria-label="Language" data-bind="language">
+                    <button type="button" data-lang="en" aria-pressed="true">EN</button>
+                    <button type="button" data-lang="my" aria-pressed="false">MY</button>
+                  </div>
+                </div>
+                <button class="account-logout" id="logout-button" type="button">Log out</button>
+              </div>
+            </div>
           </div>
         </div>
-      </aside>
-      <div class="main">
-        <div class="masthead">
-          <header class="topbar">
-            <div class="topbar-left">
-              <button class="icon-btn menu-btn" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
-                <i class="ri-menu-line" aria-hidden="true"></i>
-              </button>
-              <h1 class="page-title">Finance</h1>
-            </div>
-          </header>
+        <div class="finance-banner" id="low-balance-banner" role="status" hidden>
+          <p>
+            <strong>Low payout balance warning:</strong>
+            Central payout account balance is running low to fulfill pending withdrawal requests.
+          </p>
+          <div class="finance-banner-side">
+            <span class="finance-count" id="withdrawal-alert-count">0 new</span>
+            <button class="icon-btn" id="dismiss-banner" type="button" aria-label="Dismiss low balance warning">
+              <i data-lucide="x"></i>
+            </button>
+          </div>
         </div>
-        <main class="canvas" id="content">
-          <section class="empty-stage">
-            <div class="empty-state">
-              <span class="empty-orb" aria-hidden="true"><i class="ri-wallet-line"></i></span>
-              <h2>Finance is quiet</h2>
-              <p>Payouts, fees, and statements will appear here once the books have something to show.</p>
+        <main class="canvas outlet-canvas" id="content">
+          <div class="finance-workspace">
+            <div class="finance-tabs" role="tablist" aria-label="Finance">
+              <button type="button" role="tab" id="tab-overview" data-tab="overview" aria-selected="true" aria-controls="panel-overview">Overview &amp; Earnings</button>
+              <button type="button" role="tab" id="tab-withdrawals" data-tab="withdrawals" aria-selected="false" aria-controls="panel-withdrawals" tabindex="-1">
+                Withdrawal Requests
+                <span class="finance-count" id="withdrawal-tab-count">0</span>
+              </button>
+              <button type="button" role="tab" id="tab-ledger" data-tab="ledger" aria-selected="false" aria-controls="panel-ledger" tabindex="-1">Transaction History</button>
+              <button type="button" role="tab" id="tab-payouts" data-tab="payouts" aria-selected="false" aria-controls="panel-payouts" tabindex="-1">Payout History</button>
+              <button type="button" role="tab" id="tab-invoices" data-tab="invoices" aria-selected="false" aria-controls="panel-invoices" tabindex="-1">Invoices &amp; Audit Log</button>
             </div>
-          </section>
+
+            <section class="finance-panel is-shown" id="panel-overview" data-panel="overview" role="tabpanel" aria-labelledby="tab-overview">
+              <div class="finance-head">
+                <div>
+                  <h2>Financial Overview</h2>
+                  <p>Marketplace earnings, clearing balances, and platform commission.</p>
+                </div>
+                <div class="finance-menu">
+                  <button class="btn" id="export-report" type="button" aria-expanded="false" aria-controls="export-report-list">Export Financial Report</button>
+                  <div class="finance-menu-list" id="export-report-list" hidden>
+                    <button type="button" data-export="csv" data-scope="overview">Export CSV</button>
+                    <button type="button" data-export="excel" data-scope="overview">Export Excel</button>
+                  </div>
+                </div>
+              </div>
+              <div class="finance-stats">
+                <article class="finance-stat">
+                  <p class="finance-kicker">Total Marketplace Revenue</p>
+                  <p class="finance-stat-value" id="stat-total-revenue">—</p>
+                  <p class="finance-stat-usd" id="stat-total-revenue-usd"></p>
+                  <p class="finance-stat-note">Gross order volume, year to date.</p>
+                </article>
+                <article class="finance-stat">
+                  <p class="finance-kicker">Pending Balance</p>
+                  <p class="finance-stat-value" id="stat-pending-balance">—</p>
+                  <p class="finance-stat-usd" id="stat-pending-balance-usd"></p>
+                  <p class="finance-stat-note">Delivered orders inside the 3–7 day clearing period, before they move to available balance.</p>
+                </article>
+                <article class="finance-stat">
+                  <p class="finance-kicker">Available Balance</p>
+                  <p class="finance-stat-value" id="stat-available-balance">—</p>
+                  <p class="finance-stat-usd" id="stat-available-balance-usd"></p>
+                  <p class="finance-stat-note">Net cleared balance after the 10% platform commission.</p>
+                  <button class="btn is-ghost" id="simulate-withdrawal" type="button">Request / Simulate Withdrawal</button>
+                </article>
+                <article class="finance-stat">
+                  <p class="finance-kicker">Platform Commission Earned</p>
+                  <p class="finance-stat-value" id="stat-platform-commission">—</p>
+                  <p class="finance-stat-usd" id="stat-platform-commission-usd"></p>
+                  <p class="finance-stat-note">Rate <span id="commission-rate">10%</span> · deducted from gross order volume.</p>
+                </article>
+              </div>
+              <section class="finance-card">
+                <div class="finance-head">
+                  <div>
+                    <h2>Monthly Revenue &amp; Commission</h2>
+                    <p id="trend-range">Last 6 months</p>
+                  </div>
+                  <div class="finance-pills" role="group" aria-label="Chart period">
+                    <button type="button" data-span="6" aria-pressed="true">6 Months</button>
+                    <button type="button" data-span="12" aria-pressed="false">1 Year</button>
+                  </div>
+                </div>
+                <div class="finance-chart">
+                  <canvas id="financeTrendChart" role="img" aria-label="Monthly gross revenue and commission"></canvas>
+                </div>
+              </section>
+            </section>
+
+            <section class="finance-panel" id="panel-withdrawals" data-panel="withdrawals" role="tabpanel" aria-labelledby="tab-withdrawals" hidden>
+              <div class="finance-head">
+                <div>
+                  <h2>Withdrawal Requests</h2>
+                  <p>Minimum withdrawal is 10,000 MMK. Approving a request issues a single-use idempotency key.</p>
+                </div>
+                <button class="btn" id="new-withdrawal" type="button">New Withdrawal Request</button>
+              </div>
+              <div class="finance-pills" id="withdrawal-filters" role="group" aria-label="Withdrawal status">
+                <button type="button" data-status="all" aria-pressed="true">All</button>
+                <button type="button" data-status="Pending" aria-pressed="false">Pending</button>
+                <button type="button" data-status="Approved" aria-pressed="false">Approved</button>
+                <button type="button" data-status="Rejected" aria-pressed="false">Rejected</button>
+              </div>
+              <div class="table-scroll">
+                <table class="finance-table">
+                  <caption class="sr-only">Withdrawal requests</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Request ID</th>
+                      <th scope="col">Seller / Account</th>
+                      <th scope="col">Requested Amount</th>
+                      <th scope="col">Bank Details</th>
+                      <th scope="col">Request Date</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="withdrawal-table"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="finance-panel" id="panel-ledger" data-panel="ledger" role="tabpanel" aria-labelledby="tab-ledger" hidden>
+              <div class="finance-head">
+                <div>
+                  <h2>Transaction History</h2>
+                  <p>Credits, refunds, payouts, and commission postings.</p>
+                </div>
+                <div class="finance-actions">
+                  <button class="btn is-ghost" type="button" data-export="csv" data-scope="ledger">Export CSV</button>
+                  <button class="btn is-ghost" type="button" data-export="excel" data-scope="ledger">Export Excel</button>
+                </div>
+              </div>
+              <div class="finance-filters">
+                <input class="search" id="ledger-search" type="search" placeholder="Transaction ID or order ID" aria-label="Search by transaction ID or order ID" />
+                <label class="finance-field">
+                  <span>From</span>
+                  <input id="ledger-from" type="date" value="2026-10-01" />
+                </label>
+                <label class="finance-field">
+                  <span>To</span>
+                  <input id="ledger-to" type="date" value="2026-11-10" />
+                </label>
+                <label class="finance-field">
+                  <span>Type</span>
+                  <select id="ledger-type">
+                    <option value="all">All Types</option>
+                    <option value="credit">Credit (Order)</option>
+                    <option value="debit">Debit (Refund/Payout)</option>
+                    <option value="commission">Commission</option>
+                  </select>
+                </label>
+              </div>
+              <div class="table-scroll">
+                <table class="finance-table">
+                  <caption class="sr-only">Transaction ledger</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Date &amp; Time</th>
+                      <th scope="col">Transaction ID</th>
+                      <th scope="col">Reference</th>
+                      <th scope="col">Type</th>
+                      <th scope="col">Gross</th>
+                      <th scope="col">Commission</th>
+                      <th scope="col">Net</th>
+                      <th scope="col">Balance State</th>
+                      <th scope="col">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ledger-table"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="finance-panel" id="panel-payouts" data-panel="payouts" role="tabpanel" aria-labelledby="tab-payouts" hidden>
+              <div class="finance-head">
+                <div>
+                  <h2>Payout History</h2>
+                  <p>Completed withdrawals and their bank receipts.</p>
+                </div>
+                <div class="finance-actions">
+                  <button class="btn is-ghost" type="button" data-export="csv" data-scope="payouts">Export CSV</button>
+                  <button class="btn is-ghost" type="button" data-export="excel" data-scope="payouts">Export Excel</button>
+                </div>
+              </div>
+              <div class="finance-filters">
+                <input class="search" id="payout-search" type="search" placeholder="Payout ID, bank, or receipt reference" aria-label="Search payouts" />
+              </div>
+              <div class="table-scroll">
+                <table class="finance-table">
+                  <caption class="sr-only">Completed payouts</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Completion Date</th>
+                      <th scope="col">Payout ID</th>
+                      <th scope="col">Destination Bank</th>
+                      <th scope="col">Payout Amount</th>
+                      <th scope="col">Receipt Reference</th>
+                      <th scope="col">Processed By</th>
+                      <th scope="col"><span class="sr-only">Receipt</span></th>
+                    </tr>
+                  </thead>
+                  <tbody id="payout-table"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="finance-panel" id="panel-invoices" data-panel="invoices" role="tabpanel" aria-labelledby="tab-invoices" hidden>
+              <div class="finance-head">
+                <div>
+                  <h2>Invoices</h2>
+                  <p class="finance-note">Invoices are automatically generated and stored when an order status reaches Delivered.</p>
+                </div>
+              </div>
+              <div class="table-scroll">
+                <table class="finance-table">
+                  <caption class="sr-only">Invoices</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Invoice Number</th>
+                      <th scope="col">Linked Order</th>
+                      <th scope="col">Customer</th>
+                      <th scope="col">Delivered / Issued</th>
+                      <th scope="col">Total</th>
+                      <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="invoice-table"></tbody>
+                </table>
+              </div>
+              <section class="finance-card" aria-labelledby="audit-title">
+                <div class="finance-head">
+                  <div>
+                    <h2 id="audit-title">Security Audit Trail</h2>
+                    <p>Read-only log of sensitive admin actions.</p>
+                  </div>
+                </div>
+                <div class="table-scroll">
+                  <table class="finance-table">
+                    <caption class="sr-only">Security audit log</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Timestamp</th>
+                        <th scope="col">Admin</th>
+                        <th scope="col">Action</th>
+                        <th scope="col">Target</th>
+                        <th scope="col">Idempotency Reference</th>
+                      </tr>
+                    </thead>
+                    <tbody id="audit-table"></tbody>
+                  </table>
+                </div>
+              </section>
+            </section>
+          </div>
         </main>
       </div>
     </div>
+
+    <div class="order-modal" id="withdrawal-modal" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="withdrawal-title">
+        <h2 id="withdrawal-title">New Withdrawal Request</h2>
+        <p class="finance-modal-copy">The minimum withdrawal is 10,000 MMK. The request is checked against the available balance.</p>
+        <form id="withdrawal-form">
+          <label class="field">
+            <span>Seller / account name</span>
+            <input id="withdraw-seller" type="text" value="Atelier Noir" required />
+          </label>
+          <label class="field" id="withdraw-amount-field">
+            <span>Amount (MMK)</span>
+            <input id="withdraw-amount" type="number" min="0" step="1" inputmode="numeric" required />
+            <span class="field-error" id="withdraw-error" hidden></span>
+          </label>
+          <label class="field">
+            <span>Bank name</span>
+            <input id="withdraw-bank" type="text" value="KBZ Bank" required />
+          </label>
+          <label class="field">
+            <span>Account number</span>
+            <input id="withdraw-account" type="text" value="001234567890" required />
+          </label>
+          <label class="field">
+            <span>Account holder</span>
+            <input id="withdraw-holder" type="text" value="Atelier Noir Co." required />
+          </label>
+          <div class="modal-actions">
+            <button class="btn is-ghost" type="button" data-close-modal>Cancel</button>
+            <button class="btn" type="submit">Submit request</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="order-modal" id="approve-modal" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="approve-title">
+        <h2 id="approve-title">Approve withdrawal</h2>
+        <p class="finance-modal-copy" id="approve-copy"></p>
+        <p class="finance-key-label">Idempotency-Key</p>
+        <code class="finance-key" id="idempotency-key"></code>
+        <div class="modal-actions">
+          <button class="btn is-ghost" type="button" data-close-modal>Cancel</button>
+          <button class="btn" id="confirm-approve" type="button">Approve payout</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="order-modal" id="reject-modal" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="reject-title">
+        <h2 id="reject-title">Reject withdrawal</h2>
+        <p class="finance-modal-copy" id="reject-copy"></p>
+        <label class="field" id="reject-reason-field">
+          <span>Reason</span>
+          <textarea id="reject-reason" rows="3" required></textarea>
+          <span class="field-error" id="reject-error" hidden>A reason is required.</span>
+        </label>
+        <div class="modal-actions">
+          <button class="btn is-ghost" type="button" data-close-modal>Cancel</button>
+          <button class="btn is-danger" id="confirm-reject" type="button">Reject request</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="order-modal" id="invoice-modal" hidden>
+      <div class="modal-card finance-sheet" role="dialog" aria-modal="true" aria-labelledby="invoice-title">
+        <p class="finance-kicker">Stylex</p>
+        <h2 id="invoice-title">Invoice</h2>
+        <div id="invoice-preview"></div>
+        <p class="finance-key-label">Signed URL · expires in 300s</p>
+        <code class="finance-key" id="invoice-token"></code>
+        <div class="modal-actions">
+          <button class="btn is-ghost" type="button" data-close-modal>Close</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="finance-drawer" id="receipt-drawer" hidden>
+      <button class="finance-drawer-scrim" type="button" data-close-drawer aria-label="Close receipt"></button>
+      <aside class="finance-drawer-panel" role="dialog" aria-modal="true" aria-labelledby="receipt-title">
+        <div class="finance-head">
+          <h2 id="receipt-title">Payout receipt</h2>
+          <button class="icon-btn" type="button" data-close-drawer aria-label="Close receipt"><i data-lucide="x"></i></button>
+        </div>
+        <div id="receipt-body"></div>
+      </aside>
+    </div>
+
+    <nav class="mobile-floating-nav" id="mobile-floating-nav" aria-label="Primary">
+      <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg><span>Dashboard</span></a>
+<a href="orders.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 8h11l-1 12h-9l-1-12z"/><path d="M9 8V7a3 3 0 0 1 6 0v1"/></svg><span>Orders</span></a>
+<a href="products.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 4-8 4-8-4 8-4z"/><path d="m4 12 8 4 8-4"/><path d="m4 17 8 4 8-4"/></svg><span>Products</span></a>
+<a href="promotions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m20 13-9-9H5v6l9 9 6-6z"/><circle cx="8.5" cy="8.5" r="1" fill="currentColor" stroke="none"/></svg><span>Promotions</span></a>
+      <button type="button" id="mobile-more-toggle" aria-expanded="false" aria-controls="mobile-more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="18" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg><span>More</span></button>
+    </nav>
+    <div class="mobile-more" id="mobile-more" hidden>
+      <a class="nav-link is-active" href="finance.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/></svg><span>Finance</span></a>
+<a class="nav-link" href="message.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H9l-4 3v-3H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></svg><span>Message</span></a>
+<a class="nav-link" href="studio.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Studio</span></a>
+<a class="nav-link" href="team.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9.5" r="2"/><path d="M3.5 19c.6-3 2.8-4.5 5.5-4.5s4.9 1.5 5.5 4.5"/><path d="M16 14.6c1.7.2 3 1.2 3.6 3.4"/></svg><span>Team</span></a>
+<a class="nav-link" href="shop-profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10 6 4h12l2 6"/><path d="M4 10h16v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M10 20v-5h4v5"/></svg><span>Shop Profile</span></a>
+<a class="nav-link" href="setting.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Settings</span></a>
+    </div>
     <button class="scrim" id="scrim" type="button" hidden aria-label="Close menu"></button>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <script src="js/script.js"></script>
+    <script src="js/finance.js"></script>
   </body>
 </html>
