@@ -3866,26 +3866,41 @@ body[data-page="finance"] .toast.is-on {
   .mobile-floating-nav a,
   .mobile-floating-nav button {
     display: flex;
+    flex: 1 1 0;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 2px;
-    min-width: 52px;
+    min-width: 0;
     height: 48px;
-    padding: 0 8px;
+    padding: 0 2px;
     border: 0;
     border-radius: var(--radius-pill);
     background: transparent;
-    color: var(--text-primary);
+    color: var(--text-secondary);
     font-family: var(--font-heading);
     font-size: 10px;
-    font-weight: 500;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+
+  .mobile-floating-nav a span,
+  .mobile-floating-nav button span {
+    max-width: 100%;
+    overflow: hidden;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.1;
+    text-overflow: ellipsis;
   }
 
   .mobile-floating-nav a.is-active,
+  .mobile-floating-nav button.is-active,
   .mobile-floating-nav button[aria-expanded="true"] {
     background: var(--accent-primary);
     color: var(--text-on-dark);
+    font-weight: 600;
   }
 
   .mobile-more:not([hidden]) {
