@@ -252,6 +252,16 @@
       setSidebarCollapsed(!collapsed, true);
     });
   }
+
+  const brandRow = sidebar && sidebar.querySelector(".brand-row");
+  if (brandRow) {
+    brandRow.addEventListener("mouseleave", () => {
+      const collapsed = sidebar.classList.contains("is-collapsed") || document.documentElement.getAttribute("data-sidebar") === "collapsed";
+      if (!collapsed) return;
+      const active = document.activeElement;
+      if (active && brandRow.contains(active)) active.blur();
+    });
+  }
   if (document.documentElement.getAttribute("data-sidebar") === "collapsed") {
     setSidebarCollapsed(true);
   }

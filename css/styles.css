@@ -187,7 +187,7 @@ p {
   display: flex;
   align-items: center;
   min-width: 0;
-  min-height: 36px;
+  min-height: 48px;
   margin-bottom: 22px;
   transition: min-height var(--sidebar-slide);
 }
@@ -201,7 +201,7 @@ p {
   display: flex;
   align-items: center;
   gap: 10px;
-  max-width: calc(100% - 40px);
+  max-width: calc(100% - 56px);
   min-width: 0;
   overflow: hidden;
   padding: 4px 8px;
@@ -237,12 +237,12 @@ p {
   z-index: 1;
   display: grid;
   place-items: center;
-  width: 36px;
-  height: 36px;
+  width: 48px;
+  height: 48px;
   margin: 0;
   padding: 0;
   border: 0;
-  border-radius: 10px;
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--text-primary);
   transform: translateY(-50%);
@@ -265,7 +265,7 @@ p {
   left: calc(100% + 10px);
   z-index: 30;
   padding: 6px 10px;
-  border-radius: 8px;
+  border-radius: var(--radius-pill);
   background: var(--text-primary);
   color: var(--bg-outlet);
   font-family: var(--font-body);
@@ -349,11 +349,6 @@ html[data-sidebar="collapsed"] .sidebar,
   padding-left: 22px;
 }
 
-html[data-sidebar="collapsed"] .brand-row,
-.sidebar.is-collapsed .brand-row {
-  min-height: 48px;
-}
-
 html[data-sidebar="collapsed"] .sidebar:not(.is-animating) .brand-row,
 .sidebar.is-collapsed:not(.is-animating) .brand-row {
   overflow: visible;
@@ -381,25 +376,32 @@ html[data-sidebar="collapsed"] .sidebar-toggle,
 html[data-sidebar="collapsed"] .sidebar:not(.is-animating) .sidebar-toggle,
 .sidebar.is-collapsed:not(.is-animating) .sidebar-toggle {
   right: 50%;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  left: auto;
+  border-radius: var(--radius-pill);
   background: var(--bg-muted);
+  box-shadow: none;
   transform: translate(50%, -50%);
 }
 
 html[data-sidebar="collapsed"] .brand-row:hover .sidebar-toggle,
-html[data-sidebar="collapsed"] .brand-row:focus-within .sidebar-toggle,
+html[data-sidebar="collapsed"] .sidebar-toggle:focus-visible,
 .sidebar.is-collapsed .brand-row:hover .sidebar-toggle,
-.sidebar.is-collapsed .brand-row:focus-within .sidebar-toggle {
+.sidebar.is-collapsed .sidebar-toggle:focus-visible {
   opacity: 1;
 }
 
 html[data-sidebar="collapsed"] .brand-row:hover .brand-mark,
-html[data-sidebar="collapsed"] .brand-row:focus-within .brand-mark,
+html[data-sidebar="collapsed"] .brand-row:has(.sidebar-toggle:focus-visible) .brand-mark,
 .sidebar.is-collapsed .brand-row:hover .brand-mark,
-.sidebar.is-collapsed .brand-row:focus-within .brand-mark {
+.sidebar.is-collapsed .brand-row:has(.sidebar-toggle:focus-visible) .brand-mark {
   opacity: 0;
+}
+
+html[data-sidebar="collapsed"] .brand-row:hover .sidebar-tip,
+html[data-sidebar="collapsed"] .sidebar-toggle:focus-visible .sidebar-tip,
+.sidebar.is-collapsed .brand-row:hover .sidebar-tip,
+.sidebar.is-collapsed .sidebar-toggle:focus-visible .sidebar-tip {
+  opacity: 1;
 }
 
 html[data-sidebar="collapsed"] .sidebar-tip::after,
@@ -446,7 +448,7 @@ html[data-sidebar="collapsed"] .sidebar:not(.is-animating) .nav-link span,
   width: max-content;
   padding: 6px 10px;
   overflow: visible;
-  border-radius: 8px;
+  border-radius: var(--radius-pill);
   background: var(--text-primary);
   color: var(--bg-outlet);
   font-family: var(--font-body);
@@ -4085,15 +4087,29 @@ input[type="search"]:focus {
   border-spacing: 0;
 }
 
+.table-scroll,
+.table-wrap {
+  overflow: auto;
+  background-clip: padding-box;
+}
+
+.table-wrap {
+  border-radius: var(--radius-inner);
+}
+
 .order-table th:first-child,
 .product-table th:first-child,
 .variant-table th:first-child,
 .measure-table th:first-child,
 .finance-table th:first-child,
 .promo-table th:first-child,
-.data-table th:first-child {
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 0;
+.order-table tr:last-child td:first-child,
+.product-table tr:last-child td:first-child,
+.variant-table tr:last-child td:first-child,
+.measure-table tr:last-child td:first-child,
+.finance-table tr:last-child td:first-child,
+.promo-table tr:last-child td:first-child {
+  border-top-left-radius: var(--radius-card);
 }
 
 .order-table th:last-child,
@@ -4102,9 +4118,53 @@ input[type="search"]:focus {
 .measure-table th:last-child,
 .finance-table th:last-child,
 .promo-table th:last-child,
-.data-table th:last-child {
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 0;
+.order-table tr:last-child td:last-child,
+.product-table tr:last-child td:last-child,
+.variant-table tr:last-child td:last-child,
+.measure-table tr:last-child td:last-child,
+.finance-table tr:last-child td:last-child,
+.promo-table tr:last-child td:last-child {
+  border-top-right-radius: var(--radius-card);
+}
+
+.order-table tr:last-child td:first-child,
+.product-table tr:last-child td:first-child,
+.variant-table tr:last-child td:first-child,
+.measure-table tr:last-child td:first-child,
+.finance-table tr:last-child td:first-child,
+.promo-table tr:last-child td:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: var(--radius-card);
+}
+
+.order-table tr:last-child td:last-child,
+.product-table tr:last-child td:last-child,
+.variant-table tr:last-child td:last-child,
+.measure-table tr:last-child td:last-child,
+.finance-table tr:last-child td:last-child,
+.promo-table tr:last-child td:last-child {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: var(--radius-card);
+}
+
+.data-table th:first-child,
+.data-table tr:last-child td:first-child {
+  border-top-left-radius: var(--radius-inner);
+  border-bottom-left-radius: var(--radius-inner);
+}
+
+.data-table th:last-child,
+.data-table tr:last-child td:last-child {
+  border-top-right-radius: var(--radius-inner);
+  border-bottom-right-radius: var(--radius-inner);
+}
+
+.data-table th {
+  border-bottom: 0;
+}
+
+.data-table tbody tr:first-child td {
+  padding-top: 16px;
 }
 
 .btn:not(.is-ghost):not(.is-danger),
@@ -4303,12 +4363,24 @@ input[type="search"]:focus {
   font-weight: 600;
 }
 
-.studio-table th:first-child {
-  border-top-left-radius: 12px;
+.studio-table th:first-child,
+.studio-table tr:last-child td:first-child {
+  border-top-left-radius: var(--radius-inner);
 }
 
-.studio-table th:last-child {
-  border-top-right-radius: 12px;
+.studio-table th:last-child,
+.studio-table tr:last-child td:last-child {
+  border-top-right-radius: var(--radius-inner);
+}
+
+.studio-table tr:last-child td:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: var(--radius-inner);
+}
+
+.studio-table tr:last-child td:last-child {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: var(--radius-inner);
 }
 
 .studio-thumb {
@@ -4465,10 +4537,6 @@ input[type="search"]:focus {
   vertical-align: -1px;
   animation: spin 0.7s linear infinite;
 }
-  background: var(--bg-card);
-  color: var(--text-primary);
-  box-shadow: inset 4px 0 0 var(--accent-red), var(--shadow-floating);
-}
 
 @media (max-width: 900px) {
   .studio-layout,
@@ -4480,4 +4548,82 @@ input[type="search"]:focus {
   .studio-story {
     position: static;
   }
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]):not([type="search"]),
+select,
+.date-field input,
+.threshold-field input,
+.finance-field input,
+.finance-field select,
+.field input,
+.field select,
+.products-workspace .field input,
+.products-workspace .field select,
+.products-workspace .measure-table input,
+.variant-table input,
+.inline-date,
+.vis-select,
+.promo-field input,
+.promo-field select,
+.pager-size select {
+  border-radius: var(--radius-pill);
+}
+
+.date-field input,
+.threshold-field input,
+.finance-field input,
+.finance-field select,
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"] {
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+
+.date-field input:focus,
+.threshold-field input:focus,
+.finance-field input:focus,
+.finance-field select:focus,
+.field input:focus,
+.field select:focus,
+.field textarea:focus,
+input[type="date"]:focus {
+  border-color: var(--text-primary);
+  outline: none;
+}
+
+textarea,
+.field textarea,
+.products-workspace .field textarea,
+.studio-story textarea {
+  border-radius: var(--radius-inner);
+}
+
+.rev-stat,
+.panel,
+.history-card,
+.thumb,
+.mini-thumb {
+  border-radius: var(--radius-inner);
+}
+
+.warn-badge,
+.status-badge,
+.pill,
+.low-badge,
+.variant-count,
+.code-pill,
+.promo-badge,
+.flash-live,
+.finance-count,
+.bell-badge,
+.swatch {
+  border-radius: var(--radius-pill);
 }
