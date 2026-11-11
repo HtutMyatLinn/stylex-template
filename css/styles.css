@@ -33,7 +33,10 @@
   --shadow-float-dark: 0 16px 36px -6px rgba(13, 13, 13, 0.28);
   --shadow-mobile-nav: var(--shadow-nav-mobile);
   --transition-smooth: 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  --sidebar-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --sidebar-slide: 0.35s var(--sidebar-ease);
   --sidebar: 280px;
+  --sidebar-rail: 92px;
 }
 
 *,
@@ -159,57 +162,81 @@ p {
 .sidebar {
   position: sticky;
   top: 24px;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   flex: none;
-  width: 280px;
+  width: var(--sidebar);
   height: calc(100vh - 48px);
   margin: 0;
   padding: 28px 18px;
   overflow: visible;
-  transition: width var(--transition-smooth);
+  transition: width var(--sidebar-slide), padding var(--sidebar-slide);
   background: var(--color-white);
   border: 0;
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-float);
 }
 
+.sidebar.is-animating {
+  will-change: width, padding;
+}
+
 .brand-row {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  min-width: 0;
+  min-height: 36px;
   margin-bottom: 22px;
+  transition: min-height var(--sidebar-slide);
+}
+
+.sidebar.is-animating .brand-row,
+.sidebar.is-animating .nav {
+  overflow: hidden;
 }
 
 .brand {
   display: flex;
   align-items: center;
   gap: 10px;
+  max-width: calc(100% - 40px);
   min-width: 0;
+  overflow: hidden;
   padding: 4px 8px;
+  transition: gap var(--sidebar-slide), padding var(--sidebar-slide);
 }
 
 .brand-mark {
+  flex: none;
   width: 10px;
   height: 10px;
   background: var(--color-red);
-  transition: opacity var(--transition-smooth);
+  transition: opacity 0.2s ease;
 }
 
 .brand-name {
+  min-width: 0;
+  max-width: 9rem;
+  overflow: hidden;
   font-family: var(--font-display);
   font-size: 26px;
   font-weight: 700;
   letter-spacing: -0.05em;
   line-height: 1;
+  white-space: nowrap;
+  opacity: 1;
+  transition: max-width var(--sidebar-slide), opacity 0.2s ease;
 }
 
 .sidebar-toggle {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  z-index: 1;
   display: grid;
   place-items: center;
-  flex: none;
   width: 36px;
   height: 36px;
   margin: 0;
@@ -218,6 +245,8 @@ p {
   border-radius: 10px;
   background: transparent;
   color: var(--text-primary);
+  transform: translateY(-50%);
+  transition: opacity 0.18s ease, background var(--transition-smooth);
 }
 
 .sidebar-toggle:hover,
@@ -266,15 +295,19 @@ p {
   flex: 1;
   gap: 14px;
   min-height: 0;
+  min-width: 0;
   overflow: auto;
+  transition: gap var(--sidebar-slide);
 }
 
 .nav-link {
   display: flex;
   align-items: center;
   gap: 14px;
+  min-width: 0;
   min-height: 52px;
   padding: 12px 16px;
+  overflow: hidden;
   border-radius: var(--radius-pill);
   color: var(--color-obsidian);
   font-family: var(--font-heading);
@@ -282,7 +315,22 @@ p {
   font-weight: 500;
   letter-spacing: -0.015em;
   line-height: 1.25;
-  transition: background var(--transition-smooth), color var(--transition-smooth), transform var(--transition-smooth);
+  transition:
+    background var(--transition-smooth),
+    color var(--transition-smooth),
+    transform var(--transition-smooth),
+    gap var(--sidebar-slide),
+    padding var(--sidebar-slide),
+    min-height var(--sidebar-slide);
+}
+
+.nav-link span {
+  min-width: 0;
+  max-width: 11rem;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 1;
+  transition: max-width var(--sidebar-slide), opacity 0.2s ease;
 }
 
 .nav-link svg,
@@ -296,47 +344,48 @@ p {
 
 html[data-sidebar="collapsed"] .sidebar,
 .sidebar.is-collapsed {
-  width: 92px;
-  padding-right: 14px;
-  padding-left: 14px;
-}
-
-html[data-sidebar="collapsed"] .brand-name,
-.sidebar.is-collapsed .brand-name {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-}
-
-html[data-sidebar="collapsed"] .brand,
-.sidebar.is-collapsed .brand {
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  padding: 0;
+  width: var(--sidebar-rail);
+  padding-right: 22px;
+  padding-left: 22px;
 }
 
 html[data-sidebar="collapsed"] .brand-row,
 .sidebar.is-collapsed .brand-row {
-  position: relative;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 18px;
+  min-height: 48px;
+}
+
+html[data-sidebar="collapsed"] .sidebar:not(.is-animating) .brand-row,
+.sidebar.is-collapsed:not(.is-animating) .brand-row {
+  overflow: visible;
+}
+
+html[data-sidebar="collapsed"] .brand,
+.sidebar.is-collapsed .brand {
+  gap: 0;
+  max-width: none;
+  padding: 4px 0 4px 19px;
+}
+
+html[data-sidebar="collapsed"] .brand-name,
+.sidebar.is-collapsed .brand-name {
+  max-width: 0;
+  opacity: 0;
+  transition: max-width var(--sidebar-slide), opacity 0.16s ease;
 }
 
 html[data-sidebar="collapsed"] .sidebar-toggle,
 .sidebar.is-collapsed .sidebar-toggle {
-  position: absolute;
-  inset: 0;
+  opacity: 0;
+}
+
+html[data-sidebar="collapsed"] .sidebar:not(.is-animating) .sidebar-toggle,
+.sidebar.is-collapsed:not(.is-animating) .sidebar-toggle {
+  right: 50%;
   width: 48px;
   height: 48px;
-  margin: 0;
-  opacity: 0;
   border-radius: 12px;
   background: var(--bg-muted);
+  transform: translate(50%, -50%);
 }
 
 html[data-sidebar="collapsed"] .brand-row:hover .sidebar-toggle,
@@ -361,28 +410,42 @@ html[data-sidebar="collapsed"] .sidebar-tip::after,
 html[data-sidebar="collapsed"] .nav,
 .sidebar.is-collapsed .nav {
   gap: 18px;
+}
+
+html[data-sidebar="collapsed"] .sidebar:not(.is-animating) .nav,
+.sidebar.is-collapsed:not(.is-animating) .nav {
   overflow: visible;
 }
 
 html[data-sidebar="collapsed"] .nav-link,
 .sidebar.is-collapsed .nav-link {
-  position: relative;
-  align-self: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
+  gap: 0;
   min-height: 48px;
-  padding: 0;
+  padding: 13px;
+}
+
+html[data-sidebar="collapsed"] .sidebar:not(.is-animating) .nav-link,
+.sidebar.is-collapsed:not(.is-animating) .nav-link {
+  position: relative;
   overflow: visible;
 }
 
 html[data-sidebar="collapsed"] .nav-link span,
 .sidebar.is-collapsed .nav-link span {
+  max-width: 0;
+  opacity: 0;
+  transition: max-width var(--sidebar-slide), opacity 0.16s ease;
+}
+
+html[data-sidebar="collapsed"] .sidebar:not(.is-animating) .nav-link span,
+.sidebar.is-collapsed:not(.is-animating) .nav-link span {
   position: absolute;
   top: 50%;
   left: calc(100% + 14px);
   z-index: 30;
+  width: max-content;
   padding: 6px 10px;
+  overflow: visible;
   border-radius: 8px;
   background: var(--text-primary);
   color: var(--bg-outlet);
@@ -398,11 +461,13 @@ html[data-sidebar="collapsed"] .nav-link span,
   transition: opacity 0.15s ease;
 }
 
-html[data-sidebar="collapsed"] .nav-link:hover span,
-html[data-sidebar="collapsed"] .nav-link:focus-visible span,
-.sidebar.is-collapsed .nav-link:hover span,
-.sidebar.is-collapsed .nav-link:focus-visible span {
+html[data-sidebar="collapsed"] .sidebar:not(.is-animating) .nav-link:hover span,
+html[data-sidebar="collapsed"] .sidebar:not(.is-animating) .nav-link:focus-visible span,
+.sidebar.is-collapsed:not(.is-animating) .nav-link:hover span,
+.sidebar.is-collapsed:not(.is-animating) .nav-link:focus-visible span {
+  max-width: 16rem;
   opacity: 1;
+  transition: opacity 0.15s ease;
 }
 
 html[data-sidebar="collapsed"] .nav-link svg,
@@ -479,6 +544,7 @@ html[data-sidebar="collapsed"] .nav-link svg,
   min-height: calc(100vh - 48px);
   padding: 0;
   background: transparent;
+  contain: inline-size;
 }
 
 .masthead {
@@ -1469,6 +1535,14 @@ html[data-sidebar="collapsed"] .nav-link svg,
 
 @media (prefers-reduced-motion: reduce) {
   .sidebar,
+  .brand-row,
+  .brand,
+  .brand-mark,
+  .brand-name,
+  .sidebar-toggle,
+  .nav,
+  .nav-link,
+  .nav-link span,
   .is-spinning {
     transition: none;
     animation: none;

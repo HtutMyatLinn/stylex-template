@@ -211,9 +211,29 @@
   const scrim = document.getElementById("scrim");
   const SIDEBAR_KEY = "stylex-sidebar";
   const sidebarCollapse = document.getElementById("sidebar-collapse");
+  const sidebarMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let sidebarMotionTimer = 0;
 
-  function setSidebarCollapsed(collapsed) {
+  function beginSidebarMotion() {
+    if (!sidebar || sidebarMotion.matches) return;
+    sidebar.classList.add("is-animating");
+    window.clearTimeout(sidebarMotionTimer);
+    sidebarMotionTimer = window.setTimeout(() => {
+      sidebar.classList.remove("is-animating");
+    }, 450);
+  }
+
+  if (sidebar) {
+    sidebar.addEventListener("transitionend", (event) => {
+      if (event.target !== sidebar || event.propertyName !== "width") return;
+      sidebar.classList.remove("is-animating");
+      window.clearTimeout(sidebarMotionTimer);
+    });
+  }
+
+  function setSidebarCollapsed(collapsed, animate) {
     if (!sidebar) return;
+    if (animate) beginSidebarMotion();
     sidebar.classList.toggle("is-collapsed", collapsed);
     if (collapsed) document.documentElement.setAttribute("data-sidebar", "collapsed");
     else document.documentElement.removeAttribute("data-sidebar");
@@ -229,7 +249,7 @@
   if (sidebarCollapse) {
     sidebarCollapse.addEventListener("click", () => {
       const collapsed = sidebar.classList.contains("is-collapsed") || document.documentElement.getAttribute("data-sidebar") === "collapsed";
-      setSidebarCollapsed(!collapsed);
+      setSidebarCollapsed(!collapsed, true);
     });
   }
   if (document.documentElement.getAttribute("data-sidebar") === "collapsed") {

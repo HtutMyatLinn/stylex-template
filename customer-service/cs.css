@@ -1,0 +1,47 @@
+.soon {
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.soon-frame {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: min(760px, 100%);
+  min-height: calc(100vh - 48px);
+  margin: 0 auto;
+}
+
+.soon-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.soon-copy {
+  display: grid;
+  align-content: center;
+  gap: 14px;
+  flex: 1;
+}
+
+.soon-copy h1 {
+  font-family: var(--font-heading);
+  font-size: clamp(52px, 10vw, 92px);
+  font-weight: 700;
+  letter-spacing: -0.055em;
+  line-height: 0.92;
+}
+
+.soon-copy p:last-child {
+  max-width: 28ch;
+  color: var(--text-secondary);
+  font-size: 17px;
+}
+
+@media (max-width: 768px) {
+  .soon {
+    padding: 16px;
+  }
+}

@@ -15,7 +15,7 @@
       } catch (error) {}
     </script>
 
-    <title>Studio · Stylex</title>
+    <title>Shop · Stylex</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -26,9 +26,10 @@
       href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="./shop.css" />
   </head>
-  <body data-page="studio">
+  <body data-page="shop">
     <a class="skip" href="#content">Skip to content</a>
     <div class="layout">
       <aside class="sidebar" id="sidebar">
@@ -46,7 +47,7 @@
 <a class="nav-link" href="promotions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m20 13-9-9H5v6l9 9 6-6z"/><circle cx="8.5" cy="8.5" r="1" fill="currentColor" stroke="none"/></svg><span>Promotions</span></a>
 <a class="nav-link" href="finance.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/></svg><span>Finance</span></a>
 <a class="nav-link" href="message.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H9l-4 3v-3H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></svg><span>Message</span></a>
-<a class="nav-link is-active" href="studio.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Studio</span></a>
+<a class="nav-link" href="studio.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Studio</span></a>
 <a class="nav-link" href="team.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9.5" r="2"/><path d="M3.5 19c.6-3 2.8-4.5 5.5-4.5s4.9 1.5 5.5 4.5"/><path d="M16 14.6c1.7.2 3 1.2 3.6 3.4"/></svg><span>Team</span></a>
 <a class="nav-link" href="shop-profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10 6 4h12l2 6"/><path d="M4 10h16v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M10 20v-5h4v5"/></svg><span>Shop Profile</span></a>
 <a class="nav-link" href="setting.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Settings</span></a>
@@ -55,7 +56,8 @@
       <div class="main outlet">
         <div class="outlet-head">
           <div class="outlet-title-wrap">
-            <h1 class="page-title" data-bind="page-title">Shop Studio</h1>
+            <a class="portal-back" href="../index.html">Back to All Portals</a>
+            <h1 class="page-title" data-bind="page-title">Shop</h1>
           </div>
           <div class="utility-cluster">
             <p class="status-pill"><span class="live-dot" aria-hidden="true"></span><span id="status-date" data-bind="shop-date">Today</span></p>
@@ -87,54 +89,13 @@
           </div>
         </div>
         <main class="canvas outlet-canvas" id="content">
-          <div class="studio" id="studio-app" data-shop-id="atelier-noir">
-            <section class="studio-bar">
-              <input class="search" id="studio-search" type="search" placeholder="Search captions" aria-label="Search gallery photos by caption" />
-              <p class="studio-count" id="studio-capacity" data-bind="gallery-capacity">0 / 20 Active Photos</p>
-              <div class="segment" id="studio-views" role="group" aria-label="Gallery view">
-                <button type="button" data-view="grid" aria-pressed="true">Gallery Grid</button>
-                <button type="button" data-view="table" aria-pressed="false">Order Table</button>
-              </div>
-              <button class="btn is-ghost" id="studio-preview" type="button">Preview Shop Profile</button>
-              <button class="btn" id="studio-upload" type="button">Upload Photo</button>
-            </section>
-            <div class="studio-layout">
-              <div class="studio-main">
-                <section class="studio-grid" id="studio-grid" aria-label="Shop photo gallery"></section>
-                <section class="studio-table-wrap" id="studio-table-view" hidden>
-                  <table class="studio-table">
-                    <caption class="sr-only">Gallery display order</caption>
-                    <thead>
-                      <tr>
-                        <th scope="col">Order</th>
-                        <th scope="col">Photo</th>
-                        <th scope="col">Caption</th>
-                        <th scope="col">Cover</th>
-                        <th scope="col">Format / Size</th>
-                        <th scope="col">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody id="studio-table"></tbody>
-                  </table>
-                </section>
-              </div>
-              <aside class="studio-story">
-                <div class="studio-story-head">
-                  <h2>Public Shop Description</h2>
-                  <span class="studio-status" id="studio-desc-status">Published</span>
-                </div>
-                <label class="sr-only" for="studio-description">Public shop description</label>
-                <textarea id="studio-description" maxlength="2000" rows="10" data-bind="shop-description"></textarea>
-                <p class="field-error" id="studio-desc-error" hidden>Description cannot be empty.</p>
-                <p class="studio-counter" id="studio-desc-count">0 / 2,000 characters</p>
-                <p class="studio-note">Content is automatically sanitized for unsafe HTML or prohibited terms before publishing.</p>
-                <div class="studio-story-actions">
-                  <button class="btn is-ghost" id="studio-desc-reset" type="button">Reset</button>
-                  <button class="btn" id="studio-desc-save" type="button">Save Description</button>
-                </div>
-              </aside>
+          <section class="empty-stage">
+            <div class="empty-state">
+              <span class="empty-orb" aria-hidden="true"><i class="ri-store-2-line"></i></span>
+              <h2>Shop page is empty</h2>
+              <p>Your storefront profile will be edited here.</p>
             </div>
-          </div>
+          </section>
         </main>
       </div>
     </div>
@@ -148,68 +109,13 @@
     <div class="mobile-more" id="mobile-more" hidden>
       <a class="nav-link" href="finance.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/></svg><span>Finance</span></a>
 <a class="nav-link" href="message.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H9l-4 3v-3H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></svg><span>Message</span></a>
-<a class="nav-link is-active" href="studio.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Studio</span></a>
+<a class="nav-link" href="studio.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Studio</span></a>
 <a class="nav-link" href="team.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9.5" r="2"/><path d="M3.5 19c.6-3 2.8-4.5 5.5-4.5s4.9 1.5 5.5 4.5"/><path d="M16 14.6c1.7.2 3 1.2 3.6 3.4"/></svg><span>Team</span></a>
 <a class="nav-link" href="shop-profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10 6 4h12l2 6"/><path d="M4 10h16v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M10 20v-5h4v5"/></svg><span>Shop Profile</span></a>
 <a class="nav-link" href="setting.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Settings</span></a>
     </div>
     <button class="scrim" id="scrim" type="button" hidden aria-label="Close menu"></button>
-
-    <div class="order-modal studio-modal" id="studio-photo-modal" hidden>
-      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="studio-photo-title">
-        <h2 id="studio-photo-title">Upload Photo</h2>
-        <div class="studio-drop" id="studio-drop">
-          <p>Drop a JPG, JPEG, PNG, or WEBP image, up to 10 MB.</p>
-          <input id="studio-file" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" />
-        </div>
-        <div class="studio-presets" id="studio-presets"></div>
-        <img class="studio-preview-img" id="studio-file-preview" alt="" hidden />
-        <label class="studio-field">Caption
-          <input id="studio-caption" type="text" maxlength="150" />
-        </label>
-        <label class="studio-check"><input id="studio-cover-flag" type="checkbox" /> Set as Primary Cover Photo</label>
-        <p class="field-error" id="studio-photo-error" hidden></p>
-        <div class="studio-modal-actions">
-          <button class="btn is-ghost" type="button" data-close-studio>Cancel</button>
-          <button class="btn" id="studio-save-photo" type="button">Save Photo</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="order-modal studio-modal" id="studio-delete-modal" hidden>
-      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="studio-delete-title">
-        <h2 id="studio-delete-title">Delete Photo</h2>
-        <img class="studio-preview-img" id="studio-delete-thumb" alt="" />
-        <p>Are you sure you want to delete this photo from your Shop Studio gallery? This action cannot be undone.</p>
-        <div class="studio-modal-actions">
-          <button class="btn is-ghost" type="button" data-close-studio>Cancel</button>
-          <button class="btn is-danger" id="studio-confirm-delete" type="button">Delete Photo</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="order-modal studio-modal" id="studio-preview-modal" hidden>
-      <div class="modal-card studio-preview-card" role="dialog" aria-modal="true" aria-labelledby="studio-preview-title">
-        <img class="studio-hero" id="studio-hero" alt="Primary cover" />
-        <div class="studio-identity">
-          <span class="avatar" aria-hidden="true">AN</span>
-          <div>
-            <h2 id="studio-preview-title">Atelier Noir</h2>
-            <p>Registered Shop Owner · Yangon · 4.9</p>
-          </div>
-        </div>
-        <h3>About the Shop</h3>
-        <p id="studio-preview-copy"></p>
-        <h3>Lookbook</h3>
-        <div class="studio-lookbook" id="studio-lookbook"></div>
-        <div class="studio-modal-actions">
-          <button class="btn is-ghost" type="button" data-close-studio>Close Preview</button>
-          <button class="btn" id="studio-publish" type="button">Publish Changes</button>
-        </div>
-      </div>
-    </div>
-
-    <script src="js/script.js"></script>
-    <script src="js/studio.js"></script>
+    <script src="../js/script.js"></script>
+    <script src="./shop.js"></script>
   </body>
 </html>
