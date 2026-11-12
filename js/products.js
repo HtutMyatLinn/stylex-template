@@ -107,7 +107,6 @@
     const edit = event.target.closest("[data-edit]");
     const discount = event.target.closest("[data-discount]");
     const removeTag = event.target.closest("[data-remove-tag]");
-    const removeOption = event.target.closest("[data-remove-option]");
     const removeMedia = event.target.closest("[data-remove-media]");
     const cover = event.target.closest("[data-cover]");
     if (tabButton) {
@@ -121,8 +120,13 @@
     if (event.target.closest("#editor-back")) showView("list");
     const publish = event.target.closest("#publish-product");
     if (publish) window.runWithLoading(publish, () => saveProduct());
-    const generate = event.target.closest("#generate-variants");
-    if (generate) return;
+    const addVariant = event.target.closest("#add-variant");
+    if (addVariant) window.runWithLoading(addVariant, () => addVariantFromInputs());
+    const removeVariant = event.target.closest("[data-remove-variant]");
+    if (removeVariant && editor) {
+      editor.variants.splice(Number(removeVariant.dataset.removeVariant), 1);
+      renderVariants();
+    }
     if (discount) {
       editor.discountType = discount.dataset.discount;
       document.querySelectorAll("[data-discount]").forEach((button) => {
@@ -133,10 +137,6 @@
     if (removeTag && editor) {
       editor.tags.splice(Number(removeTag.dataset.removeTag), 1);
       assignTags(editor.tags);
-    }
-    if (removeOption && editor) {
-      editor.options[removeOption.dataset.removeOption].splice(Number(removeOption.dataset.index), 1);
-      renderOptionChips();
     }
     if (removeMedia && editor) {
       window.runWithLoading(removeMedia, () => {
@@ -174,17 +174,40 @@
   }
 
   function onOptionKey(event, key) {
-    if (event.key !== "Enter" && event.key !== ",") return;
+    if (event.key !== "Enter") return;
     event.preventDefault();
-    const value = sanitize(event.target.value).replace(/,$/, "");
-    if (!value || !editor) return;
-    if (key === "color") {
-      editor.options.color.push({ name: value, hex: document.getElementById("opt-color-picker").value });
-    } else {
-      editor.options[key].push(value);
+    addVariantFromInputs();
+  }
+
+  function addVariantFromInputs() {
+    if (!editor) return;
+    const colorName = sanitize(document.getElementById("opt-color").value);
+    const size = sanitize(document.getElementById("opt-size").value);
+    const material = sanitize(document.getElementById("opt-material").value);
+    const hex = document.getElementById("opt-color-picker").value || "#1a1a1a";
+    if (!colorName && !size && !material) {
+      toast("Add a color name, size, or material first.");
+      return;
     }
-    event.target.value = "";
-    renderOptionChips();
+    const color = colorName ? { name: colorName, hex: hex } : "";
+    if (colorName) editor.options.color.push({ name: colorName, hex: hex });
+    if (size) editor.options.size.push(size);
+    if (material) editor.options.material.push(material);
+    editor.variants.push({
+      color: color,
+      size: size,
+      material: material,
+      sku: variantSku(color, size, material),
+      price: "",
+      stock: "",
+      barcode: "",
+    });
+    document.getElementById("opt-color").value = "";
+    document.getElementById("opt-size").value = "";
+    document.getElementById("opt-material").value = "";
+    variantPage = Math.max(1, Math.ceil(editor.variants.length / 10));
+    renderVariants();
+    toast("Variant added.");
   }
 
   function showView(name) {
@@ -227,7 +250,6 @@
       document.getElementById("m-" + size + "-length").value = measure.length || "";
     });
     renderMedia();
-    renderOptionChips();
     renderVariants();
     document.getElementById("price-original").value = editor.originalPrice;
     document.getElementById("discount-value").value = editor.discountValue;
@@ -429,35 +451,6 @@
     });
   }
 
-  function renderOptionChips() {
-    ["color", "size", "material"].forEach((key) => {
-      const box = document.getElementById("chips-" + key);
-      box.replaceChildren();
-      editor.options[key].forEach((value, index) => {
-        const chip = document.createElement("span");
-        chip.className = "chip";
-        const name = value && typeof value === "object" ? value.name : value;
-        if (value && value.hex) {
-          const dot = document.createElement("i");
-          dot.className = "color-dot";
-          dot.style.background = value.hex;
-          chip.appendChild(dot);
-        }
-        const label = document.createElement("span");
-        label.textContent = name;
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "icon-x";
-        button.dataset.removeOption = key;
-        button.dataset.index = String(index);
-        button.setAttribute("aria-label", "Remove " + name);
-        button.textContent = "×";
-        chip.append(label, button);
-        box.appendChild(chip);
-      });
-    });
-  }
-
   function renderMedia() {
     const grid = document.getElementById("media-grid");
     grid.replaceChildren();
@@ -518,21 +511,28 @@
     const paged = window.pageRows(indexed, variantPage);
     variantPage = paged.page;
     wrap.innerHTML =
-      '<table class="variant-table"><thead><tr><th>Variant</th><th>SKU</th><th>Price</th><th>Stock</th><th>Barcode</th></tr></thead><tbody>' +
+      '<ul class="variant-list">' +
       paged.rows.map(({ variant, index }) => {
+        const hex = variant.color && typeof variant.color === "object" ? variant.color.hex : "";
         return (
-          '<tr data-variant-row data-index="' + index + '" data-color="' + escapeHtml(variant.color) + '" data-size="' + escapeHtml(variant.size) + '" data-material="' + escapeHtml(variant.material) + '">' +
-            "<td>" + escapeHtml(variantLabel(variant)) + "</td>" +
-            '<td><input class="variant-sku" value="' + escapeHtml(variant.sku) + '" aria-label="SKU"></td>' +
-            '<td><input class="variant-price" type="number" min="0" step="1" value="' + escapeHtml(variant.price) + '" aria-label="Price"></td>' +
-            '<td><input class="variant-stock" type="number" min="0" step="1" value="' + escapeHtml(variant.stock) + '" aria-label="Stock"></td>' +
-            '<td><input class="variant-barcode" value="' + escapeHtml(variant.barcode) + '" aria-label="Barcode"></td>' +
-          "</tr>"
+          '<li class="variant-list-item" data-variant-row data-index="' + index + '">' +
+            '<div class="variant-list-head">' +
+              (hex ? '<span class="variant-list-swatch" style="background:' + escapeHtml(hex) + '" aria-hidden="true"></span>' : "") +
+              "<strong>" + escapeHtml(variantLabel(variant)) + "</strong>" +
+              '<button class="btn is-ghost" type="button" data-remove-variant="' + index + '">Remove</button>' +
+            "</div>" +
+            '<div class="variant-list-fields">' +
+              '<label><span>SKU</span><input class="variant-sku" value="' + escapeHtml(variant.sku) + '" aria-label="SKU"></label>' +
+              '<label><span>Price</span><input class="variant-price" type="number" min="0" step="1" value="' + escapeHtml(variant.price) + '" aria-label="Price"></label>' +
+              '<label><span>Stock</span><input class="variant-stock" type="number" min="0" step="1" value="' + escapeHtml(variant.stock) + '" aria-label="Stock"></label>' +
+              '<label><span>Barcode</span><input class="variant-barcode" value="' + escapeHtml(variant.barcode) + '" aria-label="Barcode"></label>' +
+            "</div>" +
+          "</li>"
         );
       }).join("") +
-      "</tbody></table>";
+      "</ul>";
     pager.hidden = false;
-    window.renderPager(pager, variantPage, paged.pages);
+    window.renderPager(pager, variantPage, paged.pages, editor.variants.length + (editor.variants.length === 1 ? " variant" : " variants"));
     markSkuErrors();
   }
 
@@ -710,8 +710,13 @@
     return list.filter((item) => item.stock <= threshold);
   }
 
+  function optionName(value) {
+    if (value && typeof value === "object") return value.name || "";
+    return value || "";
+  }
+
   function variantSku(color, size, material) {
-    return ["STX", skuPart(editor.category || "item"), skuPart(color), skuPart(size), skuPart(material)].filter((part) => part !== "X").join("-");
+    return ["STX", skuPart(editor.category || "item"), skuPart(optionName(color)), skuPart(size), skuPart(material)].filter((part) => part !== "X").join("-");
   }
 
   function skuPart(value) {
@@ -789,7 +794,7 @@
   }
 
   function variantLabel(variant) {
-    return [variant.color, variant.size, variant.material].filter(Boolean).join(" / ");
+    return [optionName(variant.color), variant.size, variant.material].filter(Boolean).join(" / ");
   }
 
   function numberValue(id) {

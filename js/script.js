@@ -501,6 +501,7 @@ if (menuToggle && scrim && sidebar) {
   const selectIndex = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, "selectedIndex");
   let openSelect = null;
   bootThemeSelects();
+  bootMobileTables();
 
   if (document.body.dataset.page !== "dashboard") return;
 
@@ -1518,5 +1519,88 @@ if (menuToggle && scrim && sidebar) {
     });
     window.addEventListener("resize", () => placeThemeSelect(openSelect));
     document.addEventListener("scroll", () => placeThemeSelect(openSelect), true);
+  }
+
+  function tableLabels(table) {
+    if (!table || !table.tHead) return [];
+    const headerRow = table.tHead.rows[0];
+    if (!headerRow) return [];
+    return Array.from(headerRow.cells).map((cell) => {
+      return (cell.textContent || "").replace(/\s+/g, " ").trim();
+    });
+  }
+
+  function cellLooksLikeActions(cell, label) {
+    if (!cell) return false;
+    const text = String(label || "").toLowerCase().trim();
+    if (text === "actions" || text === "action" || text === "manage") return true;
+    if (cell.querySelector(".row-actions, .studio-actions")) return true;
+    if (cell.querySelector("input, select, textarea, .product-cell, .sku-cell")) return false;
+    const buttons = cell.querySelectorAll("button, .btn, .restock-btn");
+    if (!buttons.length) return false;
+    const meaningful = cell.querySelector("strong, .finance-id, .order-id, .status-badge, .promo-badge, .finance-badge, img, .finance-meta");
+    return !meaningful;
+  }
+
+  function enhanceTableRow(row, labels) {
+    if (!row || row.nodeType !== 1) return;
+    const cells = Array.from(row.cells || []);
+    if (!cells.length) return;
+
+    const isEmpty = cells.some((cell) => cell.hasAttribute("colspan")) || row.classList.contains("empty-row");
+    row.classList.toggle("is-empty", isEmpty);
+    if (isEmpty) {
+      cells.forEach((cell) => {
+        cell.removeAttribute("data-label");
+        cell.classList.remove("is-primary", "is-actions");
+      });
+      return;
+    }
+
+    let actionIndex = -1;
+    cells.forEach((cell, index) => {
+      const label = labels[index] || "";
+      if (label) cell.setAttribute("data-label", label);
+      else cell.removeAttribute("data-label");
+      cell.classList.toggle("is-primary", index === 0);
+      cell.classList.remove("is-actions");
+      if (cellLooksLikeActions(cell, label)) actionIndex = index;
+    });
+
+    if (actionIndex < 0) {
+      const last = cells[cells.length - 1];
+      if (last && last.querySelector("button, .row-actions, .studio-actions, .restock-btn")) {
+        actionIndex = cells.length - 1;
+      }
+    }
+    if (actionIndex >= 0) cells[actionIndex].classList.add("is-actions");
+  }
+
+  function enhanceDataTables(root) {
+    const scope = root && root.querySelectorAll ? root : document;
+    const selector =
+      "table.order-table, table.product-table, table.finance-table, table.promo-table, table.studio-table, table.data-table, table.team-table, table.variant-table, table.measure-table";
+    const tables = scope.querySelectorAll ? scope.querySelectorAll(selector) : [];
+    const list = root && root.matches && root.matches("table") ? [root] : Array.from(tables);
+    list.forEach((table) => {
+      if (!table || !table.tBodies || !table.tBodies.length) return;
+      const labels = tableLabels(table);
+      Array.from(table.tBodies[0].rows).forEach((row) => enhanceTableRow(row, labels));
+    });
+  }
+
+  function bootMobileTables() {
+    window.enhanceDataTables = enhanceDataTables;
+    enhanceDataTables(document);
+    let queued = false;
+    const queue = () => {
+      if (queued) return;
+      queued = true;
+      window.requestAnimationFrame(() => {
+        queued = false;
+        enhanceDataTables(document);
+      });
+    };
+    new MutationObserver(queue).observe(document.body, { childList: true, subtree: true });
   }
 })();

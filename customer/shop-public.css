@@ -132,3 +132,43 @@ body {
 .public-card button:disabled {
   opacity: 0.45;
 }
+
+@media (max-width: 768px) {
+  .public-cover {
+    height: 200px;
+  }
+
+  .public-identity,
+  .public-tabs,
+  .public-main {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .public-identity {
+    margin-top: -40px;
+    gap: 12px;
+  }
+
+  .public-logo {
+    width: 80px;
+    height: 80px;
+  }
+
+  .public-follow,
+  .public-tabs button,
+  .public-card button {
+    min-height: 44px;
+  }
+
+  .public-grid,
+  .public-products {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 390px) {
+  .public-cover {
+    height: 160px;
+  }
+}

@@ -222,27 +222,28 @@
                   <section class="panel">
                     <h2>Variants</h2>
                     <div class="option-grid">
-                      <div class="field">
-                        <span>Color picker</span>
+                      <div class="field option-color-picker">
+                        <span class="option-label" aria-hidden="true">&nbsp;</span>
                         <input id="opt-color-picker" type="color" value="#1a1a1a" aria-label="Color picker" />
                       </div>
                       <div class="field">
-                        <span>Color</span>
-                        <input id="opt-color" type="text" placeholder="Add a color name, then Enter" />
-                        <div class="chips" id="chips-color"></div>
+                        <span class="option-label">Color Name</span>
+                        <input id="opt-color" type="text" placeholder="Add a color name" />
                       </div>
                       <div class="field">
-                        <span>Size</span>
-                        <input id="opt-size" type="text" placeholder="Add a size, then Enter" />
-                        <div class="chips" id="chips-size"></div>
+                        <span class="option-label">Size</span>
+                        <input id="opt-size" type="text" placeholder="Add a size" />
                       </div>
                       <div class="field">
-                        <span>Material</span>
-                        <input id="opt-material" type="text" placeholder="Add a material, then Enter" />
-                        <div class="chips" id="chips-material"></div>
+                        <span class="option-label">Material</span>
+                        <input id="opt-material" type="text" placeholder="Add a material" />
+                      </div>
+                      <div class="field option-grid-action">
+                        <span class="option-label" aria-hidden="true">&nbsp;</span>
+                        <button class="btn" id="add-variant" type="button">Add Variant</button>
                       </div>
                     </div>
-                    <div class="table-scroll" id="variant-wrap"></div>
+                    <div id="variant-wrap"></div>
                     <nav class="pager" id="variant-pager" aria-label="Variant pages"></nav>
                   </section>
                 </div>

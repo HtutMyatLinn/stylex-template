@@ -405,6 +405,28 @@ img {
   .hub {
     padding: 16px;
   }
+
+  .hub-intro h1 {
+    font-size: clamp(2rem, 10vw, 2.75rem);
+  }
+
+  .portal-card {
+    padding: 20px;
+  }
+
+  .portal-go {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 390px) {
+  .hub {
+    padding: 12px;
+  }
+
+  .hub-frame {
+    gap: 20px;
+  }
 }
 
 .sk {

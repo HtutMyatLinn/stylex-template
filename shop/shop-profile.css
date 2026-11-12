@@ -215,4 +215,30 @@
   .profile-media {
     grid-template-columns: 1fr;
   }
+
+  .profile-bar,
+  .profile-card-head {
+    align-items: stretch;
+  }
+
+  .profile-bar .btn,
+  .profile-card-head .btn {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .profile-drop,
+  .profile-drop.is-cover {
+    min-height: 160px;
+  }
+
+  .profile-preview-frame {
+    height: min(60vh, 480px);
+  }
+}
+
+@media (max-width: 390px) {
+  .profile-card {
+    padding: 16px;
+  }
 }

@@ -161,10 +161,9 @@
 
               <section class="promo-card">
                 <div class="promo-filters">
-                  <input class="search" id="promo-search" type="search" placeholder="Campaign name or coupon code" aria-label="Search campaigns" />
-                  <label class="promo-field">
-                    <span>Type</span>
-                    <select id="promo-type-filter">
+                  <div class="promo-filters-main">
+                    <input class="search" id="promo-search" type="search" placeholder="Campaign name or coupon code" aria-label="Search campaigns" />
+                    <select id="promo-type-filter" aria-label="Filter by type">
                       <option value="all">All Types</option>
                       <option value="discount">Direct Discount</option>
                       <option value="coupon">Coupon Code</option>
@@ -173,12 +172,12 @@
                       <option value="shipping">Free Shipping</option>
                       <option value="flash">Flash Sale</option>
                     </select>
-                  </label>
-                  <div class="promo-tabs" id="promo-status-tabs" role="tablist" aria-label="Campaign status">
-                    <button type="button" data-status="all" aria-pressed="true">All</button>
-                    <button type="button" data-status="Active" aria-pressed="false">Active</button>
-                    <button type="button" data-status="Scheduled" aria-pressed="false">Scheduled</button>
-                    <button type="button" data-status="Expired" aria-pressed="false">Expired</button>
+                    <div class="promo-tabs" id="promo-status-tabs" role="tablist" aria-label="Campaign status">
+                      <button type="button" data-status="all" aria-pressed="true">All</button>
+                      <button type="button" data-status="Active" aria-pressed="false">Active</button>
+                      <button type="button" data-status="Scheduled" aria-pressed="false">Scheduled</button>
+                      <button type="button" data-status="Expired" aria-pressed="false">Expired</button>
+                    </div>
                   </div>
                   <button class="btn is-ghost" id="reset-filters" type="button">Reset Filters</button>
                 </div>
@@ -200,7 +199,7 @@
                     <tbody id="promo-table"></tbody>
                   </table>
                 </div>
-                <div class="promo-pager" id="promo-pager"></div>
+                <nav class="pager" id="promo-pager" aria-label="Campaign pages"></nav>
               </section>
             </section>
 
@@ -450,7 +449,7 @@
             <tbody id="picker-table"></tbody>
           </table>
         </div>
-        <div class="promo-pager" id="picker-pager"></div>
+        <nav class="pager" id="picker-pager" aria-label="Product picker pages"></nav>
         <div class="promo-bar">
           <p id="picker-count">0 products selected</p>
           <div class="promo-actions">

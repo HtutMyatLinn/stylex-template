@@ -371,4 +371,58 @@ html[lang="my"] .settings {
     align-items: flex-start;
     flex-direction: column;
   }
+
+  .settings-menu,
+  .settings-panel {
+    min-width: 0;
+  }
+
+  .settings-row-actions,
+  .settings-doc-bar,
+  .settings-qa {
+    flex-wrap: wrap;
+  }
+
+  .settings-row-actions .btn,
+  .settings-doc-bar .btn,
+  .settings-qa .btn {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 768px) {
+  .settings {
+    gap: 12px;
+    padding-bottom: 24px;
+  }
+
+  .settings-nav {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .settings-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .settings-nav button {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .settings-link-card,
+  .settings-logout {
+    width: 100%;
+  }
+
+  .settings-link-card .btn,
+  .settings-logout {
+    min-height: 44px;
+  }
 }

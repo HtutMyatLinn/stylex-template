@@ -63,9 +63,9 @@ const flashEnd = localInput(new Date(Date.now() + ((5 * 60 + 42) * 60 * 1000)));
   let typeFilter = "all";
   let query = "";
   let page = 1;
-  let pageSize = 5;
+  let pageSize = 10;
   let pickerPage = 1;
-  let pickerSize = 5;
+  let pickerSize = 10;
   let pickerQuery = "";
   let pickerCategory = "all";
   let pickerMode = "products";
@@ -222,32 +222,10 @@ const flashEnd = localInput(new Date(Date.now() + ((5 * 60 + 42) * 60 * 1000)));
     return html;
   }
 
-  function renderPager(container, current, pages, total, size, start, noun, onChange) {
-    const from = total === 0 ? 0 : start + 1;
-    const to = Math.min(start + size, total);
-    const numbers = [];
-    for (let index = 1; index <= pages; index += 1) {
-      if (pages > 6 && index !== 1 && index !== pages && Math.abs(index - current) > 1) continue;
-      numbers.push(index);
-    }
-    container.innerHTML =
-      '<label class="promo-field pager-size"><span>Show</span><select data-size>' +
-      [5, 10, 25].map((value) => '<option value="' + value + '"' + (value === size ? " selected" : "") + ">" + value + " rows</option>").join("") +
-      "</select></label>" +
-      '<p class="promo-note">Showing ' + from + "–" + to + " of " + total + " " + noun + "</p>" +
-      '<div class="pager-buttons">' +
-      '<button type="button" data-page="prev"' + (current <= 1 ? " disabled" : "") + ">Prev</button>" +
-      numbers.map((value) => '<button type="button" data-page="' + value + '"' + (value === current ? ' aria-current="page"' : "") + ">" + value + "</button>").join("") +
-      '<button type="button" data-page="next"' + (current >= pages ? " disabled" : "") + ">Next</button></div>";
-    container.onchange = (event) => {
-      if (!event.target.matches("[data-size]")) return;
-      onChange("size", Number(event.target.value));
-    };
-    container.onclick = (event) => {
-      const button = event.target.closest("[data-page]");
-      if (!button || button.disabled) return;
-      onChange("page", button.dataset.page);
-    };
+  function paintPager(container, current, pages, total, noun) {
+    if (!container) return;
+    const label = total + (total === 1 ? " " + noun.replace(/s$/, "") : " " + noun);
+    window.renderPager(container, current, pages, label);
   }
 
   function renderKpis() {
@@ -359,16 +337,7 @@ const flashEnd = localInput(new Date(Date.now() + ((5 * 60 + 42) * 60 * 1000)));
           "</div></td></tr>";
       }).join("");
     }
-    renderPager(document.getElementById("promo-pager"), view.page, view.pages, view.total, pageSize, view.start, "campaigns", (kind, value) => {
-      if (kind === "size") {
-        pageSize = value;
-        page = 1;
-      } else if (value === "prev") page -= 1;
-      else if (value === "next") page += 1;
-      else page = Number(value);
-      document.getElementById("promo-table").innerHTML = skeletonRows(8);
-      showLoader(renderTable);
-    });
+    paintPager(document.getElementById("promo-pager"), view.page, view.pages, view.total, "campaigns");
     if (window.lucide) window.lucide.createIcons();
   }
 
@@ -682,16 +651,7 @@ const flashEnd = localInput(new Date(Date.now() + ((5 * 60 + 42) * 60 * 1000)));
         "<td class=\"num\">" + item.sku + "</td><td class=\"num\">" + item.stock + "</td><td class=\"num\">" + formatMmk(item.price) + "</td></tr>";
     }).join("") || '<tr><td colspan="5"><div class="empty-state is-compact"><h2>No products</h2><p>Try another name or category.</p></div></td></tr>';
     document.getElementById("picker-count").textContent = pickerSet.size + " products selected";
-    renderPager(document.getElementById("picker-pager"), view.page, view.pages, view.total, pickerSize, view.start, "products", (kind, value) => {
-      if (kind === "size") {
-        pickerSize = value;
-        pickerPage = 1;
-      } else if (value === "prev") pickerPage -= 1;
-      else if (value === "next") pickerPage += 1;
-      else pickerPage = Number(value);
-      document.getElementById("picker-table").innerHTML = skeletonRows(5);
-      showLoader(renderPicker);
-    });
+    paintPager(document.getElementById("picker-pager"), view.page, view.pages, view.total, "products");
   }
 
   function openPicker(mode) {
@@ -781,6 +741,22 @@ const flashEnd = localInput(new Date(Date.now() + ((5 * 60 + 42) * 60 * 1000)));
   document.getElementById("reset-filters").addEventListener("click", resetFilters);
   document.getElementById("promo-table").addEventListener("click", (event) => {
     if (event.target.id === "empty-reset") resetFilters();
+  });
+  document.getElementById("promo-pager").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-page]");
+    if (!button || button.disabled) return;
+    const view = pageSlice(filteredCampaigns(), page, pageSize);
+    page = window.turnPage(view.page, view.pages, button.dataset.page);
+    document.getElementById("promo-table").innerHTML = skeletonRows(8);
+    showLoader(renderTable);
+  });
+  document.getElementById("picker-pager").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-page]");
+    if (!button || button.disabled) return;
+    const view = pageSlice(filteredProducts(), pickerPage, pickerSize);
+    pickerPage = window.turnPage(view.page, view.pages, button.dataset.page);
+    document.getElementById("picker-table").innerHTML = skeletonRows(5);
+    showLoader(renderPicker);
   });
 
   document.getElementById("create-promo").addEventListener("click", () => openForm(null));
