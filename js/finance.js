@@ -468,6 +468,11 @@
   }
 
   function renderChart() {
+    if (document.documentElement.classList.contains("is-booting")) {
+      if (window.whenPageReady) window.whenPageReady(renderChart);
+      else document.addEventListener("stylex-ready", renderChart, { once: true });
+      return;
+    }
     const slice = TREND.slice(TREND.length - trendSpan);
     const canvas = document.getElementById("financeTrendChart");
     const ink = cssColor("--color-black");
@@ -501,7 +506,9 @@
         },
       ],
     };
+    const firstPaint = !chart;
     const options = {
+      animation: firstPaint ? { duration: 900, easing: "easeOutQuart" } : false,
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
@@ -523,7 +530,8 @@
     };
     if (chart) {
       chart.data = payload;
-      chart.update();
+      chart.options = options;
+      chart.update(firstPaint ? undefined : "none");
       return;
     }
     chart = new Chart(canvas, { type: "line", data: payload, options: options });
@@ -653,13 +661,17 @@
     document.querySelectorAll("#withdrawal-filters [data-status]").forEach((item) => {
       item.setAttribute("aria-pressed", String(item === button));
     });
-    renderWithdrawals();
+    window.runWithSkeleton(document.getElementById("withdrawal-table"), renderWithdrawals, { columns: 7, rows: 5 });
   });
 
   ["ledger-search", "ledger-from", "ledger-to", "ledger-type"].forEach((id) => {
-    document.getElementById(id).addEventListener("input", renderLedger);
+    document.getElementById(id).addEventListener("input", () => {
+      window.runWithSkeleton(document.getElementById("ledger-table"), renderLedger, { columns: 9, rows: 6, delay: 280 });
+    });
   });
-  document.getElementById("payout-search").addEventListener("input", renderPayouts);
+  document.getElementById("payout-search").addEventListener("input", () => {
+    window.runWithSkeleton(document.getElementById("payout-table"), renderPayouts, { columns: 7, rows: 5, delay: 280 });
+  });
 
   document.getElementById("export-report").addEventListener("click", () => {
     const menu = document.getElementById("export-report-list");

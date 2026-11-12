@@ -314,7 +314,14 @@
 
   document.getElementById("studio-search").addEventListener("input", function (event) {
     query = event.target.value;
-    render();
+    const host = view === "grid" ? document.getElementById("studio-grid") : document.getElementById("studio-table");
+    window.runWithSkeleton(host, render, {
+      mode: view === "grid" ? "cards" : "table",
+      columns: 6,
+      rows: 6,
+      delay: 280,
+      variant: "media",
+    });
   });
 
   document.getElementById("studio-views").addEventListener("click", function (event) {
@@ -325,7 +332,13 @@
       document.querySelectorAll("#studio-views button").forEach(function (item) {
         item.setAttribute("aria-pressed", String(item === button));
       });
-      render();
+      const host = view === "grid" ? document.getElementById("studio-grid") : document.getElementById("studio-table");
+      window.runWithSkeleton(host, render, {
+        mode: view === "grid" ? "cards" : "table",
+        columns: 6,
+        rows: 6,
+        variant: "media",
+      });
     });
   });
 

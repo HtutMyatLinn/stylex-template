@@ -6,12 +6,16 @@
     <meta name="theme-color" content="#f7f6f4" />
     <script>
       try {
+        document.documentElement.classList.add("is-booting");
+        document.documentElement.dataset.bootAt = String(Date.now());
         if (localStorage.getItem("stylex-theme") === "dark") {
           document.documentElement.setAttribute("data-theme", "dark");
         }
       } catch (error) {}
     </script>
     <title>Customer · Stylex</title>
+    <link rel="icon" href="../favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -42,6 +46,7 @@
         <a class="portal-back" href="./shop-public.html">Open Atelier Noir</a>
       </main>
     </div>
+    <script src="../assets/js/skeleton.js"></script>
     <script src="../assets/js/global.js"></script>
     <script src="./customer.js"></script>
   </body>

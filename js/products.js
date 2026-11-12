@@ -33,7 +33,7 @@
   search.addEventListener("input", () => {
     query = search.value;
     productPage = 1;
-    renderTable();
+    window.runWithSkeleton(table, renderTable, { columns: 8, rows: 6, delay: 280 });
   });
   thresholdInput.addEventListener("input", () => {
     const value = Number(thresholdInput.value);
@@ -41,14 +41,14 @@
     threshold = value;
     productPage = 1;
     triggerLowStockAlert();
-    renderTable();
+    window.runWithSkeleton(table, renderTable, { columns: 8, rows: 6, delay: 280 });
   });
   document.getElementById("product-pager").addEventListener("click", (event) => {
     const button = event.target.closest("[data-page]");
     if (!button || button.disabled) return;
     const paged = window.pageRows(products.filter(matches), productPage);
     productPage = window.turnPage(paged.page, paged.pages, button.dataset.page);
-    renderTable();
+    window.runWithSkeleton(table, renderTable, { columns: 8, rows: 6 });
   });
   document.getElementById("variant-pager").addEventListener("click", (event) => {
     const button = event.target.closest("[data-page]");
@@ -113,7 +113,7 @@
     if (tabButton) {
       tab = tabButton.dataset.tab;
       productPage = 1;
-      renderTable();
+      window.runWithSkeleton(table, renderTable, { columns: 8, rows: 6 });
     }
     const create = event.target.closest("#create-product");
     if (create) window.runWithLoading(create, () => openEditor(blankProduct()));

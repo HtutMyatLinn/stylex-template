@@ -312,18 +312,18 @@
   });
   document.getElementById("team-search").addEventListener("input", function (event) {
     memberFilter.query = event.target.value;
-    renderMembers();
+    window.runWithSkeleton(document.getElementById("team-member-rows"), renderMembers, { columns: 5, rows: 5, delay: 280 });
   });
   document.getElementById("team-role-filter").addEventListener("change", function (event) {
     memberFilter.roleId = event.target.value;
-    renderMembers();
+    window.runWithSkeleton(document.getElementById("team-member-rows"), renderMembers, { columns: 5, rows: 5 });
   });
   document.getElementById("team-status-tabs").addEventListener("click", function (event) {
     var button = event.target.closest("[data-status]");
     if (!button) return;
     memberFilter.status = button.dataset.status;
     renderStatusTabs();
-    renderMembers();
+    window.runWithSkeleton(document.getElementById("team-member-rows"), renderMembers, { columns: 5, rows: 5 });
   });
   document.getElementById("team-invite-open").addEventListener("click", function () {
     document.getElementById("team-invite-error").hidden = true;
@@ -436,7 +436,7 @@
     if (!button) return;
     logFilter.outcome = button.dataset.outcome;
     renderOutcomes();
-    renderLogs();
+    window.runWithSkeleton(document.getElementById("team-log-rows"), renderLogs, { columns: 6, rows: 5 });
   });
   function readLogFilters() {
     logFilter.actor = document.getElementById("log-actor").value;
@@ -445,7 +445,7 @@
     logFilter.from = document.getElementById("log-from").value;
     logFilter.to = document.getElementById("log-to").value;
     logFilter.security = document.getElementById("log-security").checked;
-    renderLogs();
+    window.runWithSkeleton(document.getElementById("team-log-rows"), renderLogs, { columns: 6, rows: 5, delay: 280 });
   }
   document.getElementById("team-log-rows").addEventListener("click", function (event) {
     var row = event.target.closest("[data-log]");

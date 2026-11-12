@@ -3,7 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f6f4" />
+    <script>
+      try {
+        document.documentElement.classList.add("is-booting");
+        document.documentElement.dataset.bootAt = String(Date.now());
+        if (localStorage.getItem("stylex-theme") === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
+      } catch (error) {}
+    </script>
     <title>Atelier Noir · Stylex</title>
+    <link rel="icon" href="../favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500&display=swap" rel="stylesheet" />
@@ -40,6 +52,8 @@
       <section data-panel="products" hidden></section>
       <section data-panel="policies" hidden></section>
     </main>
+    <script src="../assets/js/skeleton.js"></script>
+    <script src="../assets/js/global.js"></script>
     <script src="./shop-public.js"></script>
   </body>
 </html>

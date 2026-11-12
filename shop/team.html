@@ -6,6 +6,8 @@
     <meta name="theme-color" content="#f7f6f4" />
     <script>
       try {
+        document.documentElement.classList.add("is-booting");
+        document.documentElement.dataset.bootAt = String(Date.now());
         var theme = localStorage.getItem("stylex-theme");
         var systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         if (theme === "dark" || (theme === "system" && systemDark)) {
@@ -18,6 +20,8 @@
     </script>
 
     <title>Team · Stylex</title>
+    <link rel="icon" href="../favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -100,12 +104,14 @@
             </div>
 
             <section id="team-panel-members" data-panel="members">
-              <div class="toolbar">
-                <input class="search" id="team-search" type="search" placeholder="Search name or email" aria-label="Search team members by name or email" />
-                <select id="team-role-filter" aria-label="Filter by role">
-                  <option value="all">All roles</option>
-                </select>
-                <div class="screen-switch" id="team-status-tabs" role="group" aria-label="Member status"></div>
+              <div class="toolbar team-member-toolbar">
+                <div class="team-filter-row">
+                  <input class="search" id="team-search" type="search" placeholder="Search name or email" aria-label="Search team members by name or email" />
+                  <select id="team-role-filter" aria-label="Filter by role">
+                    <option value="all">All roles</option>
+                  </select>
+                  <div class="screen-switch" id="team-status-tabs" role="group" aria-label="Member status"></div>
+                </div>
                 <button class="btn" id="team-invite-open" type="button">Invite Team Member</button>
               </div>
               <div class="table-scroll">
@@ -274,6 +280,7 @@
       </aside>
     </div>
 
+    <script src="../assets/js/skeleton.js"></script>
     <script src="../js/script.js"></script>
     <script src="./shop.js"></script>
     <script src="./team.js"></script>

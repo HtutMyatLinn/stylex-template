@@ -6,6 +6,8 @@
     <meta name="theme-color" content="#f7f6f4" />
     <script>
       try {
+        document.documentElement.classList.add("is-booting");
+        document.documentElement.dataset.bootAt = String(Date.now());
         var theme = localStorage.getItem("stylex-theme");
         var systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         if (theme === "dark" || (theme === "system" && systemDark)) {
@@ -18,6 +20,8 @@
     </script>
 
     <title>Shop · Stylex</title>
+    <link rel="icon" href="../favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -117,6 +121,7 @@
 <a class="nav-link" href="settings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Settings</span></a>
 </div>
     <button class="scrim" id="scrim" type="button" hidden aria-label="Close menu"></button>
+    <script src="../assets/js/skeleton.js"></script>
     <script src="../js/script.js"></script>
     <script src="./shop.js"></script>
   </body>

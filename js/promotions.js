@@ -211,11 +211,12 @@ const flashEnd = localInput(new Date(Date.now() + ((5 * 60 + 42) * 60 * 1000)));
     }, 350);
   }
 
-  function skeletonRows(columns) {
+  function skeletonRows(columns, rows) {
+    if (window.skeletonRows) return window.skeletonRows(columns, rows || 4);
     let html = "";
-    for (let index = 0; index < 4; index += 1) {
-      html += "<tr class=\"skeleton-row\">";
-      for (let cell = 0; cell < columns; cell += 1) html += "<td><span class=\"skeleton\"></span></td>";
+    for (let index = 0; index < (rows || 4); index += 1) {
+      html += "<tr class=\"sk-row\">";
+      for (let cell = 0; cell < columns; cell += 1) html += "<td><span class=\"sk skeleton\"></span></td>";
       html += "</tr>";
     }
     return html;
@@ -286,6 +287,11 @@ const flashEnd = localInput(new Date(Date.now() + ((5 * 60 + 42) * 60 * 1000)));
   function renderChart() {
     const canvas = document.getElementById("promoAnalyticsChart");
     if (typeof Chart === "undefined") return;
+    if (document.documentElement.classList.contains("is-booting")) {
+      if (window.whenPageReady) window.whenPageReady(renderChart);
+      else document.addEventListener("stylex-ready", renderChart, { once: true });
+      return;
+    }
     const top = campaigns.slice().sort((a, b) => b.revenue - a.revenue).slice(0, 6);
     const ink = getComputedStyle(document.documentElement).getPropertyValue("--color-black").trim();
     const red = getComputedStyle(document.documentElement).getPropertyValue("--color-red").trim();
@@ -297,7 +303,9 @@ const flashEnd = localInput(new Date(Date.now() + ((5 * 60 + 42) * 60 * 1000)));
         { label: "Discount", data: top.map((item) => item.discountGiven), backgroundColor: red, borderRadius: 4 },
       ],
     };
+    const firstPaint = !chart;
     const options = {
+      animation: firstPaint ? { duration: 900, easing: "easeOutQuart" } : false,
       responsive: true,
       maintainAspectRatio: false,
       plugins: { legend: { labels: { color: ink, boxWidth: 12, font: { family: "Be Vietnam Pro", size: 12 } } } },
@@ -309,7 +317,7 @@ const flashEnd = localInput(new Date(Date.now() + ((5 * 60 + 42) * 60 * 1000)));
     if (chart) {
       chart.data = data;
       chart.options = options;
-      chart.update();
+      chart.update(firstPaint ? undefined : "none");
       return;
     }
     chart = new Chart(canvas, { type: "bar", data: data, options: options });

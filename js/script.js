@@ -112,6 +112,152 @@
     }, 700);
   };
 
+  window.skeletonBone = function (options) {
+    const opts = options || {};
+    const width = opts.width || "100%";
+    const height = opts.height || "12px";
+    const radius = opts.radius || "6px";
+    const extra = opts.className ? " " + opts.className : "";
+    return (
+      '<span class="sk' +
+      extra +
+      '" style="width:' +
+      width +
+      ";height:" +
+      height +
+      ";border-radius:" +
+      radius +
+      '" aria-hidden="true"></span>'
+    );
+  };
+
+  window.skeletonRows = function (columns, rows) {
+    const cols = Math.max(1, columns || 5);
+    const count = Math.max(1, rows || 6);
+    let html = "";
+    for (let row = 0; row < count; row += 1) {
+      html += '<tr class="sk-row">';
+      for (let cell = 0; cell < cols; cell += 1) {
+        const width =
+          cell === 0 ? "74%" : cell === cols - 1 ? "46%" : 54 + ((row + cell) % 4) * 10 + "%";
+        html += "<td>" + window.skeletonBone({ width: width, height: "14px" }) + "</td>";
+      }
+      html += "</tr>";
+    }
+    return html;
+  };
+
+  window.skeletonCards = function (count, variant) {
+    const total = Math.max(1, count || 6);
+    const kind = variant || "media";
+    let html = '<div class="sk-cards" aria-hidden="true">';
+    for (let index = 0; index < total; index += 1) {
+      html += '<article class="sk-card">';
+      if (kind === "media") {
+        html += window.skeletonBone({ height: "140px", radius: "14px" });
+        html += window.skeletonBone({ width: "78%", height: "12px" });
+        html += window.skeletonBone({ width: "52%", height: "10px" });
+      } else {
+        html += window.skeletonBone({ width: "64%", height: "14px", className: "sk-title" });
+        html += window.skeletonBone({ width: "88%", height: "10px" });
+        html += window.skeletonBone({ width: "40%", height: "10px" });
+      }
+      html += "</article>";
+    }
+    html += "</div>";
+    return html;
+  };
+
+  window.skeletonFeed = function (count) {
+    const total = Math.max(1, count || 4);
+    let html = '<div class="sk-feed" aria-hidden="true">';
+    for (let index = 0; index < total; index += 1) {
+      html +=
+        '<div class="sk-feed-item">' +
+        window.skeletonBone({ width: "36px", height: "36px", radius: "50%", className: "sk-avatar" }) +
+        '<div style="display:grid;gap:8px;width:100%">' +
+        window.skeletonBone({ width: 70 - (index % 3) * 10 + "%", height: "12px" }) +
+        window.skeletonBone({ width: 48 + (index % 2) * 12 + "%", height: "10px" }) +
+        "</div></div>";
+    }
+    html += "</div>";
+    return html;
+  };
+
+  window.runWithSkeleton = function (target, render, options) {
+    const opts = options || {};
+    if (typeof render !== "function") return;
+    if (!target) {
+      render();
+      return;
+    }
+    const delay = opts.delay != null ? opts.delay : 420;
+    const mode = opts.mode || "table";
+    const columns = opts.columns || Number(target.getAttribute("data-sk-columns")) || 5;
+    const rows = opts.rows || Number(target.getAttribute("data-sk-rows")) || 6;
+    target.setAttribute("aria-busy", "true");
+    if (mode === "table") target.innerHTML = window.skeletonRows(columns, rows);
+    else if (mode === "cards") target.innerHTML = window.skeletonCards(rows, opts.variant);
+    else if (mode === "feed") target.innerHTML = window.skeletonFeed(rows);
+    else if (typeof opts.html === "string") target.innerHTML = opts.html;
+    window.setTimeout(() => {
+      try {
+        render();
+      } finally {
+        if (target.isConnected) target.removeAttribute("aria-busy");
+      }
+    }, delay);
+  };
+
+  const readyQueue = [];
+  let pageReady = !document.documentElement.classList.contains("is-booting");
+
+  window.whenPageReady = function (task) {
+    if (typeof task !== "function") return;
+    if (pageReady) {
+      window.requestAnimationFrame(() => task());
+      return;
+    }
+    readyQueue.push(task);
+  };
+
+  function flushPageReady() {
+    pageReady = true;
+    const tasks = readyQueue.splice(0, readyQueue.length);
+    window.requestAnimationFrame(() => {
+      tasks.forEach((task) => {
+        try {
+          task();
+        } catch (error) {}
+      });
+      document.dispatchEvent(new CustomEvent("stylex-ready"));
+    });
+  }
+
+  window.revealPage = function () {
+    const root = document.documentElement;
+    if (!root.classList.contains("is-booting")) {
+      if (window.StylexSkeleton) window.StylexSkeleton.clear();
+      if (!pageReady) flushPageReady();
+      return;
+    }
+    const started = Number(root.dataset.bootAt || Date.now());
+    const wait = Math.max(0, 520 - (Date.now() - started));
+    window.setTimeout(() => {
+      root.classList.add("is-ready");
+      root.classList.remove("is-booting");
+      if (window.StylexSkeleton) window.StylexSkeleton.clear();
+      flushPageReady();
+      window.setTimeout(() => root.classList.remove("is-ready"), 400);
+    }, wait);
+  };
+
+  if (window.StylexSkeleton) window.StylexSkeleton.mount();
+
+  window.setTimeout(() => {
+    if (window.revealPage) window.revealPage();
+  }, 0);
+
   function cssVar(name) {
     return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   }
@@ -487,8 +633,10 @@ if (menuToggle && scrim && sidebar) {
     if (!Number.isFinite(value) || value < 0) return;
     state.threshold = value;
     state.stockPage = 1;
-    renderLowStock();
-    renderTicker();
+    window.runWithSkeleton(document.getElementById("low-stock-list"), () => {
+      renderLowStock();
+      renderTicker();
+    }, { columns: 5, rows: 5, delay: 280 });
   });
 
   document.getElementById("stock-pager").addEventListener("click", (event) => {
@@ -496,7 +644,7 @@ if (menuToggle && scrim && sidebar) {
     if (!button || button.disabled) return;
     const paged = window.pageRows(lowStockItems(), state.stockPage);
     state.stockPage = window.turnPage(paged.page, paged.pages, button.dataset.page);
-    renderLowStock();
+    window.runWithSkeleton(document.getElementById("low-stock-list"), renderLowStock, { columns: 5, rows: 5 });
   });
 
   document.getElementById("low-stock-list").addEventListener("click", (event) => {
@@ -566,8 +714,18 @@ if (menuToggle && scrim && sidebar) {
       button.setAttribute("aria-pressed", String(button.dataset.period === period));
     });
     syncDateInputs();
-    renderPeriodData();
-    if (!options || !options.silent) announce("Showing " + periodName(period) + ".");
+    if (options && options.silent) {
+      renderPeriodData();
+      return;
+    }
+    const metrics = document.querySelectorAll(".kpi-value, .rev-value, .status-count, #orders-total");
+    metrics.forEach((node) => {
+      node.innerHTML = window.skeletonBone({ width: "64%", height: "22px" });
+    });
+    window.setTimeout(() => {
+      renderPeriodData();
+      announce("Showing " + periodName(period) + ".");
+    }, 360);
   }
 
   function setFilter(filter) {
@@ -575,7 +733,10 @@ if (menuToggle && scrim && sidebar) {
     document.querySelectorAll("[data-filter]").forEach((button) => {
       button.setAttribute("aria-pressed", String(button.dataset.filter === filter));
     });
-    renderNotifications();
+    window.runWithSkeleton(document.getElementById("recent-notifications-list"), renderNotifications, {
+      mode: "feed",
+      rows: 4,
+    });
   }
 
   function onCustomDate() {
@@ -635,17 +796,25 @@ if (menuToggle && scrim && sidebar) {
 
   function renderCharts(metrics) {
     if (typeof Chart === "undefined") return;
+    if (document.documentElement.classList.contains("is-booting")) {
+      window.whenPageReady(() => renderCharts(metrics));
+      return;
+    }
     const labels = chartLabels(metrics);
     const gross = allocate(metrics.gross, metrics.shape);
     const net = allocate(metrics.net, metrics.shape);
     const line = document.getElementById("revenueLineChart");
     const pie = document.getElementById("orderStatusPieChart");
+    const firstPaint = !revenueChart || !ordersChart;
+    const motion = firstPaint
+      ? { duration: 900, easing: "easeOutQuart" }
+      : false;
 
     if (revenueChart) {
       revenueChart.data.labels = labels;
       revenueChart.data.datasets[0].data = gross;
       revenueChart.data.datasets[1].data = net;
-      revenueChart.update();
+      revenueChart.update(firstPaint ? undefined : "none");
     } else {
       revenueChart = new Chart(line, {
         type: "line",
@@ -657,7 +826,7 @@ if (menuToggle && scrim && sidebar) {
           ],
         },
         options: {
-          animation: false,
+          animation: motion,
           responsive: true,
           maintainAspectRatio: false,
           interaction: { mode: "index", intersect: false },
@@ -700,7 +869,7 @@ if (menuToggle && scrim && sidebar) {
 
     if (ordersChart) {
       ordersChart.data.datasets[0].data = statusData;
-      ordersChart.update();
+      ordersChart.update(firstPaint ? undefined : "none");
     } else {
       ordersChart = new Chart(pie, {
         type: "doughnut",
@@ -717,7 +886,7 @@ if (menuToggle && scrim && sidebar) {
           ],
         },
         options: {
-          animation: false,
+          animation: motion,
           responsive: true,
           maintainAspectRatio: false,
           cutout: "68%",

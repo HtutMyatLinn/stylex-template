@@ -17,6 +17,9 @@
   --shadow-nav-mobile: 0 12px 32px rgba(13, 13, 13, 0.16);
   --radius-card: 24px;
   --radius-pill: 9999px;
+  --sk-base: color-mix(in srgb, var(--bg-muted) 88%, var(--text-primary) 4%);
+  --sk-shine: color-mix(in srgb, var(--bg-card) 72%, #ffffff 28%);
+  --transition-smooth: 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 [data-theme="dark"] {
@@ -35,6 +38,8 @@
   --border-subtle: #2a2a2a;
   --shadow-floating: 0 12px 36px rgba(0, 0, 0, 0.45);
   --shadow-nav-mobile: 0 14px 40px rgba(0, 0, 0, 0.7);
+  --sk-base: color-mix(in srgb, var(--bg-muted) 80%, #000 20%);
+  --sk-shine: color-mix(in srgb, var(--bg-card) 70%, #3a3a3a 30%);
 }
 
 *,
@@ -399,5 +404,97 @@ img {
 @media (max-width: 768px) {
   .hub {
     padding: 16px;
+  }
+}
+
+.sk {
+  display: block;
+  width: 100%;
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--sk-base) 0%,
+    var(--sk-shine) 45%,
+    var(--sk-base) 90%
+  );
+  background-size: 220% 100%;
+  animation: sk-shimmer 1.15s ease-in-out infinite;
+}
+
+@keyframes sk-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+html.is-booting #content,
+html.is-booting .hub-frame,
+html.is-booting .soon-frame {
+  position: relative;
+  isolation: isolate;
+}
+
+html.is-booting #content > *:not(#stylex-boot-skeleton),
+html.is-booting .soon-frame > *:not(#stylex-boot-skeleton) {
+  display: none !important;
+}
+
+html.is-booting .hub-frame > .portal-grid {
+  display: none !important;
+}
+
+.page-skeleton {
+  display: none;
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  pointer-events: none;
+}
+
+html.is-booting .page-skeleton {
+  display: block;
+}
+
+.page-skeleton .sk-shell {
+  pointer-events: none;
+}
+
+.page-skeleton .sk-segment {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+html.is-ready #content > *:not(#stylex-boot-skeleton),
+html.is-ready .hub-frame > *:not(#stylex-boot-skeleton),
+html.is-ready .soon-frame > *:not(#stylex-boot-skeleton) {
+  animation: sk-content-in 0.35s var(--transition-smooth) both;
+}
+
+@keyframes sk-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk {
+    animation: none;
+  }
+
+  html.is-ready #content > *:not(#stylex-boot-skeleton),
+  html.is-ready .hub-frame > *:not(#stylex-boot-skeleton),
+  html.is-ready .soon-frame > *:not(#stylex-boot-skeleton) {
+    animation: none;
   }
 }

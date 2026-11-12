@@ -26,7 +26,7 @@
   search.addEventListener("input", () => {
     state.query = search.value;
     state.page = 1;
-    renderTable();
+    window.runWithSkeleton(document.getElementById("order-table"), renderTable, { columns: 6, rows: 6, delay: 280 });
   });
   document.getElementById("order-pager").addEventListener("click", (event) => {
     const button = event.target.closest("[data-page]");
@@ -34,7 +34,7 @@
     const visible = orders.filter(matchesQuery);
     const paged = window.pageRows(visible, state.page);
     state.page = window.turnPage(paged.page, paged.pages, button.dataset.page);
-    renderTable();
+    window.runWithSkeleton(document.getElementById("order-table"), renderTable, { columns: 6, rows: 6 });
   });
   document.getElementById("cancel-form").addEventListener("submit", onCancelSubmit);
   document.getElementById("cancel-detail").addEventListener("input", clearCancelError);
@@ -62,7 +62,7 @@
     if (filter) {
       state.filter = filter.dataset.filter;
       state.page = 1;
-      renderTable();
+      window.runWithSkeleton(document.getElementById("order-table"), renderTable, { columns: 6, rows: 6 });
     }
     if (adminView) openAdminDetail(adminView.dataset.viewAdmin);
     if (back) openScreen("table");

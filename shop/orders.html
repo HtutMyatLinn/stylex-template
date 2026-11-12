@@ -6,6 +6,8 @@
     <meta name="theme-color" content="#f7f6f4" />
     <script>
       try {
+        document.documentElement.classList.add("is-booting");
+        document.documentElement.dataset.bootAt = String(Date.now());
         var theme = localStorage.getItem("stylex-theme");
         var systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         if (theme === "dark" || (theme === "system" && systemDark)) {
@@ -18,6 +20,8 @@
     </script>
 
     <title>Orders · Stylex</title>
+    <link rel="icon" href="../favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -166,6 +170,7 @@
     </div>
 
     <div id="order-status-live" class="sr-only" aria-live="polite"></div>
+    <script src="../assets/js/skeleton.js"></script>
     <script src="../js/script.js"></script>
     <script src="../js/orders.js"></script>
     <script src="./shop.js"></script>
