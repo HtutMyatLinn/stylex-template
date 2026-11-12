@@ -1,0 +1,134 @@
+body {
+  margin: 0;
+  background: var(--bg-outlet);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+}
+
+.public-vacation {
+  margin: 0;
+  padding: 14px 20px;
+  background: var(--accent-red);
+  color: #fff;
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+
+.public-vacation[hidden],
+.public-main [hidden] {
+  display: none;
+}
+
+.public-cover {
+  height: 280px;
+  background: #1a1a1a center / cover no-repeat;
+}
+
+.public-identity {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: -48px;
+  padding: 0 24px 16px;
+}
+
+.public-logo {
+  width: 96px;
+  height: 96px;
+  border: 4px solid var(--bg-card);
+  border-radius: 50%;
+  background: #111 center / cover no-repeat;
+}
+
+.public-identity h1 {
+  margin: 0;
+  font-family: var(--font-heading);
+}
+
+.public-verified,
+#shop-url {
+  display: inline-flex;
+  margin-right: 8px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-card);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.public-follow,
+.public-tabs button,
+.public-card button {
+  height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--outline);
+  border-radius: var(--radius-pill);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+
+.public-follow[aria-pressed="true"],
+.public-tabs button[aria-pressed="true"] {
+  border-color: var(--text-primary);
+  background: var(--text-primary);
+  color: var(--text-on-dark);
+}
+
+.public-social {
+  display: flex;
+  gap: 8px;
+}
+
+.public-social a {
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.public-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 24px 16px;
+}
+
+.public-main {
+  display: grid;
+  gap: 16px;
+  padding: 0 24px 40px;
+}
+
+.public-grid,
+.public-products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.public-card {
+  padding: 16px;
+  border-radius: var(--radius-card);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-floating);
+}
+
+.public-card h2,
+.public-card h3 {
+  margin: 0 0 8px;
+  font-family: var(--font-heading);
+}
+
+.public-product {
+  height: 180px;
+  margin-bottom: 12px;
+  border-radius: 18px;
+  background: var(--bg-muted);
+}
+
+.public-card button:disabled {
+  opacity: 0.45;
+}

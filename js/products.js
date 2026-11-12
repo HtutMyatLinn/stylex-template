@@ -122,15 +122,7 @@
     const publish = event.target.closest("#publish-product");
     if (publish) window.runWithLoading(publish, () => saveProduct());
     const generate = event.target.closest("#generate-variants");
-    if (generate) {
-      window.runWithLoading(generate, () => {
-        readOptionsFromChips();
-        editor.variants = generateVariantCombinations();
-        variantPage = 1;
-        renderVariants();
-        if (!editor.variants.length) toast("Add at least one color, size, or material.");
-      });
-    }
+    if (generate) return;
     if (discount) {
       editor.discountType = discount.dataset.discount;
       document.querySelectorAll("[data-discount]").forEach((button) => {
@@ -186,7 +178,11 @@
     event.preventDefault();
     const value = sanitize(event.target.value).replace(/,$/, "");
     if (!value || !editor) return;
-    editor.options[key].push(value);
+    if (key === "color") {
+      editor.options.color.push({ name: value, hex: document.getElementById("opt-color-picker").value });
+    } else {
+      editor.options[key].push(value);
+    }
     event.target.value = "";
     renderOptionChips();
   }
@@ -440,14 +436,21 @@
       editor.options[key].forEach((value, index) => {
         const chip = document.createElement("span");
         chip.className = "chip";
+        const name = value && typeof value === "object" ? value.name : value;
+        if (value && value.hex) {
+          const dot = document.createElement("i");
+          dot.className = "color-dot";
+          dot.style.background = value.hex;
+          chip.appendChild(dot);
+        }
         const label = document.createElement("span");
-        label.textContent = value;
+        label.textContent = name;
         const button = document.createElement("button");
         button.type = "button";
         button.className = "icon-x";
         button.dataset.removeOption = key;
         button.dataset.index = String(index);
-        button.setAttribute("aria-label", "Remove " + value);
+        button.setAttribute("aria-label", "Remove " + name);
         button.textContent = "×";
         chip.append(label, button);
         box.appendChild(chip);
@@ -506,7 +509,7 @@
     const wrap = document.getElementById("variant-wrap");
     const pager = document.getElementById("variant-pager");
     if (!editor.variants.length) {
-      wrap.innerHTML = window.emptyState("ri-layout-grid-line", "No variants yet", "Add a color, size, or material, then generate combinations.", true);
+      wrap.innerHTML = window.emptyState("ri-layout-grid-line", "No variants yet", "Variants already saved for this product will show here.", true);
       pager.hidden = true;
       pager.innerHTML = "";
       return;

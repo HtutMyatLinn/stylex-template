@@ -1,0 +1,374 @@
+.settings {
+  display: grid;
+  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  padding: 8px 0 40px;
+}
+
+.settings-menu,
+.settings-panel,
+.settings-summary {
+  border-radius: var(--radius-card);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-floating);
+}
+
+.settings-menu {
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+}
+
+.settings-summary {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 14px;
+  box-shadow: none;
+  background: var(--bg-input);
+}
+
+.settings-logo {
+  display: grid;
+  flex: none;
+  width: 56px;
+  height: 56px;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--text-primary);
+  color: var(--text-on-dark);
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+.settings-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.settings-summary strong,
+.settings-panel h2,
+.settings-block h3 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+
+.settings-summary p,
+.settings-lead,
+.settings-help,
+.settings-social p,
+.settings-device small,
+.settings-ticket p {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.settings-badges,
+.settings-row-actions,
+.settings-choice,
+.settings-social,
+.settings-device,
+.settings-ticket,
+.settings-faq summary,
+.settings-matrix-head,
+.settings-matrix-row,
+.settings-doc-bar,
+.settings-qa {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-badges {
+  margin-top: 8px;
+}
+
+.settings-nav {
+  display: grid;
+  gap: 6px;
+}
+
+.settings-nav button,
+.settings-choice button,
+.settings-doc-bar button {
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--outline);
+  border-radius: var(--radius-pill);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  text-align: left;
+}
+
+.settings-nav button[aria-pressed="true"],
+.settings-choice button[aria-pressed="true"],
+.settings-doc-bar button[aria-pressed="true"] {
+  border-color: var(--text-primary);
+  background: var(--text-primary);
+  color: var(--text-on-dark);
+}
+
+.settings-logout {
+  min-height: 42px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-red);
+  color: #fff;
+}
+
+.settings-stage {
+  display: grid;
+  gap: 12px;
+}
+
+.settings-panel {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+}
+
+.settings-panel[hidden],
+.settings-block[hidden],
+.settings-alert[hidden] {
+  display: none;
+}
+
+.settings-link-card,
+.settings-block,
+.settings-qa,
+.settings-alert {
+  padding: 14px;
+  border-radius: var(--radius-inner);
+  background: var(--bg-input);
+}
+
+.settings-link-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.settings-block {
+  display: grid;
+  gap: 12px;
+}
+
+.settings-grid,
+.settings-matrix {
+  display: grid;
+  gap: 12px;
+}
+
+.settings-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.settings-choice {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.settings-choice button {
+  text-align: center;
+}
+
+.settings .btn,
+.settings-modal .btn {
+  min-height: 42px;
+  border-radius: var(--radius-pill);
+}
+
+.settings-matrix-head,
+.settings-matrix-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 64px 64px 64px;
+  gap: 8px;
+  align-items: center;
+}
+
+.settings-matrix-head {
+  color: var(--text-secondary);
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.settings-switch {
+  position: relative;
+  display: inline-flex;
+  width: 44px;
+  height: 26px;
+  justify-self: center;
+}
+
+.settings-switch input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+}
+
+.settings-switch span {
+  width: 44px;
+  height: 26px;
+  padding: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-muted);
+}
+
+.settings-switch span::after {
+  content: "";
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  transition: transform 160ms ease;
+}
+
+.settings-switch input:checked + span {
+  background: var(--text-primary);
+}
+
+.settings-switch input:checked + span::after {
+  transform: translateX(18px);
+}
+
+.settings-switch input:focus-visible + span {
+  outline: none;
+  box-shadow: none;
+}
+
+.settings-pay,
+.settings-social,
+.settings-device,
+.settings-ticket,
+.settings-faq {
+  padding: 12px;
+  border-radius: var(--radius-inner);
+  background: var(--bg-card);
+}
+
+.settings-pay,
+.settings-social,
+.settings-device,
+.settings-ticket {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.settings-pay strong,
+.settings-device strong,
+.settings-ticket strong {
+  display: block;
+}
+
+.settings-code {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.settings-alert {
+  border: 1px solid var(--accent-red);
+  color: var(--text-primary);
+}
+
+.settings-alert[hidden] {
+  display: none;
+}
+
+.settings-doc {
+  display: grid;
+  gap: 10px;
+}
+
+.settings-doc p + p {
+  margin-top: 8px;
+}
+
+.settings-faq {
+  display: block;
+}
+
+.settings-faq summary {
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+
+.settings-faq p {
+  margin-top: 8px;
+  color: var(--text-secondary);
+}
+
+.settings-updated {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 12px;
+  border-radius: var(--radius-pill);
+  background: var(--text-primary);
+  color: var(--text-on-dark);
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.settings-modal .modal-card {
+  width: min(560px, 100%);
+  border: 0;
+  border-radius: var(--radius-card);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-floating);
+}
+
+.settings-modal.is-locked {
+  background: rgba(13, 13, 13, 0.55);
+}
+
+.settings-scroll {
+  max-height: 280px;
+  overflow: auto;
+  padding: 12px;
+  border-radius: var(--radius-inner);
+  background: var(--bg-input);
+}
+
+.settings-scroll p + p {
+  margin-top: 10px;
+}
+
+html[lang="my"] .settings {
+  font-family: "Noto Sans Myanmar", var(--font-body), sans-serif;
+}
+
+@media (max-width: 860px) {
+  .settings,
+  .settings-grid,
+  .settings-choice,
+  .settings-matrix-head,
+  .settings-matrix-row {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-matrix-head {
+    display: none;
+  }
+
+  .settings-pay,
+  .settings-social,
+  .settings-device,
+  .settings-ticket,
+  .settings-link-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atelier Noir · Stylex</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="./shop-public.css" />
+  </head>
+  <body>
+    <a class="skip" href="#content">Skip to content</a>
+    <p class="public-vacation" id="vacation-banner" hidden>This shop is currently on vacation. Ordering and checkout are temporarily paused.</p>
+    <header class="public-hero">
+      <div class="public-cover" id="shop-cover"></div>
+      <div class="public-identity">
+        <div class="public-logo" id="shop-logo"></div>
+        <div>
+          <h1 id="shop-name">Atelier Noir</h1>
+          <p><span class="public-verified">Verified</span> <span id="shop-url">marketplace.com/shop/ateliernoir</span></p>
+          <p id="shop-followers">12,840 followers</p>
+        </div>
+        <button class="public-follow" id="follow-shop" type="button" aria-pressed="false">Follow Shop</button>
+        <div class="public-social" id="shop-social"></div>
+      </div>
+    </header>
+    <nav class="public-tabs" id="shop-tabs" aria-label="Shop">
+      <button type="button" data-tab="home" aria-pressed="true">Home</button>
+      <button type="button" data-tab="story" aria-pressed="false">Story &amp; Philosophy</button>
+      <button type="button" data-tab="founders" aria-pressed="false">Founders</button>
+      <button type="button" data-tab="products" aria-pressed="false">Products</button>
+      <button type="button" data-tab="policies" aria-pressed="false">Policies &amp; Contact</button>
+    </nav>
+    <main id="content" class="public-main">
+      <section data-panel="home"></section>
+      <section data-panel="story" hidden></section>
+      <section data-panel="founders" hidden></section>
+      <section data-panel="products" hidden></section>
+      <section data-panel="policies" hidden></section>
+    </main>
+    <script src="./shop-public.js"></script>
+  </body>
+</html>

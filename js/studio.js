@@ -185,9 +185,7 @@
   }
 
   function cardActions(item) {
-    return '<button type="button" data-up="' + item.id + '"' + (item.displayOrder === 1 ? " disabled" : "") + '>Up</button>' +
-      '<button type="button" data-down="' + item.id + '"' + (item.displayOrder === photos.length ? " disabled" : "") + '>Down</button>' +
-      '<button type="button" data-cover="' + item.id + '"' + (item.isCover ? " disabled" : "") + '>' + (item.isCover ? "Primary cover" : "Set as Cover") + '</button>' +
+    return '<button type="button" data-cover="' + item.id + '"' + (item.isCover ? " disabled" : "") + '>' + (item.isCover ? "Primary cover" : "Set as Cover") + '</button>' +
       '<button type="button" data-edit="' + item.id + '">Edit</button>' +
       '<button type="button" class="is-delete" data-delete="' + item.id + '">Delete</button>';
   }
@@ -314,10 +312,6 @@
     });
   }
 
-  document.getElementById("studio-presets").innerHTML = PRESETS.map(function (item, index) {
-    return '<button type="button" data-preset="' + index + '">' + item.caption + '</button>';
-  }).join("");
-
   document.getElementById("studio-search").addEventListener("input", function (event) {
     query = event.target.value;
     render();
@@ -368,25 +362,13 @@
     pendingImage.file = file;
   });
 
-  document.getElementById("studio-presets").addEventListener("click", function (event) {
-    const button = event.target.closest("[data-preset]");
-    if (!button) return;
-    const preset = PRESETS[Number(button.dataset.preset)];
-    applyPending({ name: preset.name, type: "image/jpeg", size: 860000, url: preset.url }, preset.url);
-    if (!document.getElementById("studio-caption").value) document.getElementById("studio-caption").value = preset.caption;
-  });
-
   document.getElementById("studio-app").addEventListener("click", function (event) {
-    const up = event.target.closest("[data-up]");
-    const down = event.target.closest("[data-down]");
     const cover = event.target.closest("[data-cover]");
     const edit = event.target.closest("[data-edit]");
     const remove = event.target.closest("[data-delete]");
-    const button = up || down || cover || edit || remove;
+    const button = cover || edit || remove;
     if (!button) return;
     window.runWithLoading(button, function () {
-      if (up) move(up.dataset.up, -1);
-      if (down) move(down.dataset.down, 1);
       if (cover) {
         setPhotoDisplay(SHOP_ID, cover.dataset.cover, true);
         render();

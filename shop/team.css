@@ -1,0 +1,165 @@
+.team {
+  display: grid;
+  gap: 16px;
+  padding: 8px 0 32px;
+}
+
+.team-sections {
+  margin-bottom: 0;
+}
+
+.team-roles {
+  display: grid;
+  grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.team-role-list,
+.team-matrix {
+  padding: 16px;
+  border-radius: var(--radius-card);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-floating);
+}
+
+.team-role-list-head,
+.team-matrix-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.team-role-list h2,
+.team-matrix h2,
+.team-group h3,
+.finance-drawer-panel h3 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+
+.team-role-card {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-inner);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  text-align: left;
+}
+
+.team-role-card.is-selected {
+  border-color: var(--outline);
+  background: var(--bg-card);
+}
+
+.team-role-card small,
+.team-matrix-head p,
+.team-perm small {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.team-group {
+  margin-top: 16px;
+}
+
+.team-group.is-sensitive {
+  padding: 12px;
+  border-radius: var(--radius-inner);
+  background: var(--bg-input);
+}
+
+.team-perm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+}
+
+.team-explicit {
+  margin-left: auto;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--text-primary);
+  color: var(--text-on-dark);
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.team-callout,
+.team-lock,
+.team-audit {
+  margin: 0 0 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-inner);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.team-audit span,
+.team-lock {
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+
+.team-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.team-table tbody tr[data-log] {
+  cursor: pointer;
+}
+
+.team-access-actions {
+  justify-content: flex-start;
+}
+
+.team-meta {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.team-meta div {
+  display: grid;
+  gap: 2px;
+}
+
+.team-meta dt {
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.team-meta dd {
+  margin: 0;
+}
+
+.finance-drawer-panel pre {
+  margin: 0 0 12px;
+  padding: 12px;
+  overflow: auto;
+  border-radius: var(--radius-inner);
+  background: var(--bg-input);
+  font-size: 12px;
+}
+
+@media (max-width: 800px) {
+  .team-roles {
+    grid-template-columns: 1fr;
+  }
+}

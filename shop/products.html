@@ -6,7 +6,9 @@
     <meta name="theme-color" content="#f7f6f4" />
     <script>
       try {
-        if (localStorage.getItem("stylex-theme") === "dark") {
+        var theme = localStorage.getItem("stylex-theme");
+        var systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (theme === "dark" || (theme === "system" && systemDark)) {
           document.documentElement.setAttribute("data-theme", "dark");
         }
         if (localStorage.getItem("stylex-sidebar") === "collapsed") {
@@ -50,7 +52,7 @@
 <a class="nav-link" href="studio.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Studio</span></a>
 <a class="nav-link" href="team.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9.5" r="2"/><path d="M3.5 19c.6-3 2.8-4.5 5.5-4.5s4.9 1.5 5.5 4.5"/><path d="M16 14.6c1.7.2 3 1.2 3.6 3.4"/></svg><span>Team</span></a>
 <a class="nav-link" href="shop-profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10 6 4h12l2 6"/><path d="M4 10h16v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M10 20v-5h4v5"/></svg><span>Shop Profile</span></a>
-<a class="nav-link" href="setting.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Settings</span></a>
+<a class="nav-link" href="settings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Settings</span></a>
         </nav>
       </aside>
       <div class="main outlet">
@@ -91,17 +93,15 @@
         <main class="canvas outlet-canvas" id="content">
           <div class="products-workspace" id="products-app">
             <section class="product-view is-shown" id="inventory-view" data-view="list">
-              <div class="inventory-head">
-                <button class="btn" id="create-product" type="button">+ Create product</button>
-              </div>
               <div class="toolbar">
                 <input class="search" id="product-search" type="search" placeholder="Search name or SKU" aria-label="Search by product name or SKU" />
                 <label class="threshold-field" for="low-stock-threshold">
                   Low stock alert threshold
                   <input id="low-stock-threshold" type="number" min="0" max="999" step="1" value="10" inputmode="numeric" />
                 </label>
+                <div class="status-tabs" id="status-tabs" role="tablist" aria-label="Product status"></div>
+                <button class="btn" id="create-product" type="button">+ Create product</button>
               </div>
-              <div class="status-tabs" id="status-tabs" role="tablist" aria-label="Product status"></div>
               <div class="table-scroll">
                 <table class="product-table">
                   <thead>
@@ -219,8 +219,12 @@
                     <h2>Variants</h2>
                     <div class="option-grid">
                       <div class="field">
+                        <span>Color picker</span>
+                        <input id="opt-color-picker" type="color" value="#1a1a1a" aria-label="Color picker" />
+                      </div>
+                      <div class="field">
                         <span>Color</span>
-                        <input id="opt-color" type="text" placeholder="Add a color, then Enter" />
+                        <input id="opt-color" type="text" placeholder="Add a color name, then Enter" />
                         <div class="chips" id="chips-color"></div>
                       </div>
                       <div class="field">
@@ -234,7 +238,6 @@
                         <div class="chips" id="chips-material"></div>
                       </div>
                     </div>
-                    <button class="btn is-ghost" id="generate-variants" type="button">Generate variant combinations</button>
                     <div class="table-scroll" id="variant-wrap"></div>
                     <nav class="pager" id="variant-pager" aria-label="Variant pages"></nav>
                   </section>
@@ -359,7 +362,7 @@
 <a class="nav-link" href="message.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H9l-4 3v-3H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></svg><span>Message</span></a>
 <a class="nav-link" href="team.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9.5" r="2"/><path d="M3.5 19c.6-3 2.8-4.5 5.5-4.5s4.9 1.5 5.5 4.5"/><path d="M16 14.6c1.7.2 3 1.2 3.6 3.4"/></svg><span>Team</span></a>
 <a class="nav-link" href="shop-profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10 6 4h12l2 6"/><path d="M4 10h16v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M10 20v-5h4v5"/></svg><span>Shop Profile</span></a>
-<a class="nav-link" href="setting.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Settings</span></a>
+<a class="nav-link" href="settings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Settings</span></a>
 </div>
     <button class="scrim" id="scrim" type="button" hidden aria-label="Close menu"></button>
     <div id="toast" class="toast" role="status" hidden></div>

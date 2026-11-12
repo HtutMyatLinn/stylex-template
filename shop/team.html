@@ -6,7 +6,9 @@
     <meta name="theme-color" content="#f7f6f4" />
     <script>
       try {
-        if (localStorage.getItem("stylex-theme") === "dark") {
+        var theme = localStorage.getItem("stylex-theme");
+        var systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (theme === "dark" || (theme === "system" && systemDark)) {
           document.documentElement.setAttribute("data-theme", "dark");
         }
         if (localStorage.getItem("stylex-sidebar") === "collapsed") {
@@ -28,6 +30,7 @@
     />
     <link rel="stylesheet" href="../css/styles.css" />
     <link rel="stylesheet" href="./shop.css" />
+    <link rel="stylesheet" href="./team.css" />
   </head>
   <body data-page="team">
     <a class="skip" href="#content">Skip to content</a>
@@ -50,7 +53,7 @@
 <a class="nav-link" href="studio.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Studio</span></a>
 <a class="nav-link is-active" href="team.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9.5" r="2"/><path d="M3.5 19c.6-3 2.8-4.5 5.5-4.5s4.9 1.5 5.5 4.5"/><path d="M16 14.6c1.7.2 3 1.2 3.6 3.4"/></svg><span>Team</span></a>
 <a class="nav-link" href="shop-profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10 6 4h12l2 6"/><path d="M4 10h16v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M10 20v-5h4v5"/></svg><span>Shop Profile</span></a>
-<a class="nav-link" href="setting.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Settings</span></a>
+<a class="nav-link" href="settings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Settings</span></a>
         </nav>
       </aside>
       <div class="main outlet">
@@ -89,13 +92,109 @@
           </div>
         </div>
         <main class="canvas outlet-canvas" id="content">
-          <section class="empty-stage">
-            <div class="empty-state">
-              <span class="empty-orb" aria-hidden="true"><i class="ri-team-line"></i></span>
-              <h2>No teammates yet</h2>
-              <p>People who help run Atelier Noir will show up here.</p>
+          <div class="team" id="team-app" data-shop-id="atelier-noir">
+            <div class="screen-switch team-sections" id="team-sections" role="tablist" aria-label="Team">
+              <button type="button" data-section="members" aria-pressed="true">Team Members</button>
+              <button type="button" data-section="roles" aria-pressed="false">Roles &amp; Permissions</button>
+              <button type="button" data-section="logs" aria-pressed="false">Activity Logs</button>
             </div>
-          </section>
+
+            <section id="team-panel-members" data-panel="members">
+              <div class="toolbar">
+                <input class="search" id="team-search" type="search" placeholder="Search name or email" aria-label="Search team members by name or email" />
+                <select id="team-role-filter" aria-label="Filter by role">
+                  <option value="all">All roles</option>
+                </select>
+                <div class="screen-switch" id="team-status-tabs" role="group" aria-label="Member status"></div>
+                <button class="btn" id="team-invite-open" type="button">Invite Team Member</button>
+              </div>
+              <div class="table-scroll">
+                <table class="order-table team-table">
+                  <caption class="sr-only">Team members</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Member</th>
+                      <th scope="col">Role</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Last active</th>
+                      <th scope="col">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="team-member-rows"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section id="team-panel-roles" data-panel="roles" hidden>
+              <div class="team-roles">
+                <aside class="team-role-list">
+                  <div class="team-role-list-head">
+                    <h2>Roles</h2>
+                    <button class="btn" id="team-role-create" type="button">+ Create Custom Role</button>
+                  </div>
+                  <div id="team-role-cards"></div>
+                </aside>
+                <div class="team-matrix">
+                  <div class="team-matrix-head">
+                    <div>
+                      <h2 id="team-role-title">Permissions</h2>
+                      <p id="team-role-note"></p>
+                    </div>
+                    <button class="btn" id="team-permissions-save" type="button">Save Permissions</button>
+                  </div>
+                  <div id="team-permission-groups"></div>
+                </div>
+              </div>
+            </section>
+
+            <section id="team-panel-logs" data-panel="logs" hidden>
+              <p class="team-audit"><span>Locked</span> Activity logs are append-only and immutable. Records cannot be edited or deleted.</p>
+              <div class="toolbar">
+                <input class="search" id="log-actor" type="search" placeholder="Actor name" aria-label="Filter logs by actor" />
+                <label class="finance-field">
+                  <span>Role</span>
+                  <select id="log-role" aria-label="Filter logs by role"><option value="all">All roles</option></select>
+                </label>
+                <label class="finance-field">
+                  <span>Action</span>
+                  <select id="log-action" aria-label="Filter logs by action type">
+                    <option value="all">All actions</option>
+                    <option value="invite">Invitation</option>
+                    <option value="access">Access change</option>
+                    <option value="role">Role change</option>
+                    <option value="permissions">Permission change</option>
+                    <option value="security">Security event</option>
+                  </select>
+                </label>
+                <label class="finance-field">
+                  <span>From</span>
+                  <input id="log-from" type="date" />
+                </label>
+                <label class="finance-field">
+                  <span>To</span>
+                  <input id="log-to" type="date" />
+                </label>
+                <div class="screen-switch" id="log-outcomes" role="group" aria-label="Log outcome"></div>
+                <label class="team-check"><input id="log-security" type="checkbox" /> Security events only</label>
+              </div>
+              <div class="table-scroll">
+                <table class="order-table team-table">
+                  <caption class="sr-only">Activity logs</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Timestamp</th>
+                      <th scope="col">Actor</th>
+                      <th scope="col">Action</th>
+                      <th scope="col">Target</th>
+                      <th scope="col">Category</th>
+                      <th scope="col">Outcome</th>
+                    </tr>
+                  </thead>
+                  <tbody id="team-log-rows"></tbody>
+                </table>
+              </div>
+            </section>
+          </div>
         </main>
       </div>
     </div>
@@ -112,10 +211,71 @@
 <a class="nav-link" href="message.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H9l-4 3v-3H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></svg><span>Message</span></a>
 <a class="nav-link is-active" href="team.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9.5" r="2"/><path d="M3.5 19c.6-3 2.8-4.5 5.5-4.5s4.9 1.5 5.5 4.5"/><path d="M16 14.6c1.7.2 3 1.2 3.6 3.4"/></svg><span>Team</span></a>
 <a class="nav-link" href="shop-profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10 6 4h12l2 6"/><path d="M4 10h16v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M10 20v-5h4v5"/></svg><span>Shop Profile</span></a>
-<a class="nav-link" href="setting.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Settings</span></a>
+<a class="nav-link" href="settings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Settings</span></a>
 </div>
     <button class="scrim" id="scrim" type="button" hidden aria-label="Close menu"></button>
+
+    <div class="order-modal" id="team-invite-modal" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="team-invite-title">
+        <h2 id="team-invite-title">Invite Team Member</h2>
+        <form id="team-invite-form">
+          <label class="field"><span>Registered user email</span><input id="team-invite-email" type="email" required autocomplete="off" placeholder="name@studio.com" /></label>
+          <label class="field"><span>Initial role</span><select id="team-invite-role" required></select></label>
+          <p class="team-callout">New members receive only the permissions in their assigned role. Financial and other sensitive permissions require an explicit assignment.</p>
+          <p class="field-error" id="team-invite-error" hidden></p>
+          <div class="modal-actions">
+            <button class="btn is-ghost" id="team-invite-cancel" type="button">Cancel</button>
+            <button class="btn" type="submit">Send invitation</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="order-modal" id="team-access-modal" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="team-access-title">
+        <h2 id="team-access-title">Change access</h2>
+        <p id="team-access-who"></p>
+        <p class="team-lock" id="team-access-lock" hidden>Every shop must retain at least one active owner. Owner access cannot be removed or downgraded without a verified ownership transfer.</p>
+        <label class="field"><span>Role</span><select id="team-access-role"></select></label>
+        <div class="modal-actions team-access-actions">
+          <button class="btn" id="team-access-role-save" type="button">Change role</button>
+          <button class="btn is-ghost" id="team-access-suspend" type="button">Suspend access</button>
+          <button class="btn is-ghost" id="team-access-reactivate" type="button">Reactivate access</button>
+          <button class="btn is-danger" id="team-access-remove" type="button">Remove member</button>
+          <button class="btn is-danger" id="team-access-revoke" type="button">Revoke invitation</button>
+          <button class="btn is-ghost" id="team-access-close" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="order-modal" id="team-role-modal" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="team-role-modal-title">
+        <h2 id="team-role-modal-title">Create custom role</h2>
+        <form id="team-role-form">
+          <label class="field"><span>Role name</span><input id="team-role-name" type="text" required maxlength="40" /></label>
+          <p class="field-error" id="team-role-error" hidden></p>
+          <div class="modal-actions">
+            <button class="btn is-ghost" id="team-role-cancel" type="button">Cancel</button>
+            <button class="btn" type="submit">Create role</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="finance-drawer" id="team-log-drawer" hidden>
+      <button class="finance-drawer-scrim" id="team-log-scrim" type="button" aria-label="Close event detail"></button>
+      <aside class="finance-drawer-panel" role="dialog" aria-modal="true" aria-labelledby="team-log-title">
+        <h2 id="team-log-title">Event detail</h2>
+        <dl class="team-meta" id="team-log-meta"></dl>
+        <h3>Before</h3>
+        <pre id="team-log-before"></pre>
+        <h3>After</h3>
+        <pre id="team-log-after"></pre>
+      </aside>
+    </div>
+
     <script src="../js/script.js"></script>
     <script src="./shop.js"></script>
+    <script src="./team.js"></script>
   </body>
 </html>

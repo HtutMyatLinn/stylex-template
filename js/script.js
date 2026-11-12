@@ -126,10 +126,27 @@
 
   const THEME_KEY = "stylex-theme";
 
+  function storedTheme() {
+    try {
+      return localStorage.getItem(THEME_KEY) || "light";
+    } catch (error) {
+      return "light";
+    }
+  }
+
+  function resolveTheme(theme) {
+    if (theme === "system") {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    return theme === "dark" ? "dark" : "light";
+  }
+
   function applyTheme(theme) {
-    const dark = theme === "dark";
+    const choice = theme === "dark" || theme === "system" || theme === "light" ? theme : "light";
+    const dark = resolveTheme(choice) === "dark";
     if (dark) document.documentElement.setAttribute("data-theme", "dark");
     else document.documentElement.removeAttribute("data-theme");
+    document.documentElement.dataset.themeChoice = choice;
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute("content", dark ? "#0d0d0d" : "#f7f6f4");
     const themeSwitch = document.getElementById("theme-switch");
@@ -141,6 +158,8 @@
     if (themeLabel) themeLabel.textContent = dark ? "Dark theme" : "Light theme";
     document.dispatchEvent(new CustomEvent("stylex-theme"));
   }
+
+  window.applyStylexTheme = applyTheme;
 
   function closeAccountMenu() {
     const toggle = document.getElementById("account-toggle");
@@ -155,7 +174,10 @@
   const themeSwitch = document.getElementById("theme-switch");
   const logoutButton = document.getElementById("logout-button");
   const languageGroup = document.querySelector(".lang-pills");
-  applyTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light");
+  applyTheme(storedTheme());
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+    if (storedTheme() === "system") applyTheme("system");
+  });
   if (accountToggle && accountMenu) {
     accountToggle.addEventListener("click", (event) => {
       event.stopPropagation();
@@ -197,6 +219,7 @@
       try {
         localStorage.setItem(LANG_KEY, button.dataset.lang);
       } catch (error) {}
+      document.dispatchEvent(new CustomEvent("stylex-lang", { detail: button.dataset.lang }));
     });
   }
   if (logoutButton) {
@@ -327,6 +350,11 @@ if (menuToggle && scrim && sidebar) {
     closeAccountMenu();
     if (document.body.dataset.page === "dashboard") closeNotifications();
   });
+
+  const selectValue = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, "value");
+  const selectIndex = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, "selectedIndex");
+  let openSelect = null;
+  bootThemeSelects();
 
   if (document.body.dataset.page !== "dashboard") return;
 
@@ -1141,5 +1169,185 @@ if (menuToggle && scrim && sidebar) {
     const date = new Date();
     date.setDate(date.getDate() - days);
     return iso(date);
+  }
+
+    function closeThemeSelect(wrap) {
+    if (!wrap) return;
+    wrap.classList.remove("is-open");
+    const menu = wrap.themeMenu;
+    const trigger = wrap.querySelector(".theme-select-button");
+    if (menu) menu.hidden = true;
+    if (trigger) trigger.setAttribute("aria-expanded", "false");
+    if (openSelect === wrap) openSelect = null;
+  }
+
+  function placeThemeSelect(wrap) {
+    if (!wrap) return;
+    const trigger = wrap.querySelector(".theme-select-button");
+    const menu = wrap.querySelector(".theme-select-menu") || wrap.themeMenu;
+    if (!trigger || !menu || menu.hidden) return;
+    const rect = trigger.getBoundingClientRect();
+    const width = Math.max(rect.width, 168);
+    menu.style.width = width + "px";
+    const menuHeight = Math.min(menu.scrollHeight, 240);
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const openUp = spaceBelow < menuHeight + 12 && rect.top > spaceBelow;
+    const left = Math.max(8, Math.min(rect.left, window.innerWidth - width - 8));
+    menu.style.left = left + "px";
+    menu.style.top = (openUp ? Math.max(8, rect.top - menuHeight - 6) : rect.bottom + 6) + "px";
+  }
+
+  function upgradeSelect(select) {
+    if (!select || select.dataset.themeSelect === "on" || select.closest(".theme-select") || !select.parentNode) return;
+    const trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "theme-select-button";
+    trigger.setAttribute("aria-haspopup", "listbox");
+    trigger.setAttribute("aria-expanded", "false");
+    const menu = document.createElement("div");
+    menu.className = "theme-select-menu";
+    menu.hidden = true;
+    menu.setAttribute("role", "listbox");
+    const wrap = document.createElement("div");
+    wrap.className = "theme-select";
+    if (select.classList.contains("vis-select")) wrap.classList.add("is-table");
+    select.dataset.themeSelect = "on";
+    select.classList.add("theme-select-native");
+    select.tabIndex = -1;
+    select.setAttribute("aria-hidden", "true");
+    select.parentNode.insertBefore(wrap, select);
+    wrap.append(select, trigger);
+    document.body.appendChild(menu);
+    wrap.themeMenu = menu;
+    select.themeMenu = menu;
+
+    let painting = false;
+    function paint() {
+      if (painting || !select.isConnected) return;
+      painting = true;
+      const current = select.options[select.selectedIndex];
+      trigger.replaceChildren();
+      const label = document.createElement("span");
+      label.textContent = current ? current.textContent : "";
+      trigger.appendChild(label);
+      trigger.disabled = select.disabled;
+      const named = select.getAttribute("aria-label");
+      if (named) trigger.setAttribute("aria-label", named);
+      menu.replaceChildren();
+      Array.from(select.options).forEach((option, index) => {
+        const item = document.createElement("button");
+        item.type = "button";
+        item.className = "theme-select-option";
+        item.setAttribute("role", "option");
+        item.setAttribute("aria-selected", String(index === select.selectedIndex));
+        item.disabled = option.disabled;
+        item.textContent = option.textContent;
+        item.addEventListener("click", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          selectIndex.set.call(select, index);
+          select.dispatchEvent(new Event("change", { bubbles: true }));
+          if (!wrap.isConnected) return;
+          paint();
+          closeThemeSelect(wrap);
+          trigger.focus();
+        });
+        menu.appendChild(item);
+      });
+      painting = false;
+    }
+
+    Object.defineProperty(select, "value", {
+      configurable: true,
+      get() { return selectValue.get.call(select); },
+      set(next) {
+        selectValue.set.call(select, next);
+        paint();
+      }
+    });
+    Object.defineProperty(select, "selectedIndex", {
+      configurable: true,
+      get() { return selectIndex.get.call(select); },
+      set(next) {
+        selectIndex.set.call(select, next);
+        paint();
+      }
+    });
+    new MutationObserver(paint).observe(select, { childList: true, subtree: true, attributes: true, attributeFilter: ["disabled"] });
+    select.addEventListener("change", paint);
+    select.addEventListener("mousedown", (event) => event.preventDefault());
+    select.addEventListener("focus", () => trigger.focus());
+    trigger.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (trigger.disabled) return;
+      if (openSelect === wrap) {
+        closeThemeSelect(wrap);
+        return;
+      }
+      closeThemeSelect(openSelect);
+      menu.hidden = false;
+      wrap.classList.add("is-open");
+      trigger.setAttribute("aria-expanded", "true");
+      openSelect = wrap;
+      placeThemeSelect(wrap);
+      const selected = menu.querySelector('[aria-selected="true"]') || menu.querySelector("button");
+      if (selected) selected.focus();
+    });
+    trigger.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowDown" && event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      trigger.click();
+    });
+    menu.addEventListener("keydown", (event) => {
+      const items = Array.from(menu.querySelectorAll("button:not(:disabled)"));
+      const index = items.indexOf(document.activeElement);
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeThemeSelect(wrap);
+        trigger.focus();
+      } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+        event.preventDefault();
+        const next = event.key === "ArrowDown" ? Math.min(items.length - 1, index + 1) : Math.max(0, index - 1);
+        if (items[next]) items[next].focus();
+      }
+    });
+    paint();
+  }
+
+  function bootThemeSelects() {
+    const outlet = document.querySelector(".outlet");
+    if (!outlet) return;
+    const scan = (node) => {
+      if (!node || node.nodeType !== 1) return;
+      if (node.matches("select")) upgradeSelect(node);
+      node.querySelectorAll("select").forEach(upgradeSelect);
+    };
+    scan(document.body);
+    const retireSelect = (node) => {
+      if (!node || node.nodeType !== 1) return;
+      const selects = node.matches("select") ? [node] : Array.from(node.querySelectorAll("select"));
+      selects.forEach((select) => {
+        if (select.isConnected || !select.themeMenu) return;
+        if (openSelect && openSelect.themeMenu === select.themeMenu) openSelect = null;
+        select.themeMenu.remove();
+      });
+    };
+    new MutationObserver((records) => {
+      records.forEach((record) => {
+        record.addedNodes.forEach(scan);
+        record.removedNodes.forEach(retireSelect);
+      });
+    }).observe(document.body, { childList: true, subtree: true });
+    document.addEventListener("click", (event) => {
+      if (!openSelect) return;
+      if (openSelect.contains(event.target) || (openSelect.themeMenu && openSelect.themeMenu.contains(event.target))) return;
+      closeThemeSelect(openSelect);
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeThemeSelect(openSelect);
+    });
+    window.addEventListener("resize", () => placeThemeSelect(openSelect));
+    document.addEventListener("scroll", () => placeThemeSelect(openSelect), true);
   }
 })();
