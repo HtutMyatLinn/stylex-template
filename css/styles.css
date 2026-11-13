@@ -1636,9 +1636,10 @@ html[data-sidebar="collapsed"] .nav-link svg,
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
-  background: var(--color-white);
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
+  background: var(--bg-card, var(--color-white));
+  border: 0;
+  border-radius: var(--radius-card, 16px);
+  box-shadow: var(--shadow-floating, var(--shadow-float, none));
 }
 
 .order-table {
@@ -1764,9 +1765,10 @@ html[data-sidebar="collapsed"] .nav-link svg,
 .panel {
   margin-bottom: 12px;
   padding: 16px 18px;
-  background: var(--color-white);
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
+  background: var(--bg-card, var(--color-white));
+  border: 0;
+  border-radius: var(--radius-card, 16px);
+  box-shadow: var(--shadow-floating, var(--shadow-float, none));
 }
 
 .panel h2,
@@ -1891,9 +1893,10 @@ html[data-sidebar="collapsed"] .nav-link svg,
 .history-card {
   align-items: center;
   padding: 16px;
-  background: var(--color-white);
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
+  background: var(--bg-card, var(--color-white));
+  border: 0;
+  border-radius: var(--radius-card, 16px);
+  box-shadow: var(--shadow-floating, var(--shadow-float, none));
 }
 
 .history-copy {
@@ -3495,7 +3498,7 @@ body[data-page="finance"] .toast.is-on {
 }
 
 .promo .table-scroll {
-  border-radius: 8px;
+  border-radius: var(--radius-card, 16px);
 }
 
 .promo-table {
@@ -4117,10 +4120,42 @@ html.is-ready #content > *:not(#stylex-boot-skeleton) {
 .promo-kpi,
 .empty-state,
 .finance-banner,
-.modal-card {
+.modal-card,
+.panel {
   border: 0;
   border-radius: var(--radius-card);
-  box-shadow: var(--shadow-float);
+  box-shadow: var(--shadow-floating, var(--shadow-float));
+  background: var(--bg-card, var(--color-white));
+}
+
+/* Nested table inside a card → drop outer chrome; table is the float */
+.promo-card:has(> .table-scroll),
+.finance-card:has(> .table-scroll) {
+  display: grid;
+  gap: 12px;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.promo-card:has(> .table-scroll) > .promo-filters {
+  padding: 16px;
+  border-radius: var(--radius-card);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-floating, var(--shadow-float));
+}
+
+.finance-audit {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* Tables inside dialogs/cards should not stack a second float */
+.modal-card .table-scroll,
+.card .table-wrap {
+  box-shadow: none;
+  background: transparent;
 }
 
 .finance-banner,
@@ -4139,7 +4174,7 @@ html.is-ready #content > *:not(#stylex-boot-skeleton) {
 }
 
 .table-scroll {
-  background: var(--color-white);
+  background: var(--bg-card, var(--color-white));
 }
 
 .empty-stage .empty-state {
@@ -4700,7 +4735,7 @@ input[type="search"]:focus {
 }
 
 .studio-table-wrap {
-  padding: 16px;
+  padding: 0;
   overflow-x: auto;
 }
 
@@ -4970,11 +5005,14 @@ textarea,
 }
 
 .rev-stat,
-.panel,
 .history-card,
 .thumb,
 .mini-thumb {
   border-radius: var(--radius-inner);
+}
+
+.panel {
+  border-radius: var(--radius-card);
 }
 
 .warn-badge,
@@ -5458,6 +5496,7 @@ input[type="time"]:focus {
   }
 
   .outlet-head {
+    align-items: center;
     padding-left: 4px;
     padding-right: 4px;
   }
@@ -5468,8 +5507,10 @@ input[type="time"]:focus {
 
   .utility-cluster {
     min-width: 0;
-    width: 100%;
-    justify-content: flex-start;
+    width: auto;
+    margin-left: auto;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
   }
 
   .toolbar,
@@ -6090,8 +6131,10 @@ input[type="time"]:focus {
     width: 100%;
   }
 
+  .studio-actions button,
   .studio-actions .btn {
     width: 100%;
+    min-height: 44px;
   }
 }
 

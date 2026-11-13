@@ -403,6 +403,62 @@
     document.getElementById("shop-preview-modal").hidden = true;
   });
 
+  function openDeleteModal(id) {
+    document.getElementById(id).hidden = false;
+  }
+
+  function closeDeleteModal(id) {
+    document.getElementById(id).hidden = true;
+  }
+
+  function syncDeleteSubmit() {
+    var reason = document.getElementById("shop-delete-reason").value.trim();
+    document.getElementById("shop-delete-submit").disabled = reason.length < 3;
+  }
+
+  document.getElementById("shop-delete-open").addEventListener("click", function () {
+    openDeleteModal("shop-delete-confirm-modal");
+  });
+
+  document.getElementById("shop-delete-confirm-cancel").addEventListener("click", function () {
+    closeDeleteModal("shop-delete-confirm-modal");
+  });
+
+  document.getElementById("shop-delete-confirm").addEventListener("click", function () {
+    closeDeleteModal("shop-delete-confirm-modal");
+    document.getElementById("shop-delete-reason").value = "";
+    document.getElementById("shop-delete-reason-error").hidden = true;
+    syncDeleteSubmit();
+    openDeleteModal("shop-delete-reason-modal");
+  });
+
+  document.getElementById("shop-delete-reason-cancel").addEventListener("click", function () {
+    closeDeleteModal("shop-delete-reason-modal");
+  });
+
+  document.getElementById("shop-delete-reason").addEventListener("input", syncDeleteSubmit);
+
+  document.getElementById("shop-delete-submit").addEventListener("click", function () {
+    var reason = document.getElementById("shop-delete-reason").value.trim();
+    var error = document.getElementById("shop-delete-reason-error");
+    if (reason.length < 3) {
+      error.hidden = false;
+      error.textContent = "Enter a reason before deleting the shop.";
+      syncDeleteSubmit();
+      return;
+    }
+    error.hidden = true;
+    state.deleted = true;
+    state.deleteReason = reason;
+    state.deleteAt = new Date().toISOString();
+    persist();
+    closeDeleteModal("shop-delete-reason-modal");
+    if (window.showToast) window.showToast("Shop deleted. Reason saved.");
+    window.setTimeout(function () {
+      window.location.href = "./index.html";
+    }, 700);
+  });
+
   document.getElementById("shop-profile-form").addEventListener("submit", function (event) {
     event.preventDefault();
     readFounders();

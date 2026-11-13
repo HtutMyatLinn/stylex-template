@@ -54,6 +54,8 @@
 <a class="nav-link" href="promotions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m20 13-9-9H5v6l9 9 6-6z"/><circle cx="8.5" cy="8.5" r="1" fill="currentColor" stroke="none"/></svg><span>Promotions</span></a>
 <a class="nav-link" href="finance.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/></svg><span>Finance</span></a>
 <a class="nav-link" href="message.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H9l-4 3v-3H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></svg><span>Message</span></a>
+<a class="nav-link" href="customers.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 19c.8-3.2 3.2-5 6.5-5s5.7 1.8 6.5 5"/></svg><span>Customer</span></a>
+<a class="nav-link" href="ads.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10v4a2 2 0 0 0 2 2h2l5 3V5L8 8H6a2 2 0 0 0-2 2z"/><path d="M16.5 8.5a4.5 4.5 0 0 1 0 7"/><path d="M18.8 6.2a7.5 7.5 0 0 1 0 11.6"/></svg><span>Ads</span></a>
 <a class="nav-link" href="studio.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Studio</span></a>
 <a class="nav-link is-active" href="team.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9.5" r="2"/><path d="M3.5 19c.6-3 2.8-4.5 5.5-4.5s4.9 1.5 5.5 4.5"/><path d="M16 14.6c1.7.2 3 1.2 3.6 3.4"/></svg><span>Team</span></a>
 <a class="nav-link" href="shop-profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10 6 4h12l2 6"/><path d="M4 10h16v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M10 20v-5h4v5"/></svg><span>Shop Profile</span></a>
@@ -63,7 +65,6 @@
       <div class="main outlet">
         <div class="outlet-head">
           <div class="outlet-title-wrap">
-            <a class="portal-back" href="../index.html">Back to All Portals</a>
             <h1 class="page-title" data-bind="page-title">Team</h1>
           </div>
           <div class="utility-cluster">
@@ -106,28 +107,85 @@
             <section id="team-panel-members" data-panel="members">
               <div class="toolbar team-member-toolbar">
                 <div class="team-filter-row">
-                  <input class="search" id="team-search" type="search" placeholder="Search name or email" aria-label="Search team members by name or email" />
-                  <select id="team-role-filter" aria-label="Filter by role">
-                    <option value="all">All roles</option>
+                  <input class="search" id="team-search" type="search" placeholder="Search name or phone" aria-label="Search team members by name or phone" />
+                  <select id="team-role-filter" aria-label="Filter by permission">
+                    <option value="all">All permissions</option>
                   </select>
                   <div class="screen-switch" id="team-status-tabs" role="group" aria-label="Member status"></div>
                 </div>
-                <button class="btn" id="team-invite-open" type="button">Invite Team Member</button>
+                <button class="btn" id="team-create-open" type="button">Create Team Member</button>
               </div>
               <div class="table-scroll">
                 <table class="order-table team-table">
                   <caption class="sr-only">Team members</caption>
                   <thead>
                     <tr>
-                      <th scope="col">Member</th>
-                      <th scope="col">Role</th>
-                      <th scope="col">Status</th>
-                      <th scope="col">Last active</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Position</th>
+                      <th scope="col">Phone</th>
+                      <th scope="col">Permission</th>
                       <th scope="col">Actions</th>
                     </tr>
                   </thead>
                   <tbody id="team-member-rows"></tbody>
                 </table>
+              </div>
+              <nav class="pager" id="team-member-pager" aria-label="Team member pages"></nav>
+            </section>
+
+            <section id="team-panel-detail" data-panel="detail" hidden>
+              <div class="team-detail-head">
+                <button class="btn is-ghost team-back-btn" id="team-detail-back" type="button">Back to Team</button>
+                <div>
+                  <p class="team-detail-eyebrow">Team member</p>
+                  <h2 id="team-detail-title">Member</h2>
+                  <p id="team-detail-subtitle" class="team-detail-subtitle"></p>
+                </div>
+              </div>
+
+              <div class="team-detail-grid">
+                <section class="team-detail-card" aria-labelledby="team-account-heading">
+                  <div class="team-detail-card-head">
+                    <h3 id="team-account-heading">Account Information</h3>
+                    <p class="team-detail-help">Update name, position, phone, and permission for this member.</p>
+                  </div>
+                  <form id="team-account-form" class="team-detail-form">
+                    <label class="field"><span>Name</span><input id="detail-name" name="name" type="text" required autocomplete="name" /></label>
+                    <label class="field"><span>Position</span><input id="detail-position" name="position" type="text" required autocomplete="organization-title" /></label>
+                    <label class="field"><span>Phone</span><input id="detail-phone" name="phone" type="tel" required autocomplete="tel" /></label>
+                    <label class="field"><span>Permission</span><select id="detail-permission" name="permissionId" required></select></label>
+                    <p class="field-error" id="team-account-error" hidden></p>
+                    <div class="team-detail-actions">
+                      <button class="btn" type="submit">Update</button>
+                    </div>
+                  </form>
+                </section>
+
+                <section class="team-detail-card is-warning" aria-labelledby="team-password-heading">
+                  <div class="team-detail-card-head">
+                    <h3 id="team-password-heading">Reset Password</h3>
+                    <p class="team-detail-help">Set a new password for this member. They will use it the next time they sign in.</p>
+                  </div>
+                  <form id="team-password-form" class="team-detail-form">
+                    <label class="field"><span>New password</span><input id="detail-password" name="password" type="password" required autocomplete="new-password" minlength="6" /></label>
+                    <label class="field"><span>Confirm password</span><input id="detail-password-confirm" name="confirmPassword" type="password" required autocomplete="new-password" minlength="6" /></label>
+                    <p class="field-error" id="team-password-error" hidden></p>
+                    <div class="team-detail-actions">
+                      <button class="btn" type="submit">Update Password</button>
+                    </div>
+                  </form>
+                </section>
+
+                <section class="team-detail-card is-danger team-detail-danger" aria-labelledby="team-delete-heading">
+                  <div class="team-detail-card-head">
+                    <h3 id="team-delete-heading">Delete Account</h3>
+                    <p class="team-detail-help">Permanently remove this team member and revoke their access. This action cannot be undone.</p>
+                  </div>
+                  <p class="team-lock" id="team-delete-lock" hidden>Every shop must retain at least one active owner. Owner access cannot be removed without a verified ownership transfer.</p>
+                  <div class="team-detail-actions">
+                    <button class="btn is-danger" id="team-delete-open" type="button">Delete Account</button>
+                  </div>
+                </section>
               </div>
             </section>
 
@@ -165,7 +223,7 @@
                   <span>Action</span>
                   <select id="log-action" aria-label="Filter logs by action type">
                     <option value="all">All actions</option>
-                    <option value="invite">Invitation</option>
+                    <option value="create">Member create</option>
                     <option value="access">Access change</option>
                     <option value="role">Role change</option>
                     <option value="permissions">Permission change</option>
@@ -199,6 +257,7 @@
                   <tbody id="team-log-rows"></tbody>
                 </table>
               </div>
+              <nav class="pager" id="team-log-pager" aria-label="Activity log pages"></nav>
             </section>
           </div>
         </main>
@@ -215,41 +274,52 @@
 <a class="nav-link" href="promotions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m20 13-9-9H5v6l9 9 6-6z"/><circle cx="8.5" cy="8.5" r="1" fill="currentColor" stroke="none"/></svg><span>Promotions</span></a>
 <a class="nav-link" href="finance.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/></svg><span>Finance</span></a>
 <a class="nav-link" href="message.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H9l-4 3v-3H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></svg><span>Message</span></a>
+<a class="nav-link" href="customers.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 19c.8-3.2 3.2-5 6.5-5s5.7 1.8 6.5 5"/></svg><span>Customer</span></a>
+<a class="nav-link" href="ads.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10v4a2 2 0 0 0 2 2h2l5 3V5L8 8H6a2 2 0 0 0-2 2z"/><path d="M16.5 8.5a4.5 4.5 0 0 1 0 7"/><path d="M18.8 6.2a7.5 7.5 0 0 1 0 11.6"/></svg><span>Ads</span></a>
 <a class="nav-link is-active" href="team.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9.5" r="2"/><path d="M3.5 19c.6-3 2.8-4.5 5.5-4.5s4.9 1.5 5.5 4.5"/><path d="M16 14.6c1.7.2 3 1.2 3.6 3.4"/></svg><span>Team</span></a>
 <a class="nav-link" href="shop-profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10 6 4h12l2 6"/><path d="M4 10h16v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M10 20v-5h4v5"/></svg><span>Shop Profile</span></a>
 <a class="nav-link" href="settings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18"/></svg><span>Settings</span></a>
 </div>
     <button class="scrim" id="scrim" type="button" hidden aria-label="Close menu"></button>
 
-    <div class="order-modal" id="team-invite-modal" hidden>
-      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="team-invite-title">
-        <h2 id="team-invite-title">Invite Team Member</h2>
-        <form id="team-invite-form">
-          <label class="field"><span>Registered user email</span><input id="team-invite-email" type="email" required autocomplete="off" placeholder="name@studio.com" /></label>
-          <label class="field"><span>Initial role</span><select id="team-invite-role" required></select></label>
+    <div class="order-modal" id="team-create-modal" hidden>
+      <div class="modal-card team-create-sheet" role="dialog" aria-modal="true" aria-labelledby="team-create-title">
+        <h2 id="team-create-title">Create Team Member</h2>
+        <form id="team-create-form">
+          <label class="field"><span>Name</span><input id="create-name" name="name" type="text" required autocomplete="name" placeholder="Full name" /></label>
+          <label class="field"><span>Position</span><input id="create-position" name="position" type="text" required autocomplete="organization-title" placeholder="e.g. Catalog Editor" /></label>
+          <label class="field"><span>Phone</span><input id="create-phone" name="phone" type="tel" required autocomplete="tel" placeholder="+95 9 000 000 000" /></label>
+          <label class="field"><span>Password</span><input id="create-password" name="password" type="password" required autocomplete="new-password" minlength="6" /></label>
+          <label class="field"><span>Confirm Password</span><input id="create-password-confirm" name="confirmPassword" type="password" required autocomplete="new-password" minlength="6" /></label>
+          <label class="field"><span>Permission</span><select id="create-permission" name="permissionId" required></select></label>
           <p class="team-callout">New members receive only the permissions in their assigned role. Financial and other sensitive permissions require an explicit assignment.</p>
-          <p class="field-error" id="team-invite-error" hidden></p>
+          <p class="field-error" id="team-create-error" hidden></p>
           <div class="modal-actions">
-            <button class="btn is-ghost" id="team-invite-cancel" type="button">Cancel</button>
-            <button class="btn" type="submit">Send invitation</button>
+            <button class="btn is-ghost" id="team-create-cancel" type="button">Cancel</button>
+            <button class="btn" type="submit">Create Member</button>
           </div>
         </form>
       </div>
     </div>
 
-    <div class="order-modal" id="team-access-modal" hidden>
-      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="team-access-title">
-        <h2 id="team-access-title">Change access</h2>
-        <p id="team-access-who"></p>
-        <p class="team-lock" id="team-access-lock" hidden>Every shop must retain at least one active owner. Owner access cannot be removed or downgraded without a verified ownership transfer.</p>
-        <label class="field"><span>Role</span><select id="team-access-role"></select></label>
-        <div class="modal-actions team-access-actions">
-          <button class="btn" id="team-access-role-save" type="button">Change role</button>
-          <button class="btn is-ghost" id="team-access-suspend" type="button">Suspend access</button>
-          <button class="btn is-ghost" id="team-access-reactivate" type="button">Reactivate access</button>
-          <button class="btn is-danger" id="team-access-remove" type="button">Remove member</button>
-          <button class="btn is-danger" id="team-access-revoke" type="button">Revoke invitation</button>
-          <button class="btn is-ghost" id="team-access-close" type="button">Close</button>
+    <div class="order-modal" id="team-password-modal" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="team-password-title">
+        <h2 id="team-password-title">Reset password?</h2>
+        <p id="team-password-copy" class="team-confirm-copy">This updates the sign-in password for this team member. They will need the new password next time they log in.</p>
+        <div class="modal-actions">
+          <button class="btn is-ghost" id="team-password-cancel" type="button">Cancel</button>
+          <button class="btn" id="team-password-confirm" type="button">Update Password</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="order-modal" id="team-delete-modal" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="team-delete-title">
+        <h2 id="team-delete-title">Delete team member?</h2>
+        <p id="team-delete-copy" class="team-confirm-copy">This permanently removes the member and revokes access. This cannot be undone.</p>
+        <div class="modal-actions">
+          <button class="btn is-ghost" id="team-delete-cancel" type="button">Cancel</button>
+          <button class="btn is-danger" id="team-delete-confirm" type="button">Delete Account</button>
         </div>
       </div>
     </div>

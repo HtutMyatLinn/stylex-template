@@ -1,0 +1,468 @@
+.boost-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--text-primary) 42%, transparent);
+  padding: 24px;
+  overflow: hidden;
+}
+
+.boost-overlay[hidden] {
+  display: none !important;
+}
+
+.boost-shell {
+  display: flex;
+  flex-direction: column;
+  width: min(1040px, 100%);
+  height: min(720px, calc(100vh - 48px));
+  max-height: calc(100vh - 48px);
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-floating);
+}
+
+.boost-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex: none;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.boost-head h2 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+}
+
+.boost-steps {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  flex: 1 1 240px;
+  max-width: 360px;
+}
+
+.boost-step {
+  display: grid;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.boost-step span {
+  display: block;
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-input);
+}
+
+.boost-step.is-active,
+.boost-step.is-done {
+  color: var(--text-primary);
+}
+
+.boost-step.is-active span,
+.boost-step.is-done span {
+  background: var(--accent-primary);
+}
+
+.boost-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 16px 18px;
+}
+
+.boost-foot {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 18px calc(12px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+}
+
+.boost-foot[hidden] {
+  display: none !important;
+}
+
+.boost-foot.is-end {
+  justify-content: flex-end;
+}
+
+.boost-schedule {
+  display: grid;
+  gap: 14px;
+  max-width: 640px;
+}
+
+.boost-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: var(--radius-inner);
+  background: var(--bg-input);
+}
+
+.boost-thumb {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+  border-radius: 12px;
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--thumb-color, #2c3e50) 70%, white), var(--thumb-color, #2c3e50));
+}
+
+.boost-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.boost-item strong {
+  display: block;
+  font-family: var(--font-heading);
+}
+
+.boost-item p {
+  margin: 4px 0 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.boost-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.boost-fields .field {
+  display: grid;
+  gap: 6px;
+}
+
+.boost-fields .field > span,
+.boost-pay-block .field > span:first-child {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.boost-fields .field input,
+.boost-txn,
+textarea[data-boost-note] {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--outline);
+  border-radius: 14px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font: inherit;
+}
+
+.boost-note {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+textarea[data-boost-note] {
+  min-height: 72px;
+  padding: 10px 12px;
+  resize: none;
+}
+
+.boost-cost {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: var(--radius-inner);
+  background: var(--bg-input);
+}
+
+.boost-cost strong {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+}
+
+.muted {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.boost-pay {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(220px, 0.7fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.boost-pay-main {
+  display: grid;
+  gap: 14px;
+}
+
+.boost-pay-block h3 {
+  margin: 0 0 8px;
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+}
+
+.boost-apps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.boost-app {
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+  min-height: 72px;
+  padding: 10px 6px;
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 14px;
+  background: var(--bg-card);
+  color: inherit;
+  cursor: pointer;
+}
+
+.boost-app.is-active {
+  border-color: var(--accent-primary);
+  background: color-mix(in srgb, var(--accent-primary) 8%, var(--bg-input));
+}
+
+.boost-app-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--bg-muted);
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.boost-app span {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.boost-send-box {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--bg-input);
+}
+
+.boost-send-box > p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.boost-account {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+}
+
+.boost-account strong {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+}
+
+.boost-account small {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.boost-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--outline);
+  border-radius: var(--radius-pill);
+  background: var(--bg-card);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.boost-copy.is-copied {
+  border-color: var(--accent-primary);
+  color: var(--text-primary);
+}
+
+.boost-txn {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  text-align: center;
+}
+
+.boost-confirm-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.boost-upload {
+  display: grid;
+  place-items: center;
+  gap: 6px;
+  min-height: 88px;
+  padding: 12px;
+  border: 1.5px dashed var(--outline);
+  border-radius: 14px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+}
+
+.boost-upload img {
+  max-width: 100%;
+  max-height: 96px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.boost-upload-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.boost-summary {
+  position: sticky;
+  top: 0;
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 14px;
+  background: var(--bg-input);
+}
+
+.boost-summary h3 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+}
+
+.boost-summary-row,
+.boost-summary-total {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.boost-summary-row {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.boost-summary hr {
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.boost-summary-total strong:last-child {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+}
+
+body.is-boost-open {
+  overflow: hidden;
+}
+
+body.is-boost-open .mobile-floating-nav {
+  display: none !important;
+}
+
+@media (max-width: 900px) {
+  .boost-pay {
+    grid-template-columns: 1fr;
+  }
+
+  .boost-summary {
+    position: static;
+    order: -1;
+  }
+
+  .boost-fields {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .boost-overlay {
+    padding: 0;
+    place-items: stretch;
+  }
+
+  .boost-shell {
+    width: 100%;
+    height: 100dvh;
+    max-height: none;
+    border-radius: 0;
+  }
+
+  .boost-head {
+    padding-top: calc(12px + env(safe-area-inset-top, 0px));
+  }
+
+  .boost-body {
+    padding: 14px 16px;
+  }
+
+  .boost-apps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .boost-foot {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .boost-foot .btn {
+    width: 100%;
+    min-height: 48px;
+  }
+}

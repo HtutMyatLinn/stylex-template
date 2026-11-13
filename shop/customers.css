@@ -1,0 +1,275 @@
+.customers {
+  display: grid;
+  gap: 16px;
+  padding: 8px 0 32px;
+}
+
+.customers-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.customers-toolbar .search {
+  flex: 1 1 280px;
+  max-width: 360px;
+}
+
+.customers-table.order-table {
+  min-width: 0 !important;
+}
+
+.customers-table th,
+.customers-table td {
+  padding: 10px 10px;
+  font-size: 13px;
+}
+
+#customers-list-view[hidden],
+#customers-detail-view[hidden] {
+  display: none !important;
+}
+
+#customers-detail-view {
+  display: grid;
+  gap: 16px;
+}
+
+.customer-detail-head {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.customer-summary {
+  display: grid;
+  gap: 18px;
+  padding: 18px;
+  border: 0;
+  border-radius: var(--radius-card);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-floating);
+}
+
+.customer-summary-identity {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.customer-avatar {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--text-primary);
+  color: var(--text-on-dark);
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+.customer-summary-identity h2 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+}
+
+.customer-summary-identity p {
+  margin: 4px 0 0;
+  color: var(--text-secondary);
+}
+
+.customer-summary-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.customer-summary-stats div {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border-radius: var(--radius-inner);
+  background: var(--bg-input);
+}
+
+.customer-summary-stats span {
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.customer-summary-stats strong {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+}
+
+.customer-activity-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.customer-activity-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.customer-activity-head h2 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+}
+
+.customer-activity-table-wrap {
+  margin: 0;
+}
+
+.customer-activity-table.order-table {
+  min-width: 0 !important;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.customer-activity-table th,
+.customer-activity-table td {
+  padding: 10px 12px;
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.customer-activity-table th:nth-child(1),
+.customer-activity-table td:nth-child(1) {
+  width: 18%;
+}
+
+.customer-activity-table th:nth-child(2),
+.customer-activity-table td:nth-child(2) {
+  width: 14%;
+}
+
+.customer-activity-table th:nth-child(3),
+.customer-activity-table td:nth-child(3) {
+  width: 24%;
+}
+
+.customer-activity-table th:nth-child(4),
+.customer-activity-table td:nth-child(4) {
+  width: 20%;
+}
+
+.customer-activity-table th:nth-child(5),
+.customer-activity-table td:nth-child(5) {
+  width: 12%;
+}
+
+.customer-activity-table th:nth-child(6),
+.customer-activity-table td:nth-child(6) {
+  width: 12%;
+}
+
+.customer-activity-table tbody tr.is-empty td {
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.customer-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.customer-badge.is-purchase {
+  background: color-mix(in srgb, #1f6b4f 16%, var(--bg-input));
+  color: #1f6b4f;
+}
+
+.customer-badge.is-refund {
+  background: color-mix(in srgb, #b45309 16%, var(--bg-input));
+  color: #9a3412;
+}
+
+.customer-badge.is-other {
+  background: var(--bg-input);
+  color: var(--text-primary);
+}
+
+.customer-activity-product {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+}
+
+.customer-product-thumb {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--thumb-color) 70%, white), var(--thumb-color));
+}
+
+.customer-activity-product strong {
+  overflow: hidden;
+  font-family: var(--font-heading);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .customer-badge.is-purchase {
+  background: color-mix(in srgb, #34d399 18%, var(--bg-input));
+  color: #6ee7b7;
+}
+
+[data-theme="dark"] .customer-badge.is-refund {
+  background: color-mix(in srgb, #f59e0b 18%, var(--bg-input));
+  color: #fbbf24;
+}
+
+@media (max-width: 767px) {
+  .customers-toolbar .search {
+    width: 100%;
+    max-width: none;
+  }
+
+  .customer-detail-head .btn {
+    width: 100%;
+    min-height: 44px;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .customer-summary-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .customer-activity-head {
+    align-items: stretch;
+  }
+
+  .customer-activity-table,
+  .customer-activity-table th,
+  .customer-activity-table td {
+    width: auto !important;
+  }
+
+  .customer-activity-product strong {
+    white-space: normal;
+  }
+
+  .customers-table tbody td.is-actions .btn {
+    width: 100%;
+    min-height: 44px;
+  }
+}

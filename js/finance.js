@@ -62,6 +62,11 @@
 
   let trendSpan = 6;
   let withdrawalFilter = "all";
+  let withdrawalPage = 1;
+  let ledgerPage = 1;
+  let payoutPage = 1;
+  let invoicePage = 1;
+  let auditPage = 1;
   let chart = null;
   let activeModal = null;
   let pendingDecision = null;
@@ -365,12 +370,15 @@
 
   function renderWithdrawals() {
     const rows = withdrawals.filter((row) => withdrawalFilter === "all" || row.status === withdrawalFilter);
+    const paged = window.pageRows(rows, withdrawalPage);
+    withdrawalPage = paged.page;
     const body = document.getElementById("withdrawal-table");
     if (!rows.length) {
       body.innerHTML = emptyRow(7, "No requests", "Nothing matches this status.");
+      window.renderPager(document.getElementById("withdrawal-pager"), 1, 1, "0 requests");
       return;
     }
-    body.innerHTML = rows.map((row) => {
+    body.innerHTML = paged.rows.map((row) => {
       const actions = row.status === "Pending"
         ? '<div class="row-actions"><button class="btn" type="button" data-approve="' + row.id + '">Approve</button><button class="btn is-danger" type="button" data-reject="' + row.id + '">Reject</button></div>'
         : '<span class="finance-meta">' + (row.reason ? escapeHtml(row.reason) : "Recorded") + "</span>";
@@ -384,6 +392,7 @@
         "<td>" + actions + "</td>" +
         "</tr>";
     }).join("");
+    window.renderPager(document.getElementById("withdrawal-pager"), paged.page, paged.pages, rows.length + (rows.length === 1 ? " request" : " requests"));
   }
 
   function ledgerFilters() {
@@ -397,12 +406,15 @@
 
   function renderLedger() {
     const rows = window.fetchTransactions(ledgerFilters());
+    const paged = window.pageRows(rows, ledgerPage);
+    ledgerPage = paged.page;
     const body = document.getElementById("ledger-table");
     if (!rows.length) {
       body.innerHTML = emptyRow(9, "No transactions", "Try another search, date range, or type.");
+      window.renderPager(document.getElementById("ledger-pager"), 1, 1, "0 transactions");
       return;
     }
-    body.innerHTML = rows.map((row) => {
+    body.innerHTML = paged.rows.map((row) => {
       const typeLabel = row.type === "credit" ? "Credit" : row.type === "debit" ? "Debit" : "Commission";
       return "<tr>" +
         "<td>" + escapeHtml(formatWhen(row.at)) + "</td>" +
@@ -416,16 +428,20 @@
         "<td>" + escapeHtml(row.status) + "</td>" +
         "</tr>";
     }).join("");
+    window.renderPager(document.getElementById("ledger-pager"), paged.page, paged.pages, rows.length + (rows.length === 1 ? " transaction" : " transactions"));
   }
 
   function renderPayouts() {
     const rows = window.fetchPayoutLogs(document.getElementById("payout-search").value);
+    const paged = window.pageRows(rows, payoutPage);
+    payoutPage = paged.page;
     const body = document.getElementById("payout-table");
     if (!rows.length) {
       body.innerHTML = emptyRow(7, "No payouts", "No completed payout matches that search.");
+      window.renderPager(document.getElementById("payout-pager"), 1, 1, "0 payouts");
       return;
     }
-    body.innerHTML = rows.map((row) => {
+    body.innerHTML = paged.rows.map((row) => {
       return "<tr>" +
         "<td>" + escapeHtml(formatWhen(row.at)) + "</td>" +
         "<td class=\"finance-id\">#" + escapeHtml(row.id) + "</td>" +
@@ -436,10 +452,13 @@
         "<td><button class=\"btn is-ghost\" type=\"button\" data-receipt=\"" + row.id + "\">View Receipt</button></td>" +
         "</tr>";
     }).join("");
+    window.renderPager(document.getElementById("payout-pager"), paged.page, paged.pages, rows.length + (rows.length === 1 ? " payout" : " payouts"));
   }
 
   function renderInvoices() {
-    document.getElementById("invoice-table").innerHTML = invoices.map((row) => {
+    const paged = window.pageRows(invoices, invoicePage);
+    invoicePage = paged.page;
+    document.getElementById("invoice-table").innerHTML = paged.rows.map((row) => {
       return "<tr>" +
         "<td class=\"finance-id\">#" + escapeHtml(row.number) + "</td>" +
         "<td>#" + escapeHtml(row.order) + "</td>" +
@@ -448,11 +467,14 @@
         "<td>" + moneyCell(row.total) + "</td>" +
         "<td><button class=\"btn is-ghost\" type=\"button\" data-invoice=\"" + row.number + "\">Download PDF</button></td>" +
         "</tr>";
-    }).join("");
+    }).join("") || emptyRow(6, "No invoices", "Delivered orders will appear here.");
+    window.renderPager(document.getElementById("invoice-pager"), paged.page, paged.pages, invoices.length + (invoices.length === 1 ? " invoice" : " invoices"));
   }
 
   function renderAudit() {
-    document.getElementById("audit-table").innerHTML = audit.map((row) => {
+    const paged = window.pageRows(audit, auditPage);
+    auditPage = paged.page;
+    document.getElementById("audit-table").innerHTML = paged.rows.map((row) => {
       return "<tr>" +
         "<td>" + escapeHtml(formatWhen(row.at)) + "</td>" +
         "<td>" + escapeHtml(row.admin) + "</td>" +
@@ -460,7 +482,8 @@
         "<td>" + escapeHtml(row.target) + "</td>" +
         "<td class=\"finance-id\">" + escapeHtml(row.key) + "</td>" +
         "</tr>";
-    }).join("");
+    }).join("") || emptyRow(5, "No audit events", "Sensitive actions will be logged here.");
+    window.renderPager(document.getElementById("audit-pager"), paged.page, paged.pages, audit.length + (audit.length === 1 ? " event" : " events"));
   }
 
   function cssColor(name) {
@@ -658,6 +681,7 @@
     const button = event.target.closest("[data-status]");
     if (!button) return;
     withdrawalFilter = button.dataset.status;
+    withdrawalPage = 1;
     document.querySelectorAll("#withdrawal-filters [data-status]").forEach((item) => {
       item.setAttribute("aria-pressed", String(item === button));
     });
@@ -666,11 +690,52 @@
 
   ["ledger-search", "ledger-from", "ledger-to", "ledger-type"].forEach((id) => {
     document.getElementById(id).addEventListener("input", () => {
+      ledgerPage = 1;
       window.runWithSkeleton(document.getElementById("ledger-table"), renderLedger, { columns: 9, rows: 6, delay: 280 });
     });
   });
   document.getElementById("payout-search").addEventListener("input", () => {
+    payoutPage = 1;
     window.runWithSkeleton(document.getElementById("payout-table"), renderPayouts, { columns: 7, rows: 5, delay: 280 });
+  });
+
+  document.getElementById("withdrawal-pager").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-page]");
+    if (!button || button.disabled) return;
+    const rows = withdrawals.filter((row) => withdrawalFilter === "all" || row.status === withdrawalFilter);
+    const paged = window.pageRows(rows, withdrawalPage);
+    withdrawalPage = window.turnPage(paged.page, paged.pages, button.dataset.page);
+    window.runWithSkeleton(document.getElementById("withdrawal-table"), renderWithdrawals, { columns: 7, rows: 5 });
+  });
+  document.getElementById("ledger-pager").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-page]");
+    if (!button || button.disabled) return;
+    const rows = window.fetchTransactions(ledgerFilters());
+    const paged = window.pageRows(rows, ledgerPage);
+    ledgerPage = window.turnPage(paged.page, paged.pages, button.dataset.page);
+    window.runWithSkeleton(document.getElementById("ledger-table"), renderLedger, { columns: 9, rows: 6 });
+  });
+  document.getElementById("payout-pager").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-page]");
+    if (!button || button.disabled) return;
+    const rows = window.fetchPayoutLogs(document.getElementById("payout-search").value);
+    const paged = window.pageRows(rows, payoutPage);
+    payoutPage = window.turnPage(paged.page, paged.pages, button.dataset.page);
+    window.runWithSkeleton(document.getElementById("payout-table"), renderPayouts, { columns: 7, rows: 5 });
+  });
+  document.getElementById("invoice-pager").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-page]");
+    if (!button || button.disabled) return;
+    const paged = window.pageRows(invoices, invoicePage);
+    invoicePage = window.turnPage(paged.page, paged.pages, button.dataset.page);
+    renderInvoices();
+  });
+  document.getElementById("audit-pager").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-page]");
+    if (!button || button.disabled) return;
+    const paged = window.pageRows(audit, auditPage);
+    auditPage = window.turnPage(paged.page, paged.pages, button.dataset.page);
+    renderAudit();
   });
 
   document.getElementById("export-report").addEventListener("click", () => {

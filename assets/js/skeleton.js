@@ -322,11 +322,11 @@
         bone("min(100%, 320px)", "42px", "9999px") +
         bone("140px", "42px", "14px") +
         '<div class="screen-switch sk-segment">' +
-        chips(5, ["48px", "64px", "72px", "88px", "80px"]) +
+        chips(4, ["48px", "64px", "88px", "80px"]) +
         "</div></div>" +
-        bone("160px", "42px", "9999px") +
+        bone("180px", "42px", "9999px") +
         "</div>" +
-        tableSkeleton(["Member", "Role", "Status", "Last active", "Actions"], 6) +
+        tableSkeleton(["Name", "Position", "Phone", "Permission", "Actions"], 6) +
         "</div>"
       );
     },

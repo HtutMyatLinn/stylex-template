@@ -105,6 +105,7 @@
   function onClick(event) {
     const tabButton = event.target.closest("[data-tab]");
     const edit = event.target.closest("[data-edit]");
+    const boost = event.target.closest("[data-boost]");
     const discount = event.target.closest("[data-discount]");
     const removeTag = event.target.closest("[data-remove-tag]");
     const removeMedia = event.target.closest("[data-remove-media]");
@@ -116,6 +117,26 @@
     }
     const create = event.target.closest("#create-product");
     if (create) window.runWithLoading(create, () => openEditor(blankProduct()));
+    if (boost) {
+      const product = products.find((item) => item.id === boost.dataset.boost);
+      if (product && typeof window.openBoost === "function") {
+        window.runWithLoading(boost, () => {
+          const coverMedia = (product.media || []).find((file) => file.cover) || (product.media || [])[0];
+          const firstColor = (product.options && product.options.color && product.options.color[0]) || null;
+          const colorHex =
+            firstColor && typeof firstColor === "object" && firstColor.hex
+              ? firstColor.hex
+              : "#2c3e50";
+          window.openBoost({
+            id: product.id,
+            name: product.name,
+            type: "product",
+            image: coverMedia?.src || "",
+            color: colorHex,
+          });
+        });
+      }
+    }
     if (edit) window.runWithLoading(edit, () => openEditor(products.find((item) => item.id === edit.dataset.edit)));
     if (event.target.closest("#editor-back")) showView("list");
     const publish = event.target.closest("#publish-product");
@@ -406,7 +427,10 @@
           '<td><span class="stock-num" data-field="stock">' + product.stock + "</span>" + (low ? ' <span class="low-badge">Low stock</span>' : "") + "</td>" +
           '<td><input class="inline-date" type="date" data-restock="' + escapeHtml(product.id) + '" value="' + escapeHtml(product.restockDate) + '" aria-label="Restock date for ' + escapeHtml(product.name) + '"></td>' +
           '<td><select class="vis-select" data-visibility="' + escapeHtml(product.id) + '" aria-label="Visibility for ' + escapeHtml(product.name) + '">' + visibilityOptions(product.visibility) + "</select></td>" +
-          '<td><div class="row-actions"><button type="button" class="btn is-ghost" data-edit="' + escapeHtml(product.id) + '">Edit</button></div></td>' +
+          '<td><div class="row-actions">' +
+            '<button type="button" class="btn is-ghost" data-boost="' + escapeHtml(product.id) + '">Boost</button>' +
+            '<button type="button" class="btn is-ghost" data-edit="' + escapeHtml(product.id) + '">Edit</button>' +
+          "</div></td>" +
         "</tr>"
       );
     }).join("");

@@ -25,6 +25,7 @@
   let published = savedCopy;
   let query = "";
   let view = "grid";
+  let tablePage = 1;
   let editingId = null;
   let pendingImage = null;
   let deleteId = null;
@@ -185,7 +186,8 @@
   }
 
   function cardActions(item) {
-    return '<button type="button" data-cover="' + item.id + '"' + (item.isCover ? " disabled" : "") + '>' + (item.isCover ? "Primary cover" : "Set as Cover") + '</button>' +
+    return '<button type="button" data-boost="' + item.id + '">Boost</button>' +
+      '<button type="button" data-cover="' + item.id + '"' + (item.isCover ? " disabled" : "") + '>' + (item.isCover ? "Primary cover" : "Set as Cover") + '</button>' +
       '<button type="button" data-edit="' + item.id + '">Edit</button>' +
       '<button type="button" class="is-delete" data-delete="' + item.id + '">Delete</button>';
   }
@@ -210,7 +212,10 @@
   }
 
   function renderTable() {
-    document.getElementById("studio-table").innerHTML = visible().map(function (item) {
+    const rows = visible();
+    const paged = window.pageRows(rows, tablePage);
+    tablePage = paged.page;
+    document.getElementById("studio-table").innerHTML = paged.rows.map(function (item) {
       return '<tr draggable="true" data-id="' + item.id + '">' +
         '<td>#' + item.displayOrder + '</td>' +
         '<td><img class="studio-thumb" src="' + item.url + '" alt="" /></td>' +
@@ -218,7 +223,9 @@
         '<td>' + (item.isCover ? "Primary cover" : "—") + '</td>' +
         '<td>' + item.format.toUpperCase() + " · " + formatSize(item.size) + '</td>' +
         '<td><div class="studio-actions">' + cardActions(item) + '</div></td></tr>';
-    }).join("");
+    }).join("") || '<tr class="is-empty"><td colspan="6">No photos match this search.</td></tr>';
+    const pager = document.getElementById("studio-pager");
+    if (pager) window.renderPager(pager, paged.page, paged.pages, rows.length + (rows.length === 1 ? " photo" : " photos"));
   }
 
   function render() {
@@ -227,6 +234,8 @@
     renderTable();
     document.getElementById("studio-grid").hidden = view !== "grid";
     document.getElementById("studio-table-view").hidden = view !== "table";
+    const pager = document.getElementById("studio-pager");
+    if (pager) pager.hidden = view !== "table";
   }
 
   function move(id, direction) {
@@ -314,6 +323,7 @@
 
   document.getElementById("studio-search").addEventListener("input", function (event) {
     query = event.target.value;
+    tablePage = 1;
     const host = view === "grid" ? document.getElementById("studio-grid") : document.getElementById("studio-table");
     window.runWithSkeleton(host, render, {
       mode: view === "grid" ? "cards" : "table",
@@ -329,6 +339,7 @@
     if (!button) return;
     window.runWithLoading(button, function () {
       view = button.dataset.view;
+      tablePage = 1;
       document.querySelectorAll("#studio-views button").forEach(function (item) {
         item.setAttribute("aria-pressed", String(item === button));
       });
@@ -340,6 +351,14 @@
         variant: "media",
       });
     });
+  });
+
+  document.getElementById("studio-pager").addEventListener("click", function (event) {
+    const button = event.target.closest("[data-page]");
+    if (!button || button.disabled) return;
+    const paged = window.pageRows(visible(), tablePage);
+    tablePage = window.turnPage(paged.page, paged.pages, button.dataset.page);
+    window.runWithSkeleton(document.getElementById("studio-table"), renderTable, { columns: 6, rows: 6, variant: "media" });
   });
 
   document.getElementById("studio-upload").addEventListener("click", function (event) {
@@ -376,12 +395,26 @@
   });
 
   document.getElementById("studio-app").addEventListener("click", function (event) {
+    const boost = event.target.closest("[data-boost]");
     const cover = event.target.closest("[data-cover]");
     const edit = event.target.closest("[data-edit]");
     const remove = event.target.closest("[data-delete]");
-    const button = cover || edit || remove;
+    const button = boost || cover || edit || remove;
     if (!button) return;
     window.runWithLoading(button, function () {
+      if (boost && typeof window.openBoost === "function") {
+        const item = photos.find(function (entry) { return entry.id === boost.dataset.boost; });
+        if (item) {
+          window.openBoost({
+            id: item.id,
+            name: item.caption || "Studio photo",
+            type: "studio",
+            image: item.url || "",
+            color: "#2c3e50",
+          });
+        }
+        return;
+      }
       if (cover) {
         setPhotoDisplay(SHOP_ID, cover.dataset.cover, true);
         render();

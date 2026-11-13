@@ -1357,11 +1357,15 @@ if (menuToggle && scrim && sidebar) {
     const menu = wrap.querySelector(".theme-select-menu") || wrap.themeMenu;
     if (!trigger || !menu || menu.hidden) return;
     const rect = trigger.getBoundingClientRect();
-    const width = Math.max(rect.width, 168);
+    const isTable = wrap.classList.contains("is-table");
+    const width = Math.max(rect.width, isTable ? 200 : 168);
     menu.style.width = width + "px";
-    const menuHeight = Math.min(menu.scrollHeight, 240);
+    const menuHeight = Math.min(menu.scrollHeight, isTable ? 220 : 240);
     const spaceBelow = window.innerHeight - rect.bottom;
-    const openUp = spaceBelow < menuHeight + 12 && rect.top > spaceBelow;
+    // Table row selects prefer opening below the cell so the menu stays with its row.
+    const openUp = isTable
+      ? spaceBelow < Math.min(menuHeight, 140) && rect.top > spaceBelow
+      : spaceBelow < menuHeight + 12 && rect.top > spaceBelow;
     const left = Math.max(8, Math.min(rect.left, window.innerWidth - width - 8));
     menu.style.left = left + "px";
     menu.style.top = (openUp ? Math.max(8, rect.top - menuHeight - 6) : rect.bottom + 6) + "px";
